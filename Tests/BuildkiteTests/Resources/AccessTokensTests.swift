@@ -1,0 +1,45 @@
+//
+//  AccessTokensTests.swift
+//  
+//
+//  Created by Aaron Sky on 5/4/20.
+//
+
+import XCTest
+@testable import Buildkite
+
+class AccessTokensTests: XCTestCase {
+    func testAccessTokenGet() throws {
+        let expected = AccessToken(uuid: UUID(), scopes: [])
+        let context = try MockContext(content: expected)
+
+        let expectation = XCTestExpectation()
+
+        context.client.send(AccessToken.Resources.Get()) { result in
+            do {
+                let response = try result.get()
+                XCTAssertEqual(expected, response.content)
+            } catch {
+                XCTFail(error.localizedDescription)
+            }
+            expectation.fulfill()
+        }
+        wait(for: [expectation])
+    }
+
+    func testAccessTokenDelete() throws {
+        let context = MockContext()
+
+        let expectation = XCTestExpectation()
+
+        context.client.send(AccessToken.Resources.Revoke()) { result in
+            do {
+                _ = try result.get()
+            } catch {
+                XCTFail(error.localizedDescription)
+            }
+            expectation.fulfill()
+        }
+        wait(for: [expectation])
+    }
+}
