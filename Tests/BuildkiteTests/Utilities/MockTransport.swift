@@ -40,7 +40,7 @@ extension MockTransport: Transport {
     }
 
     #if canImport(Combine)
-    @available(iOS 13.0, macOS 10.15, *)
+    @available(iOS 13.0, macOS 10.15, tvOS 13.0, watchOS 6.0, *)
     func sendPublisher(request: URLRequest) -> AnyPublisher<Output, Swift.Error> {
         history.append(request)
         return Future { [weak self] promise in

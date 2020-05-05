@@ -21,7 +21,7 @@ public protocol Transport {
     func send(request: URLRequest, completion: @escaping (Result<Output, Error>) -> Void)
 
     #if canImport(Combine)
-    @available(iOS 13.0, macOS 10.15, *)
+    @available(iOS 13.0, macOS 10.15, tvOS 13.0, watchOS 6.0, *)
     func sendPublisher(request: URLRequest) -> AnyPublisher<Output, Error>
     #endif
 }
@@ -44,7 +44,7 @@ extension URLSession: Transport {
     }
 
     #if canImport(Combine)
-    @available(iOS 13.0, macOS 10.15, *)
+    @available(iOS 13.0, macOS 10.15, tvOS 13.0, watchOS 6.0, *)
     public func sendPublisher(request: URLRequest) -> AnyPublisher<Output, Error> {
         dataTaskPublisher(for: request)
             .mapError { $0 as Error }

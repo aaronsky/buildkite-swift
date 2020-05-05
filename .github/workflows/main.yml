@@ -1,0 +1,32 @@
+name: CI
+on: push
+
+jobs:
+  test-macOS:
+    runs-on: macOS-latest
+    steps:
+      - uses: actions/checkout@v1.0.0
+      - name: SwiftPM Build
+        run: swift build
+  test-iOS:
+    runs-on: macOS-latest
+    steps:
+      - uses: actions/checkout@v1.0.0
+      - name: xcodebuild
+        run: |-
+          cd Packages/Buildkite
+          swift package generate-xcodeproj --enable-code-coverage
+          xcodebuild \
+            -project Buildkite.xcodeproj \
+            -scheme "Buildkite-Package" \
+            -destination "platform=iOS Simulator,OS=13.3,name=iPhone 11 Pro Max" \
+            -quiet \
+            build test
+  test-linux:
+    runs-on: ubuntu-latest
+    container:
+      image: swift:5.2.3
+    steps:
+      - uses: actions/checkout@v1.0.0
+      - name: SwiftPM Build
+        run: swift test --enable-test-discovery

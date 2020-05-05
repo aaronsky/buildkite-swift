@@ -97,7 +97,7 @@ extension TransportTests {
 // MARK: Combine-based Requests
 
 #if canImport(Combine)
-@available(iOS 13.0, macOS 10.15, *)
+@available(iOS 13.0, macOS 10.15, tvOS 13.0, watchOS 6.0, *)
 extension TransportTests {
     func testURLSessionSendPublisherBasedRequest() {
         let request = URLRequest(url: URL())

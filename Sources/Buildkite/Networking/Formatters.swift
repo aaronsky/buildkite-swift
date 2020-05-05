@@ -10,7 +10,7 @@ import Foundation
 enum Formatters {
     static let iso8601WithFractionalSeconds: ISO8601DateFormatter = {
         let formatter: ISO8601DateFormatter
-        if #available(iOS 11.0, macOS 10.13, *) {
+        if #available(iOS 11.0, macOS 10.13, tvOS 11.0, watchOS 4.0, *) {
             formatter = ISO8601DateFormatter()
             formatter.formatOptions = [.withInternetDateTime, .withFractionalSeconds]
         } else {
@@ -47,40 +47,5 @@ enum Formatters {
             throw DecodingError.dataCorrupted(DecodingError.Context(codingPath: container.codingPath, debugDescription: "Expected date string to be ISO8601-formatted."))
         }
         return date
-    }
-}
-
-class OptionalFractionalSecondsDateFormatter: DateFormatter {
-    static let withoutSeconds: DateFormatter = {
-        let formatter = DateFormatter()
-        formatter.calendar = Calendar(identifier: .iso8601)
-        formatter.locale = Locale(identifier: "en_US_POSIX")
-        formatter.timeZone = TimeZone(identifier: "UTC")
-        formatter.dateFormat = "yyyy-MM-dd'T'HH:mm:ssXXX"
-        return formatter
-    }()
-
-    func setup() {
-        calendar = Calendar(identifier: .iso8601)
-        locale = Locale(identifier: "en_US_POSIX")
-        timeZone = TimeZone(identifier: "UTC")
-        dateFormat = "yyyy-MM-dd'T'HH:mm:ss.SSSSSSXXX" // handle up to 6 decimal places, although iOS currently only preserves 2 digits of precision
-    }
-
-    override init() {
-        super.init()
-        setup()
-    }
-
-    required init?(coder aDecoder: NSCoder) {
-        super.init(coder: aDecoder)
-        setup()
-    }
-
-    override func date(from string: String) -> Date? {
-        if let result = super.date(from: string) {
-            return result
-        }
-        return OptionalFractionalSecondsDateFormatter.withoutSeconds.date(from: string)
     }
 }

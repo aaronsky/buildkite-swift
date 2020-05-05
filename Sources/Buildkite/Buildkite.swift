@@ -124,7 +124,7 @@ public final class Buildkite {
 #if canImport(Combine)
 import Combine
 
-@available(iOS 13.0, macOS 10.15, *)
+@available(iOS 13.0, macOS 10.15, tvOS 13.0, watchOS 6.0, *)
 extension Buildkite {
     public func sendPublisher<R: Resource & HasResponseBody>(_ resource: R) -> AnyPublisher<Response<R.Content>, Error> {
         transport.sendPublisher(request: URLRequest(resource, configuration: configuration))
