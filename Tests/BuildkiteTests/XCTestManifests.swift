@@ -54,10 +54,6 @@ extension BuildkiteTests {
         ("testClosureBasedRequestNoContent", testClosureBasedRequestNoContent),
         ("testClosureBasedRequestUnsuccessfulResponse", testClosureBasedRequestUnsuccessfulResponse),
         ("testFailureFromTransport", testFailureFromTransport),
-        ("testPublisherBasedRequest", testPublisherBasedRequest),
-        ("testPublisherBasedRequestInvalidResponse", testPublisherBasedRequestInvalidResponse),
-        ("testPublisherBasedRequestNoContent", testPublisherBasedRequestNoContent),
-        ("testPublisherBasedRequestUnsuccessfulResponse", testPublisherBasedRequestUnsuccessfulResponse),
     ]
 }
 
@@ -138,8 +134,6 @@ extension TransportTests {
     static let __allTests__TransportTests = [
         ("testURLSessionSendClosureBasedRequest", testURLSessionSendClosureBasedRequest),
         ("testURLSessionSendClosureBasedRequestFailure", testURLSessionSendClosureBasedRequestFailure),
-        ("testURLSessionSendPublisherBasedRequest", testURLSessionSendPublisherBasedRequest),
-        ("testURLSessionSendPublisherBasedRequestFailure", testURLSessionSendPublisherBasedRequestFailure),
     ]
 }
 
