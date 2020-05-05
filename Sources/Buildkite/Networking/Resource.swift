@@ -40,7 +40,7 @@ extension URLRequest {
     init<R: Resource>(_ resource: R, configuration: Configuration) {
         let url = configuration.url(for: resource.path)
         var request = URLRequest(url: url)
-        configuration.authorizeIfNeeded(&request)
+        configuration.transformRequest(&request)
         resource.transformRequest(&request)
         self = request
     }

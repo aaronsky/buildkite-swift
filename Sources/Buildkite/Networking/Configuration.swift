@@ -11,8 +11,11 @@ import Foundation
 import FoundationNetworking
 #endif
 
+let libraryVersion = "0.0.1"
+
 public struct Configuration {
     public let baseURL = URL(string: "https://api.buildkite.com")!
+    public let userAgent = "buildkite-swift/\(libraryVersion)"
     public var version: APIVersion
 
     public static var `default`: Configuration {
@@ -31,7 +34,8 @@ public struct Configuration {
 
     var token: String?
 
-    func authorizeIfNeeded(_ request: inout URLRequest) {
+    func transformRequest(_ request: inout URLRequest) {
+        request.addValue(userAgent, forHTTPHeaderField: "User-Agent")
         if let token = token {
             request.addValue("Bearer \(token)", forHTTPHeaderField: "Authorization")
         }
