@@ -65,7 +65,7 @@ class PipelinesTests: XCTestCase {
 
         let expectation = XCTestExpectation()
 
-        context.client.send(Pipeline.Resources.List(organization: "buildkite", pipeline: "my-pipeline")) { result in
+        context.client.send(Pipeline.Resources.List(organization: "buildkite")) { result in
             do {
                 let response = try result.get()
                 XCTAssertEqual(expected, response.content)

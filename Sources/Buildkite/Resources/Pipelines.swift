@@ -23,16 +23,13 @@ extension Pipeline.Resources {
         public typealias Content = [Pipeline]
         /// organization slug
         public var organization: String
-        /// pipeline slug
-        public var pipeline: String
 
         public var path: String {
             "organizations/\(organization)/pipelines"
         }
         
-        public init(organization: String, pipeline: String) {
+        public init(organization: String) {
             self.organization = organization
-            self.pipeline = pipeline
         }
     }
 
