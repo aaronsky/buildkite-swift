@@ -7,6 +7,10 @@
 
 import Foundation
 
+#if canImport(FoundationNetworking)
+import FoundationNetworking
+#endif
+
 public protocol HasRequestBody {
     associatedtype Body: Encodable
     var body: Body { get }

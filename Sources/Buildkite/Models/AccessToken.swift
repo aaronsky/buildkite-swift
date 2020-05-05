@@ -8,6 +8,10 @@
 
 import Foundation
 
+#if canImport(FoundationNetworking)
+import FoundationNetworking
+#endif
+
 public struct AccessToken: Codable, Equatable {
     public var uuid: UUID
     public var scopes: [String]

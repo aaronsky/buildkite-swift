@@ -8,6 +8,10 @@
 
 import Foundation
 
+#if canImport(FoundationNetworking)
+import FoundationNetworking
+#endif
+
 public struct Pipeline: Codable, Equatable {
     public var id: UUID
     public var url: URL

@@ -7,6 +7,10 @@
 
 import Foundation
 
+#if canImport(FoundationNetworking)
+import FoundationNetworking
+#endif
+
 public struct Configuration {
     public let baseURL = URL(string: "https://api.buildkite.com")!
     public var version: APIVersion

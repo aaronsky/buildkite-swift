@@ -8,6 +8,10 @@
 
 import Foundation
 
+#if canImport(FoundationNetworking)
+import FoundationNetworking
+#endif
+
 public struct Job: Codable, Equatable {
     public struct Agent: Codable, Equatable {
         public var id: UUID

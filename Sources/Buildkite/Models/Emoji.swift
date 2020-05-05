@@ -8,6 +8,10 @@
 
 import Foundation
 
+#if canImport(FoundationNetworking)
+import FoundationNetworking
+#endif
+
 public struct Emoji: Codable, Equatable {
     public var name: String
     public var url: URL

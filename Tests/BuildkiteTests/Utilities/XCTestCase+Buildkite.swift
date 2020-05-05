@@ -8,6 +8,10 @@
 import Foundation
 import XCTest
 
+#if canImport(FoundationNetworking)
+import FoundationNetworking
+#endif
+
 enum Constants {
     fileprivate static let asyncTestTimeout = 1.0
 }

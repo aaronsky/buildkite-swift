@@ -8,6 +8,10 @@
 
 import Foundation
 
+#if canImport(FoundationNetworking)
+import FoundationNetworking
+#endif
+
 public struct Annotation: Codable, Equatable {
     public enum Context: String, Codable {
         case success

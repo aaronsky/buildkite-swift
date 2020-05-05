@@ -7,6 +7,10 @@
 
 import Foundation
 
+#if canImport(FoundationNetworking)
+import FoundationNetworking
+#endif
+
 enum Formatters {
     static let iso8601WithFractionalSeconds: ISO8601DateFormatter = {
         let formatter: ISO8601DateFormatter

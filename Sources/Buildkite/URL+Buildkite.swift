@@ -7,6 +7,10 @@
 
 import Foundation
 
+#if canImport(FoundationNetworking)
+import FoundationNetworking
+#endif
+
 extension Array where Element == URLQueryItem {
     mutating func appendIfNeeded<S: LosslessStringConvertible>(_ value: S?, forKey key: String) {
         guard let value = value else {

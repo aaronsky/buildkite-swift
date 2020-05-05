@@ -7,6 +7,10 @@
 
 import Foundation
 
+#if canImport(FoundationNetworking)
+import FoundationNetworking
+#endif
+
 public enum StatusCode: Int, Error {
     /// The request was successfully processed by Buildkite.
     case ok = 200

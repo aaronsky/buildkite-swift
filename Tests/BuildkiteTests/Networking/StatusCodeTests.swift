@@ -9,6 +9,10 @@ import Foundation
 import XCTest
 @testable import Buildkite
 
+#if canImport(FoundationNetworking)
+import FoundationNetworking
+#endif
+
 class StatusCodeTests: XCTestCase {
     func testFlag() {
         XCTAssertTrue(StatusCode.ok.isSuccess)

@@ -7,6 +7,10 @@
 
 import Foundation
 
+#if canImport(FoundationNetworking)
+import FoundationNetworking
+#endif
+
 enum ResponseError: Error {
     case missingResponse
     case unexpectedlyNoContent

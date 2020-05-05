@@ -8,6 +8,10 @@
 
 import Foundation
 
+#if canImport(FoundationNetworking)
+import FoundationNetworking
+#endif
+
 public struct Artifact: Codable, Equatable {
     public enum State: String, Codable, Equatable {
         case new

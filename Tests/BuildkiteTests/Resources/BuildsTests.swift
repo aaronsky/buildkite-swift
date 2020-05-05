@@ -5,8 +5,13 @@
 //  Created by Aaron Sky on 5/4/20.
 //
 
+import Foundation
 import XCTest
 @testable import Buildkite
+
+#if canImport(FoundationNetworking)
+import FoundationNetworking
+#endif
 
 extension Build {
     init() {

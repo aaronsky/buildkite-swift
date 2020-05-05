@@ -8,6 +8,10 @@
 import Foundation
 import Buildkite
 
+#if canImport(FoundationNetworking)
+import FoundationNetworking
+#endif
+
 struct MockContext {
     var client: Buildkite
     var resources = MockResources()
