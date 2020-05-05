@@ -18,7 +18,7 @@ jobs:
           xcodebuild \
             -project Buildkite.xcodeproj \
             -scheme "Buildkite-Package" \
-            -destination "platform=iOS Simulator,OS=13.3,name=iPhone 11 Pro Max" \
+            -destination "platform=iOS Simulator,OS=latest,name=iPhone 11 Pro Max" \
             -quiet \
             build test
   test-linux:
