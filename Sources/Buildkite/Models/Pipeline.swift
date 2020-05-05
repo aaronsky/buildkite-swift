@@ -159,7 +159,6 @@ extension Pipeline {
             public var triggerBranch: String?
             public var triggerAsync: Bool?
         }
-
     }
 }
 

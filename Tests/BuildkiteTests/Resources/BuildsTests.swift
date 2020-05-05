@@ -61,15 +61,15 @@ class BuildsTests: XCTestCase {
         let expected = [Build(), Build()]
         let context = try MockContext(content: expected)
 
-        let resource = Build.Resources.ListAll(options: Build.Resources.QueryOptions(branches: ["master"],
-                                                                                     commit: "HEAD",
-                                                                                     createdFrom: Date(timeIntervalSince1970: 1000),
-                                                                                     createdTo: Date(timeIntervalSince1970: 1000),
-                                                                                     creator: UUID(),
-                                                                                     finishedFrom: Date(timeIntervalSince1970: 1000),
-                                                                                     includeRetriedJobs: true,
-                                                                                     metadata: ["buildkite": "is cool"],
-                                                                                     state: "passed"))
+        let resource = Build.Resources.ListAll(queryOptions: Build.Resources.QueryOptions(branches: ["master"],
+                                                                                          commit: "HEAD",
+                                                                                          createdFrom: Date(timeIntervalSince1970: 1000),
+                                                                                          createdTo: Date(timeIntervalSince1970: 1000),
+                                                                                          creator: UUID(),
+                                                                                          finishedFrom: Date(timeIntervalSince1970: 1000),
+                                                                                          includeRetriedJobs: true,
+                                                                                          metadata: ["buildkite": "is cool"],
+                                                                                          state: "passed"))
 
         let expectation = XCTestExpectation()
 

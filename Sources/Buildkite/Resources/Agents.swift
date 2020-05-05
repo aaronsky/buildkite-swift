@@ -24,12 +24,25 @@ extension Agent.Resources {
         /// organization slug
         public var organization: String
 
+        public var pageOptions: PageOptions?
+        
         public var path: String {
             "organizations/\(organization)/agents"
         }
         
         public init(organization: String) {
             self.organization = organization
+        }
+        
+        public func transformRequest(_ request: inout URLRequest) {
+            guard let url = request.url,
+                var components = URLComponents(url: url, resolvingAgainstBaseURL: true) else {
+                    return
+            }
+            if let options = pageOptions {
+                components.queryItems = [URLQueryItem](options: options)
+            }
+            request.url = components.url
         }
     }
 

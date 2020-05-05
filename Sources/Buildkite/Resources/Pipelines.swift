@@ -23,16 +23,30 @@ extension Pipeline.Resources {
         public typealias Content = [Pipeline]
         /// organization slug
         public var organization: String
-
+        
+        public var pageOptions: PageOptions?
+        
         public var path: String {
             "organizations/\(organization)/pipelines"
         }
         
-        public init(organization: String) {
+        public init(organization: String, pageOptions: PageOptions? = nil) {
             self.organization = organization
+            self.pageOptions = pageOptions
+        }
+        
+        public func transformRequest(_ request: inout URLRequest) {
+            guard let url = request.url,
+                var components = URLComponents(url: url, resolvingAgainstBaseURL: true) else {
+                    return
+            }
+            if let options = pageOptions {
+                components.queryItems = [URLQueryItem](options: options)
+            }
+            request.url = components.url
         }
     }
-
+    
     /// Get a pipeline
     public struct Get: Resource, HasResponseBody {
         public typealias Content = Pipeline
@@ -40,7 +54,7 @@ extension Pipeline.Resources {
         public var organization: String
         /// pipeline slug
         public var pipeline: String
-
+        
         public var path: String {
             "organizations/\(organization)/pipelines/\(pipeline)"
         }
@@ -50,15 +64,15 @@ extension Pipeline.Resources {
             self.pipeline = pipeline
         }
     }
-
+    
     /// Create a pipeline
     public struct Create: Resource, HasRequestBody, HasResponseBody {
         public typealias Content = Pipeline
         /// organization slug
         public var organization: String
-
+        
         public var body: Body
-
+        
         public struct Body: Codable {
             /// The name of the pipeline.
             public var name: String
@@ -66,7 +80,7 @@ extension Pipeline.Resources {
             public var repository: URL
             /// An array of the build pipeline steps.
             public var steps: [Pipeline.Step]
-
+            
             /// A branch filter pattern to limit which pushed branches trigger builds on this pipeline.
             public var branchConfiguration: String?
             /// Cancel intermediate builds. When a new build is created on a branch, any previous builds that are running on the same branch will be automatically canceled.
@@ -104,7 +118,7 @@ extension Pipeline.Resources {
                 self.teamUUIDs = teamUUIDs
             }
         }
-
+        
         public var path: String {
             "organizations/\(organization)/pipelines"
         }
@@ -113,12 +127,12 @@ extension Pipeline.Resources {
             self.organization = organization
             self.body = body
         }
-
+        
         public func transformRequest(_ request: inout URLRequest) {
             request.httpMethod = "POST"
         }
     }
-
+    
     /// Update a pipeline
     ///
     /// Updates one or more properties of an existing pipeline
@@ -128,9 +142,9 @@ extension Pipeline.Resources {
         public var organization: String
         /// pipeline slug
         public var pipeline: String
-
+        
         public var body: Body
-
+        
         public struct Body: Codable {
             /// A branch filter pattern to limit which pushed branches trigger builds on this pipeline.
             public var branchConfiguration: String?
@@ -175,7 +189,7 @@ extension Pipeline.Resources {
                 self.visibility = visibility
             }
         }
-
+        
         public var path: String {
             "organizations/\(organization)/pipelines/\(pipeline)"
         }
@@ -186,7 +200,7 @@ extension Pipeline.Resources {
             self.body = body
         }
     }
-
+    
     /// Delete a pipeline
     public struct Delete: Resource {
         public typealias Content = Void
@@ -194,11 +208,11 @@ extension Pipeline.Resources {
         public var organization: String
         /// pipeline slug
         public var pipeline: String
-
+        
         public var path: String {
             "organizations/\(organization)/pipelines/\(pipeline)"
         }
-    
+        
         public init(organization: String, pipeline: String) {
             self.organization = organization
             self.pipeline = pipeline

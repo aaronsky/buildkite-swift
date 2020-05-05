@@ -32,16 +32,16 @@ extension Resource {
 }
 
 extension URLRequest {
-    init<R: Resource & HasRequestBody>(_ resource: R, configuration: Configuration, encoder: JSONEncoder) throws {
-        self.init(resource, configuration: configuration)
-        httpBody = try encoder.encode(resource.body)
-    }
-
     init<R: Resource>(_ resource: R, configuration: Configuration) {
         let url = configuration.url(for: resource.path)
         var request = URLRequest(url: url)
         configuration.transformRequest(&request)
         resource.transformRequest(&request)
         self = request
+    }
+    
+    init<R: Resource & HasRequestBody>(_ resource: R, configuration: Configuration, encoder: JSONEncoder) throws {
+        self.init(resource, configuration: configuration)
+        httpBody = try encoder.encode(resource.body)
     }
 }

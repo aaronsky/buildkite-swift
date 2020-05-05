@@ -24,10 +24,13 @@ extension Build.Resources {
         public typealias Content = [Build]
         public let path = "builds"
         
-        public var options: QueryOptions?
+        public var queryOptions: QueryOptions?
         
-        public init(options: Build.Resources.QueryOptions? = nil) {
-            self.options = options
+        public var pageOptions: PageOptions?
+        
+        public init(queryOptions: Build.Resources.QueryOptions? = nil, pageOptions: PageOptions? = nil) {
+            self.queryOptions = queryOptions
+            self.pageOptions = pageOptions
         }
         
         public func transformRequest(_ request: inout URLRequest) {
@@ -35,9 +38,14 @@ extension Build.Resources {
                 var components = URLComponents(url: url, resolvingAgainstBaseURL: true) else {
                     return
             }
-            if let options = options {
-                components.queryItems = [URLQueryItem](options: options)
+            var queryItems: [URLQueryItem] = []
+            if let options = queryOptions {
+                queryItems.append(contentsOf: [URLQueryItem](options: options))
             }
+            if let options = pageOptions {
+                queryItems.append(contentsOf: [URLQueryItem](options: options))
+            }
+            components.queryItems = queryItems
             request.url = components.url
         }
     }
@@ -51,15 +59,18 @@ extension Build.Resources {
         /// organization slug
         public var organization: String
         
-        public var options: QueryOptions?
+        public var queryOptions: QueryOptions?
+        
+        public var pageOptions: PageOptions?
         
         public var path: String {
             "organizations/\(organization)/builds"
         }
         
-        public init(organization: String, options: Build.Resources.QueryOptions? = nil) {
+        public init(organization: String, queryOptions: Build.Resources.QueryOptions? = nil, pageOptions: PageOptions? = nil) {
             self.organization = organization
-            self.options = options
+            self.queryOptions = queryOptions
+            self.pageOptions = pageOptions
         }
 
         public func transformRequest(_ request: inout URLRequest) {
@@ -67,9 +78,14 @@ extension Build.Resources {
                 var components = URLComponents(url: url, resolvingAgainstBaseURL: true) else {
                     return
             }
-            if let options = options {
-                components.queryItems = [URLQueryItem](options: options)
+            var queryItems: [URLQueryItem] = []
+            if let options = queryOptions {
+                queryItems.append(contentsOf: [URLQueryItem](options: options))
             }
+            if let options = pageOptions {
+                queryItems.append(contentsOf: [URLQueryItem](options: options))
+            }
+            components.queryItems = queryItems
             request.url = components.url
         }
     }
@@ -83,17 +99,20 @@ extension Build.Resources {
         public var organization: String
         /// pipeline slug
         public var pipeline: String
-
-        public var options: QueryOptions?
+        
+        public var queryOptions: QueryOptions?
+        
+        public var pageOptions: PageOptions?
 
         public var path: String {
             "organizations/\(organization)/pipelines/\(pipeline)/builds"
         }
         
-        public init(organization: String, pipeline: String, options: Build.Resources.QueryOptions? = nil) {
+        public init(organization: String, pipeline: String, queryOptions: Build.Resources.QueryOptions? = nil, pageOptions: PageOptions? = nil) {
             self.organization = organization
             self.pipeline = pipeline
-            self.options = options
+            self.queryOptions = queryOptions
+            self.pageOptions = pageOptions
         }
         
         public func transformRequest(_ request: inout URLRequest) {
@@ -101,9 +120,14 @@ extension Build.Resources {
                 var components = URLComponents(url: url, resolvingAgainstBaseURL: true) else {
                     return
             }
-            if let options = options {
-                components.queryItems = [URLQueryItem](options: options)
+            var queryItems: [URLQueryItem] = []
+            if let options = queryOptions {
+                queryItems.append(contentsOf: [URLQueryItem](options: options))
             }
+            if let options = pageOptions {
+                queryItems.append(contentsOf: [URLQueryItem](options: options))
+            }
+            components.queryItems = queryItems
             request.url = components.url
         }
     }
@@ -260,18 +284,6 @@ extension Build.Resources {
     }
     
     public struct QueryOptions {
-        internal init(branches: [String] = [], commit: String? = nil, createdFrom: Date? = nil, createdTo: Date? = nil, creator: UUID? = nil, finishedFrom: Date? = nil, includeRetriedJobs: Bool? = nil, metadata: [String : String] = [:], state: String? = nil) {
-            self.branches = branches
-            self.commit = commit
-            self.createdFrom = createdFrom
-            self.createdTo = createdTo
-            self.creator = creator
-            self.finishedFrom = finishedFrom
-            self.includeRetriedJobs = includeRetriedJobs
-            self.metadata = metadata
-            self.state = state
-        }
-        
         /// Filters the results by the given branch or branches.
         public var branches: [String] = []
         /// Filters the results by the commit (only works for full sha, not for shortened ones).
@@ -290,6 +302,18 @@ extension Build.Resources {
         public var metadata: [String: String] = [:]
         /// Filters the results by the given build state. The finished state is a shortcut to automatically search for builds with passed, failed, blocked, canceled states.
         public var state: String?
+        
+        public init(branches: [String] = [], commit: String? = nil, createdFrom: Date? = nil, createdTo: Date? = nil, creator: UUID? = nil, finishedFrom: Date? = nil, includeRetriedJobs: Bool? = nil, metadata: [String : String] = [:], state: String? = nil) {
+            self.branches = branches
+            self.commit = commit
+            self.createdFrom = createdFrom
+            self.createdTo = createdTo
+            self.creator = creator
+            self.finishedFrom = finishedFrom
+            self.includeRetriedJobs = includeRetriedJobs
+            self.metadata = metadata
+            self.state = state
+        }
     }
 }
 

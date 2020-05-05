@@ -13,40 +13,9 @@ import XCTest
 import FoundationNetworking
 #endif
 
-extension Job {
-    init() {
-        self.init(id: UUID(),
-                  type: "script",
-                  name: "📦",
-                  stepKey: "package",
-                  agentQueryRules: [],
-                  state: "finished",
-                  buildUrl: URL(),
-                  webUrl: URL(),
-                  logUrl: URL(),
-                  rawLogUrl: URL(),
-                  artifactsUrl: URL(),
-                  command: "echo 1",
-                  softFailed: false,
-                  exitStatus: 0,
-                  artifactPaths: "",
-                  agent: nil,
-                  createdAt: Date(timeIntervalSince1970: 1000),
-                  scheduledAt: Date(timeIntervalSince1970: 1000),
-                  runnableAt: nil,
-                  startedAt: nil,
-                  finishedAt: nil,
-                  retried: false,
-                  retriedInJobId: UUID(),
-                  retriesCount: 0,
-                  parallelGroupIndex: nil,
-                  parallelGroupTotal: nil)
-    }
-}
-
 class JobsTests: XCTestCase {
     func testJobsRetry() throws {
-        let expected = Job()
+        let expected = Job.waiter(Job.Wait(id: UUID()))
         let context = try MockContext(content: expected)
 
         let expectation = XCTestExpectation()
@@ -64,7 +33,7 @@ class JobsTests: XCTestCase {
     }
 
     func testJobsUnblock() throws {
-        let expected = Job()
+        let expected = Job.waiter(Job.Wait(id: UUID()))
         let context = try MockContext(content: expected)
 
         let body = Job.Resources.Unblock.Body()

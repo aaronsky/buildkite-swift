@@ -32,7 +32,7 @@ public struct Artifact: Codable, Equatable {
     public var fileSize: Int
     public var sha1sum: String
 
-    public struct URLs: Codable {
+    public struct URLs: Codable, Equatable {
         public var url: URL
     }
 }

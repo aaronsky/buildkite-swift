@@ -23,7 +23,22 @@ extension Organization.Resources {
         public typealias Content = [Organization]
         public let path = "organizations"
         
-        public init() {}
+        public var pageOptions: PageOptions?
+        
+        public init(pageOptions: PageOptions? = nil) {
+            self.pageOptions = pageOptions
+        }
+        
+        public func transformRequest(_ request: inout URLRequest) {
+            guard let url = request.url,
+                var components = URLComponents(url: url, resolvingAgainstBaseURL: true) else {
+                    return
+            }
+            if let options = pageOptions {
+                components.queryItems = [URLQueryItem](options: options)
+            }
+            request.url = components.url
+        }
     }
 
     /// Get an organization

@@ -12,7 +12,7 @@ import Buildkite
 let client = Buildkite()
 client.token = "..."
 var cancellables: Set<AnyCancellable> = []
-client.sendPublisher(Build.Resources.ListAll())
+client.sendPublisher(Build.Resources.Get(organization: "wayfair", pipeline: "merge-train-ci", build: 162))
     .map(\.content)
     .sink(receiveCompletion: { result in
         if case let .failure(error) = result {

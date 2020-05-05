@@ -19,9 +19,15 @@ enum ResponseError: Error {
 public struct Response<T> {
     public let content: T
     public let response: URLResponse
+    public let page: Page?
 
     init(content: T, response: URLResponse) {
         self.content = content
         self.response = response
+        if let response = response as? HTTPURLResponse, let link = response.allHeaderFields["Link"] as? String {
+            page = Page(for: link)
+        } else {
+            page = nil
+        }
     }
 }

@@ -12,23 +12,25 @@ import FoundationNetworking
 #endif
 
 extension Artifact {
-    enum Resources { }
+    public enum Resources { }
 }
 
 extension Artifact.Resources {
     /// List artifacts for a build
     ///
     /// Returns a paginated list of a build’s artifacts across all of its jobs.
-    struct ListByBuild: Resource, HasResponseBody {
-        typealias Content = [Artifact]
+    public struct ListByBuild: Resource, HasResponseBody {
+        public typealias Content = [Artifact]
         /// organization slug
-        var organization: String
+        public var organization: String
         /// pipeline slug
-        var pipeline: String
+        public var pipeline: String
         /// build number
-        var build: Int
-
-        var path: String {
+        public var build: Int
+        
+        public var pageOptions: PageOptions?
+        
+        public var path: String {
             "organizations/\(organization)/pipelines/\(pipeline)/builds/\(build)/artifacts"
         }
         
@@ -37,23 +39,36 @@ extension Artifact.Resources {
             self.pipeline = pipeline
             self.build = build
         }
+        
+        public func transformRequest(_ request: inout URLRequest) {
+            guard let url = request.url,
+                var components = URLComponents(url: url, resolvingAgainstBaseURL: true) else {
+                    return
+            }
+            if let options = pageOptions {
+                components.queryItems = [URLQueryItem](options: options)
+            }
+            request.url = components.url
+        }
     }
 
     /// List artifacts for a job
     ///
     /// Returns a paginated list of a job’s artifacts.
-    struct ListByJob: Resource, HasResponseBody {
-        typealias Content = [Artifact]
+    public struct ListByJob: Resource, HasResponseBody {
+        public typealias Content = [Artifact]
         /// organization slug
-        var organization: String
+        public var organization: String
         /// pipeline slug
-        var pipeline: String
+        public var pipeline: String
         /// build number
-        var build: Int
+        public var build: Int
         /// job ID
-        var jobId: UUID
-
-        var path: String {
+        public var jobId: UUID
+        
+        public var pageOptions: PageOptions?
+        
+        public var path: String {
             "organizations/\(organization)/pipelines/\(pipeline)/builds/\(build)/jobs/\(jobId)/artifacts"
         }
         
@@ -63,23 +78,34 @@ extension Artifact.Resources {
             self.build = build
             self.jobId = jobId
         }
+        
+        public func transformRequest(_ request: inout URLRequest) {
+            guard let url = request.url,
+                var components = URLComponents(url: url, resolvingAgainstBaseURL: true) else {
+                    return
+            }
+            if let options = pageOptions {
+                components.queryItems = [URLQueryItem](options: options)
+            }
+            request.url = components.url
+        }
     }
 
     /// Get an artifact
-    struct Get: Resource, HasResponseBody {
-        typealias Content = Artifact
+    public struct Get: Resource, HasResponseBody {
+        public typealias Content = Artifact
         /// organization slug
-        var organization: String
+        public var organization: String
         /// pipeline slug
-        var pipeline: String
+        public var pipeline: String
         /// build number
-        var build: Int
+        public var build: Int
         /// job ID
-        var jobId: UUID
+        public var jobId: UUID
         /// artifact ID
-        var artifactId: UUID
+        public var artifactId: UUID
 
-        var path: String {
+        public var path: String {
             "organizations/\(organization)/pipelines/\(pipeline)/builds/\(build)/jobs/\(jobId)/artifacts/\(artifactId)"
         }
         
@@ -95,20 +121,20 @@ extension Artifact.Resources {
     /// Download an artifact
     ///
     ///
-    struct Download: Resource {
-        typealias Content = Artifact.URLs
+    public struct Download: Resource, HasResponseBody {
+        public typealias Content = Artifact.URLs
         /// organization slug
-        var organization: String
+        public var organization: String
         /// pipeline slug
-        var pipeline: String
+        public var pipeline: String
         /// build number
-        var build: Int
+        public var build: Int
         /// job ID
-        var jobId: UUID
+        public var jobId: UUID
         /// artifact ID
-        var artifactId: UUID
+        public var artifactId: UUID
 
-        var path: String {
+        public var path: String {
             "organizations/\(organization)/pipelines/\(pipeline)/builds/\(build)/jobs/\(jobId)/artifacts/\(artifactId)/download"
         }
         
@@ -124,25 +150,21 @@ extension Artifact.Resources {
     /// Delete an artifact
     ///
     ///
-    struct Delete: Resource {
-        typealias Content = Void
+    public struct Delete: Resource {
+        public typealias Content = Void
         /// organization slug
-        var organization: String
+        public var organization: String
         /// pipeline slug
-        var pipeline: String
+        public var pipeline: String
         /// build number
-        var build: Int
+        public var build: Int
         /// job ID
-        var jobId: UUID
+        public var jobId: UUID
         /// artifact ID
-        var artifactId: UUID
+        public var artifactId: UUID
 
-        var path: String {
+        public var path: String {
             "organizations/\(organization)/pipelines/\(pipeline)/builds/\(build)/jobs/\(jobId)/artifacts/\(artifactId)"
-        }
-
-        func transformRequest(_ request: inout URLRequest) {
-            request.httpMethod = "DELETE"
         }
         
         public init(organization: String, pipeline: String, build: Int, jobId: UUID, artifactId: UUID) {
@@ -151,6 +173,10 @@ extension Artifact.Resources {
             self.build = build
             self.jobId = jobId
             self.artifactId = artifactId
+        }
+
+        public func transformRequest(_ request: inout URLRequest) {
+            request.httpMethod = "DELETE"
         }
     }
 }

@@ -27,7 +27,9 @@ extension Annotation.Resources {
         public var pipeline: String
         /// build number
         public var build: Int
-
+        
+        public var pageOptions: PageOptions?
+        
         public var path: String {
             "organizations/\(organization)/pipelines/\(pipeline)/builds/\(build)/annotations"
         }
@@ -36,6 +38,17 @@ extension Annotation.Resources {
             self.organization = organization
             self.pipeline = pipeline
             self.build = build
+        }
+        
+        public func transformRequest(_ request: inout URLRequest) {
+            guard let url = request.url,
+                var components = URLComponents(url: url, resolvingAgainstBaseURL: true) else {
+                    return
+            }
+            if let options = pageOptions {
+                components.queryItems = [URLQueryItem](options: options)
+            }
+            request.url = components.url
         }
     }
 }

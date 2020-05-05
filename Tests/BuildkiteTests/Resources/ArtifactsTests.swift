@@ -85,13 +85,15 @@ class ArtifactsTests: XCTestCase {
     }
 
     func testArtifactsDownload() throws {
-        let context = MockContext()
+        let expected = Artifact.URLs(url: URL())
+        let context = try MockContext(content: expected)
 
         let expectation = XCTestExpectation()
 
         context.client.send(Artifact.Resources.Download(organization: "buildkite", pipeline: "my-pipeline", build: 1, jobId: UUID(), artifactId: UUID())) { result in
             do {
-                _ = try result.get()
+                let response = try result.get()
+                XCTAssertEqual(expected, response.content)
             } catch {
                 XCTFail(error.localizedDescription)
             }
