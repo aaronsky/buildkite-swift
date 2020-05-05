@@ -12,7 +12,7 @@ Add the dependency to your `Package.swift` file:
 let package = Package(
     name: "myproject",
     dependencies: [
-        .package(url: "https://github.com/aaronsky/buildkite-swift.git", from: "0.1.0"),
+        .package(url: "https://github.com/aaronsky/buildkite-swift.git", from: "0.0.1"),
         ],
     targets: [
         .target(
