@@ -36,11 +36,11 @@ public struct Pipeline: Codable, Equatable {
     public var waitingJobsCount: Int
     public var visibility: String
     public var steps: [Step]
-    public var env: [String: EnvVar?]?
+    public var env: EnvVars?
 
     public struct Provider: Codable, Equatable {
         public var id: String
-        public var webhookUrl: URL
+        public var webhookUrl: URL?
         public var settings: Settings
     }
 }
@@ -127,7 +127,7 @@ extension Pipeline {
 
         public struct Command: Codable, Equatable {
             public let type = "script"
-            public var name: String
+            public var name: String?
             public var command: String?
             public var label: String?
             public var artifactPaths: String?
@@ -153,7 +153,7 @@ extension Pipeline {
 
         public struct Trigger: Codable, Equatable {
             public let type = "trigger"
-            public var triggerProjectSlug: String
+            public var triggerProjectSlug: String?
             public var label: String?
             public var triggerCommit: String?
             public var triggerBranch: String?
@@ -162,26 +162,43 @@ extension Pipeline {
     }
 }
 
+public typealias EnvVars = [String: EnvVar?]
 public enum EnvVar: Codable, Equatable {
     case bool(Bool)
     case number(Double)
     case string(String)
+    indirect case array([EnvVar])
+    indirect case dictionary(EnvVars)
     
     public init(from decoder: Decoder) throws {
         let container = try decoder.singleValueContainer()
-        
+
         do {
             let bool = try container.decode(Bool.self)
             self = .bool(bool)
-        } catch DecodingError.typeMismatch {
-            do {
-                let number = try container.decode(Double.self)
-                self = .number(number)
-            } catch DecodingError.typeMismatch {
-                let string = try container.decode(String.self)
-                self = .string(string)
-            }
-        }
+        } catch DecodingError.typeMismatch {}
+
+        do {
+            let number = try container.decode(Double.self)
+            self = .number(number)
+        } catch DecodingError.typeMismatch {}
+
+        do {
+            let string = try container.decode(String.self)
+            self = .string(string)
+        } catch DecodingError.typeMismatch {}
+
+        do {
+            let array = try container.decode([EnvVar].self)
+            self = .array(array)
+        } catch DecodingError.typeMismatch {}
+
+        do {
+            let dict = try container.decode(EnvVars.self)
+            self = .dictionary(dict)
+        } catch DecodingError.typeMismatch {}
+        
+        throw DecodingError.typeMismatch(Self.self, DecodingError.Context(codingPath: container.codingPath, debugDescription: "Expected to decode \(Self.self) but the value in the container was incompatible"))
     }
     
     public func encode(to encoder: Encoder) throws {
@@ -193,6 +210,10 @@ public enum EnvVar: Codable, Equatable {
             try container.encode(number)
         case .string(let string):
             try container.encode(string)
+        case .array(let array):
+            try container.encode(array)
+        case .dictionary(let dict):
+            try container.encode(dict)
         }
     }
 }

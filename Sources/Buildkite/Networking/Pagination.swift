@@ -12,10 +12,10 @@ import FoundationNetworking
 #endif
 
 public struct Page {
-    var nextPage: Int?
-    var previousPage: Int?
-    var firstPage: Int?
-    var lastPage: Int?
+    public var nextPage: Int?
+    public var previousPage: Int?
+    public var firstPage: Int?
+    public var lastPage: Int?
     
     init?(for header: String) {
         guard !header.isEmpty else {
