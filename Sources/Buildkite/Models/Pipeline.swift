@@ -176,26 +176,31 @@ public enum EnvVar: Codable, Equatable {
         do {
             let bool = try container.decode(Bool.self)
             self = .bool(bool)
+            return
         } catch DecodingError.typeMismatch {}
 
         do {
             let number = try container.decode(Double.self)
             self = .number(number)
+            return
         } catch DecodingError.typeMismatch {}
 
         do {
             let string = try container.decode(String.self)
             self = .string(string)
+            return
         } catch DecodingError.typeMismatch {}
 
         do {
             let array = try container.decode([EnvVar].self)
             self = .array(array)
+            return
         } catch DecodingError.typeMismatch {}
 
         do {
             let dict = try container.decode(EnvVars.self)
             self = .dictionary(dict)
+            return
         } catch DecodingError.typeMismatch {}
         
         throw DecodingError.typeMismatch(Self.self, DecodingError.Context(codingPath: container.codingPath, debugDescription: "Expected to decode \(Self.self) but the value in the container was incompatible"))
