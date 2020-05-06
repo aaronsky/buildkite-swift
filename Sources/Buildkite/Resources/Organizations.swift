@@ -35,7 +35,7 @@ extension Organization.Resources {
                     return
             }
             if let options = pageOptions {
-                components.queryItems = [URLQueryItem](options: options)
+                components.queryItems = [URLQueryItem](pageOptions: options)
             }
             request.url = components.url
         }

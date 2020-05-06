@@ -69,7 +69,7 @@ class BuildsTests: XCTestCase {
                                                                                           finishedFrom: Date(timeIntervalSince1970: 1000),
                                                                                           includeRetriedJobs: true,
                                                                                           metadata: ["buildkite": "is cool"],
-                                                                                          state: "passed"))
+                                                                                          state: ["passed"]))
 
         let expectation = XCTestExpectation()
 

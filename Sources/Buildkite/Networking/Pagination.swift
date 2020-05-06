@@ -68,10 +68,10 @@ public struct PageOptions {
 }
 
 extension Array where Element == URLQueryItem {
-    init(options: PageOptions) {
+    init(pageOptions: PageOptions) {
         self.init()
-        append(URLQueryItem(name: "page", value: String(options.page)))
-        append(URLQueryItem(name: "per_page", value: String(options.perPage)))
+        append(URLQueryItem(name: "page", value: String(pageOptions.page)))
+        append(URLQueryItem(name: "per_page", value: String(pageOptions.perPage)))
     }
 }
 

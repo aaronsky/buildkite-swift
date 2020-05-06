@@ -40,10 +40,10 @@ extension Build.Resources {
             }
             var queryItems: [URLQueryItem] = []
             if let options = queryOptions {
-                queryItems.append(contentsOf: [URLQueryItem](options: options))
+                queryItems.append(contentsOf: [URLQueryItem](queryOptions: options))
             }
             if let options = pageOptions {
-                queryItems.append(contentsOf: [URLQueryItem](options: options))
+                queryItems.append(contentsOf: [URLQueryItem](pageOptions: options))
             }
             components.queryItems = queryItems
             request.url = components.url
@@ -80,10 +80,10 @@ extension Build.Resources {
             }
             var queryItems: [URLQueryItem] = []
             if let options = queryOptions {
-                queryItems.append(contentsOf: [URLQueryItem](options: options))
+                queryItems.append(contentsOf: [URLQueryItem](queryOptions: options))
             }
             if let options = pageOptions {
-                queryItems.append(contentsOf: [URLQueryItem](options: options))
+                queryItems.append(contentsOf: [URLQueryItem](pageOptions: options))
             }
             components.queryItems = queryItems
             request.url = components.url
@@ -122,10 +122,10 @@ extension Build.Resources {
             }
             var queryItems: [URLQueryItem] = []
             if let options = queryOptions {
-                queryItems.append(contentsOf: [URLQueryItem](options: options))
+                queryItems.append(contentsOf: [URLQueryItem](queryOptions: options))
             }
             if let options = pageOptions {
-                queryItems.append(contentsOf: [URLQueryItem](options: options))
+                queryItems.append(contentsOf: [URLQueryItem](pageOptions: options))
             }
             components.queryItems = queryItems
             request.url = components.url
@@ -301,9 +301,9 @@ extension Build.Resources {
         /// Filters the results by the given meta_data.
         public var metadata: [String: String] = [:]
         /// Filters the results by the given build state. The finished state is a shortcut to automatically search for builds with passed, failed, blocked, canceled states.
-        public var state: String?
+        public var state: [String]
         
-        public init(branches: [String] = [], commit: String? = nil, createdFrom: Date? = nil, createdTo: Date? = nil, creator: UUID? = nil, finishedFrom: Date? = nil, includeRetriedJobs: Bool? = nil, metadata: [String : String] = [:], state: String? = nil) {
+        public init(branches: [String] = [], commit: String? = nil, createdFrom: Date? = nil, createdTo: Date? = nil, creator: UUID? = nil, finishedFrom: Date? = nil, includeRetriedJobs: Bool? = nil, metadata: [String : String] = [:], state: [String] = []) {
             self.branches = branches
             self.commit = commit
             self.createdFrom = createdFrom
@@ -318,17 +318,17 @@ extension Build.Resources {
 }
 
 
-extension Array where Element == URLQueryItem {
-    init(options: Build.Resources.QueryOptions) {
+private extension Array where Element == URLQueryItem {
+    init(queryOptions: Build.Resources.QueryOptions) {
         self.init()
-        append(options.branches, forKey: "branch")
-        appendIfNeeded(options.commit, forKey: "commit")
-        appendIfNeeded(options.createdFrom, forKey: "created_from")
-        appendIfNeeded(options.createdTo, forKey: "created_to")
-        appendIfNeeded(options.creator, forKey: "creator")
-        appendIfNeeded(options.finishedFrom, forKey: "finished_from")
-        appendIfNeeded(options.includeRetriedJobs, forKey: "include_retried_jobs")
-        append(options.metadata, forKey: "meta_data")
-        appendIfNeeded(options.state, forKey: "state")
+        append(queryOptions.branches, forKey: "branch")
+        appendIfNeeded(queryOptions.commit, forKey: "commit")
+        appendIfNeeded(queryOptions.createdFrom, forKey: "created_from")
+        appendIfNeeded(queryOptions.createdTo, forKey: "created_to")
+        appendIfNeeded(queryOptions.creator, forKey: "creator")
+        appendIfNeeded(queryOptions.finishedFrom, forKey: "finished_from")
+        appendIfNeeded(queryOptions.includeRetriedJobs, forKey: "include_retried_jobs")
+        append(queryOptions.metadata, forKey: "meta_data")
+        append(queryOptions.state, forKey: "state")
     }
 }
