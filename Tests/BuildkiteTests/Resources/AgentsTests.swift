@@ -80,7 +80,6 @@ class AgentsTests: XCTestCase {
         let context = try MockContext(content: expected)
 
         let expectation = XCTestExpectation()
-
         context.client.send(Agent.Resources.Get(organization: "buildkite", agentId: UUID())) { result in
             do {
                 let response = try result.get()
@@ -96,9 +95,12 @@ class AgentsTests: XCTestCase {
     func testAgentsStop() throws {
         let context = MockContext()
 
+        let resource = Agent.Resources.Stop(organization: "buildkite",
+                                            agentId: UUID(),
+                                            body: Agent.Resources.Stop.Body(force: true))
+        
         let expectation = XCTestExpectation()
-
-        context.client.send(Agent.Resources.Stop(organization: "buildkite", agentId: UUID(), force: true)) { result in
+        context.client.send(resource) { result in
             do {
                 _ = try result.get()
             } catch {

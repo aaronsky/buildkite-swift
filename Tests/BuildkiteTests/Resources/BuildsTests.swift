@@ -19,7 +19,7 @@ extension Build {
                   url: URL(),
                   webUrl: URL(),
                   number: 1,
-                  state: "passed",
+                  state: .passed,
                   blocked: false,
                   message: "a commit",
                   commit: "HEAD",
@@ -69,7 +69,7 @@ class BuildsTests: XCTestCase {
                                                                                           finishedFrom: Date(timeIntervalSince1970: 1000),
                                                                                           includeRetriedJobs: true,
                                                                                           metadata: ["buildkite": "is cool"],
-                                                                                          state: ["passed"]))
+                                                                                          state: [.passed]))
 
         let expectation = XCTestExpectation()
 

@@ -24,6 +24,13 @@ extension Agent.Resources {
         /// organization slug
         public var organization: String
 
+        /// Filters the results by the given agent name
+        public var name: String?
+        /// Filters the results by the given hostname
+        public var hostname: String?
+        /// Filters the results by the given exact version number
+        public var version: String?
+        
         public var pageOptions: PageOptions?
         
         public var path: String {
@@ -39,9 +46,14 @@ extension Agent.Resources {
                 var components = URLComponents(url: url, resolvingAgainstBaseURL: true) else {
                     return
             }
+            var queryItems: [URLQueryItem] = []
+            queryItems.appendIfNeeded(name, forKey: "name")
+            queryItems.appendIfNeeded(hostname, forKey: "hostname")
+            queryItems.appendIfNeeded(version, forKey: "version")
             if let options = pageOptions {
-                components.queryItems = [URLQueryItem](pageOptions: options)
+                queryItems.append(contentsOf: [URLQueryItem](pageOptions: options))
             }
+            components.queryItems = queryItems
             request.url = components.url
         }
     }
@@ -66,34 +78,32 @@ extension Agent.Resources {
     /// Stop an agent
     ///
     /// Instruct an agent to stop accepting new build jobs and shut itself down.
-    public struct Stop: Resource {
+    public struct Stop: Resource, HasRequestBody {
         public typealias Content = Void
         /// organization slug
         public var organization: String
         /// agent ID
         public var agentId: UUID
-        public var force: Bool?
+        /// body of the request
+        public var body: Body
+        
+        public struct Body: Codable {
+            /// If the agent is currently processing a job, the job and the build will be canceled.
+            public var force: Bool?
+        }
 
         public var path: String {
             "organizations/\(organization)/agents/\(agentId)/stop"
         }
         
-        public init(organization: String, agentId: UUID, force: Bool? = nil) {
+        public init(organization: String, agentId: UUID, body: Agent.Resources.Stop.Body) {
             self.organization = organization
             self.agentId = agentId
-            self.force = force
+            self.body = body
         }
 
         public func transformRequest(_ request: inout URLRequest) {
             request.httpMethod = "PUT"
-            guard let url = request.url,
-                var components = URLComponents(url: url, resolvingAgainstBaseURL: true) else {
-                    return
-            }
-            var queryItems: [URLQueryItem] = []
-            queryItems.appendIfNeeded(force, forKey: "force")
-            components.queryItems = queryItems
-            request.url = components.url
         }
     }
 }

@@ -17,7 +17,7 @@ public struct Build: Codable, Equatable {
     public var url: URL
     public var webUrl: URL
     public var number: Int
-    public var state: String
+    public var state: State
     public var blocked: Bool
     public var message: String?
     public var commit: String
@@ -33,4 +33,17 @@ public struct Build: Codable, Equatable {
     public var metaData: [String: String]
     public var pullRequest: [String: String?]?
     public var pipeline: Pipeline
+    
+    public enum State: String, Codable, Equatable {
+        case running
+        case scheduled
+        case passed
+        case failed
+        case blocked
+        case canceled
+        case canceling
+        case skipped
+        case notRun = "not_run"
+        case finished
+    }
 }

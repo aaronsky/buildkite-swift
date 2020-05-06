@@ -301,9 +301,9 @@ extension Build.Resources {
         /// Filters the results by the given meta_data.
         public var metadata: [String: String] = [:]
         /// Filters the results by the given build state. The finished state is a shortcut to automatically search for builds with passed, failed, blocked, canceled states.
-        public var state: [String]
+        public var state: [Build.State]
         
-        public init(branches: [String] = [], commit: String? = nil, createdFrom: Date? = nil, createdTo: Date? = nil, creator: UUID? = nil, finishedFrom: Date? = nil, includeRetriedJobs: Bool? = nil, metadata: [String : String] = [:], state: [String] = []) {
+        public init(branches: [String] = [], commit: String? = nil, createdFrom: Date? = nil, createdTo: Date? = nil, creator: UUID? = nil, finishedFrom: Date? = nil, includeRetriedJobs: Bool? = nil, metadata: [String : String] = [:], state: [Build.State] = []) {
             self.branches = branches
             self.commit = commit
             self.createdFrom = createdFrom
@@ -329,6 +329,6 @@ private extension Array where Element == URLQueryItem {
         appendIfNeeded(queryOptions.finishedFrom, forKey: "finished_from")
         appendIfNeeded(queryOptions.includeRetriedJobs, forKey: "include_retried_jobs")
         append(queryOptions.metadata, forKey: "meta_data")
-        append(queryOptions.state, forKey: "state")
+        append(queryOptions.state.map(\.rawValue), forKey: "state")
     }
 }
