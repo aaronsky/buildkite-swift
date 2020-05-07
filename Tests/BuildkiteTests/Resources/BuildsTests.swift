@@ -1,8 +1,9 @@
 //
 //  BuildsTests.swift
-//  
+//  Buildkite
 //
 //  Created by Aaron Sky on 5/4/20.
+//  Copyright © 2020 Aaron Sky. All rights reserved.
 //
 
 import Foundation
@@ -69,7 +70,7 @@ class BuildsTests: XCTestCase {
                                                                                           finishedFrom: Date(timeIntervalSince1970: 1000),
                                                                                           includeRetriedJobs: true,
                                                                                           metadata: ["buildkite": "is cool"],
-                                                                                          state: [.passed]))
+                                                                                          state: [.passed, .blocked, .failed]))
 
         let expectation = XCTestExpectation()
 
@@ -89,9 +90,11 @@ class BuildsTests: XCTestCase {
         let expected = [Build(), Build()]
         let context = try MockContext(content: expected)
 
+        let resource = Build.Resources.ListForOrganization(organization: "buildkite", queryOptions: Build.Resources.QueryOptions())
+        
         let expectation = XCTestExpectation()
 
-        context.client.send(Build.Resources.ListForOrganization(organization: "buildkite")) { result in
+        context.client.send(resource) { result in
             do {
                 let response = try result.get()
                 XCTAssertEqual(expected, response.content)

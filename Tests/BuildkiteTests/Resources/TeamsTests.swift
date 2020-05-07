@@ -1,5 +1,5 @@
 //
-//  EmojisTests.swift
+//  TeamsTests.swift
 //  Buildkite
 //
 //  Created by Aaron Sky on 5/4/20.
@@ -13,21 +13,28 @@ import XCTest
 #if canImport(FoundationNetworking)
 import FoundationNetworking
 #endif
-extension Emoji {
+
+private extension Team {
     init() {
-        self.init(name: "jeff",
-                  url: URL())
+        self.init(id: UUID(),
+                  name: "",
+                  slug: "",
+                  description: "",
+                  privacy: .visible,
+                  default: true,
+                  createdAt: Date(timeIntervalSince1970: 1000),
+                  createdBy: User())
     }
 }
 
-class EmojisTests: XCTestCase {
-    func testEmojisList() throws {
-        let expected = [Emoji(), Emoji()]
+class TeamsTests: XCTestCase {
+    func testTeamsList() throws {
+        let expected = [Team(), Team()]
         let context = try MockContext(content: expected)
 
         let expectation = XCTestExpectation()
 
-        context.client.send(Emoji.Resources.List(organization: "buildkite")) { result in
+        context.client.send(Team.Resources.List(organization: "buildkite", userId: UUID(), pageOptions: PageOptions(page: 1, perPage: 30))) { result in
             do {
                 let response = try result.get()
                 XCTAssertEqual(expected, response.content)

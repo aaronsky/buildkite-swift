@@ -1,8 +1,8 @@
 //
-//  Annotations.swift
+//  File.swift
 //  Buildkite
 //
-//  Created by Aaron Sky on 4/21/20.
+//  Created by Aaron Sky on 5/6/20.
 //  Copyright © 2020 Aaron Sky. All rights reserved.
 //
 
@@ -12,33 +12,28 @@ import Foundation
 import FoundationNetworking
 #endif
 
-extension Annotation {
+extension Team {
     public enum Resources { }
 }
 
-extension Annotation.Resources {
-    /// List annotations for a build
-    ///
-    /// Returns a paginated list of a build’s annotations.
+extension Team.Resources {
     public struct List: Resource, HasResponseBody {
-        public typealias Content = [Annotation]
+        public typealias Content = [Team]
         /// organization slug
         public var organization: String
-        /// pipeline slug
-        public var pipeline: String
-        /// build number
-        public var build: Int
+
+        public var userId: UUID?
         
         public var pageOptions: PageOptions?
         
         public var path: String {
-            "organizations/\(organization)/pipelines/\(pipeline)/builds/\(build)/annotations"
+            "organizations/\(organization)/teams"
         }
         
-        public init(organization: String, pipeline: String, build: Int) {
+        public init(organization: String, userId: UUID? = nil, pageOptions: PageOptions? = nil) {
             self.organization = organization
-            self.pipeline = pipeline
-            self.build = build
+            self.userId = userId
+            self.pageOptions = pageOptions
         }
         
         public func transformRequest(_ request: inout URLRequest) {
@@ -46,9 +41,12 @@ extension Annotation.Resources {
                 var components = URLComponents(url: url, resolvingAgainstBaseURL: true) else {
                     return
             }
+            var queryItems: [URLQueryItem] = []
+            queryItems.appendIfNeeded(userId, forKey: "user_id")
             if let options = pageOptions {
-                components.queryItems = [URLQueryItem](pageOptions: options)
+                queryItems.append(contentsOf: [URLQueryItem](pageOptions: options))
             }
+            components.queryItems = queryItems
             request.url = components.url
         }
     }

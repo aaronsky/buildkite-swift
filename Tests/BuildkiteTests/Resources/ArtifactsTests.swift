@@ -1,8 +1,9 @@
 //
 //  ArtifactsTests.swift
-//  
+//  Buildkite
 //
 //  Created by Aaron Sky on 5/4/20.
+//  Copyright © 2020 Aaron Sky. All rights reserved.
 //
 
 import Foundation

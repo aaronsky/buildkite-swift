@@ -3,7 +3,7 @@
 //  Buildkite
 //
 //  Created by Aaron Sky on 5/3/20.
-//  Copyright © 2020 Fangamer. All rights reserved.
+//  Copyright © 2020 Aaron Sky. All rights reserved.
 //
 
 import Foundation
