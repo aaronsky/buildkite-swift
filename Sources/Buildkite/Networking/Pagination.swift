@@ -68,7 +68,20 @@ public struct PageOptions {
     }
 }
 
-extension Array where Element == URLQueryItem {
+extension URLRequest {
+    mutating func appendPageOptions(_ options: PageOptions) {
+        guard let url = self.url,
+            var components = URLComponents(url: url, resolvingAgainstBaseURL: true) else {
+                return
+        }
+        var queryItems = components.queryItems ?? []
+        queryItems.append(pageOptions: options)
+        components.queryItems = queryItems
+        self.url = components.url
+    }
+}
+
+private extension Array where Element == URLQueryItem {
     mutating func append(pageOptions: PageOptions) {
         append(URLQueryItem(name: "page", value: String(pageOptions.page)))
         append(URLQueryItem(name: "per_page", value: String(pageOptions.perPage)))

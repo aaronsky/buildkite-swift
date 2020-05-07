@@ -29,30 +29,14 @@ extension Annotation.Resources {
         /// build number
         public var build: Int
         
-        public var pageOptions: PageOptions?
-        
         public var path: String {
             "organizations/\(organization)/pipelines/\(pipeline)/builds/\(build)/annotations"
         }
         
-        public init(organization: String, pipeline: String, build: Int, pageOptions: PageOptions? = nil) {
+        public init(organization: String, pipeline: String, build: Int) {
             self.organization = organization
             self.pipeline = pipeline
             self.build = build
-            self.pageOptions = pageOptions
-        }
-        
-        public func transformRequest(_ request: inout URLRequest) {
-            guard let url = request.url,
-                var components = URLComponents(url: url, resolvingAgainstBaseURL: true) else {
-                    return
-            }
-            var queryItems: [URLQueryItem] = []
-            if let options = pageOptions {
-                queryItems.append(pageOptions: options)
-            }
-            components.queryItems = queryItems
-            request.url = components.url
         }
     }
 }

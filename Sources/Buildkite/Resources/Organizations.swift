@@ -23,24 +23,8 @@ extension Organization.Resources {
     public struct List: Resource, HasResponseBody, Paginated {
         public typealias Content = [Organization]
         public let path = "organizations"
-        
-        public var pageOptions: PageOptions?
-        
-        public init(pageOptions: PageOptions? = nil) {
-            self.pageOptions = pageOptions
-        }
-        
-        public func transformRequest(_ request: inout URLRequest) {
-            guard let url = request.url,
-                var components = URLComponents(url: url, resolvingAgainstBaseURL: true) else {
-                    return
-            }
-            var queryItems: [URLQueryItem] = []
-            if let options = pageOptions {
-                queryItems.append(pageOptions: options)
-            }
-            components.queryItems = queryItems
-            request.url = components.url
+                
+        public init() {
         }
     }
 

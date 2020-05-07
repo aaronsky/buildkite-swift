@@ -18,8 +18,9 @@ import Combine
 
 public protocol Transport {
     typealias Output = (data: Data, response: URLResponse)
+    typealias Completion = (Result<Output, Error>) -> Void
 
-    func send(request: URLRequest, completion: @escaping (Result<Output, Error>) -> Void)
+    func send(request: URLRequest, completion: @escaping Completion)
 
     #if canImport(Combine)
     @available(iOS 13.0, macOS 10.15, tvOS 13.0, watchOS 6.0, *)
@@ -28,7 +29,7 @@ public protocol Transport {
 }
 
 extension URLSession: Transport {
-    public func send(request: URLRequest, completion: @escaping (Result<Output, Error>) -> Void) {
+    public func send(request: URLRequest, completion: @escaping Completion) {
         let task = dataTask(with: request) { data, response, error in
             if let error = error {
                 completion(.failure(error))

@@ -21,8 +21,7 @@ public protocol HasResponseBody {
     associatedtype Content: Decodable
 }
 
-public protocol Paginated {
-    var pageOptions: PageOptions? { get }
+public protocol Paginated: HasResponseBody {
 }
 
 public protocol Resource {
@@ -48,5 +47,19 @@ extension URLRequest {
     init<R: Resource & HasRequestBody>(_ resource: R, configuration: Configuration, encoder: JSONEncoder) throws {
         self.init(resource, configuration: configuration)
         httpBody = try encoder.encode(resource.body)
+    }
+    
+    init<R: Resource & Paginated>(_ resource: R, configuration: Configuration, pageOptions: PageOptions? = nil) {
+        self.init(resource, configuration: configuration)
+        if let options = pageOptions {
+            appendPageOptions(options)
+        }
+    }
+    
+    init<R: Resource & HasRequestBody & Paginated>(_ resource: R, configuration: Configuration, encoder: JSONEncoder, pageOptions: PageOptions? = nil) throws {
+        try self.init(resource, configuration: configuration, encoder: encoder)
+        if let options = pageOptions {
+            appendPageOptions(options)
+        }
     }
 }

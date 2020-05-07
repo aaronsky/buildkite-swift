@@ -24,16 +24,13 @@ extension Team.Resources {
 
         public var userId: UUID?
         
-        public var pageOptions: PageOptions?
-        
         public var path: String {
             "organizations/\(organization)/teams"
         }
         
-        public init(organization: String, userId: UUID? = nil, pageOptions: PageOptions? = nil) {
+        public init(organization: String, userId: UUID? = nil) {
             self.organization = organization
             self.userId = userId
-            self.pageOptions = pageOptions
         }
         
         public func transformRequest(_ request: inout URLRequest) {
@@ -43,9 +40,6 @@ extension Team.Resources {
             }
             var queryItems: [URLQueryItem] = []
             queryItems.appendIfNeeded(userId, forKey: "user_id")
-            if let options = pageOptions {
-                queryItems.append(pageOptions: options)
-            }
             components.queryItems = queryItems
             request.url = components.url
         }

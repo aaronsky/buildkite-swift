@@ -1,8 +1,8 @@
 //
-//  TeamsTests.swift
+//  PaginationTests.swift
 //  Buildkite
 //
-//  Created by Aaron Sky on 5/4/20.
+//  Created by Aaron Sky on 5/7/20.
 //  Copyright © 2020 Aaron Sky. All rights reserved.
 //
 
@@ -14,27 +14,14 @@ import XCTest
 import FoundationNetworking
 #endif
 
-private extension Team {
-    init() {
-        self.init(id: UUID(),
-                  name: "",
-                  slug: "",
-                  description: "",
-                  privacy: .visible,
-                  default: true,
-                  createdAt: Date(timeIntervalSince1970: 1000),
-                  createdBy: User())
-    }
-}
-
-class TeamsTests: XCTestCase {
-    func testTeamsList() throws {
-        let expected = [Team(), Team()]
+class PaginationTests: XCTestCase {
+    func testPagination() throws {
+        let expected = [Pipeline(), Pipeline()]
         let context = try MockContext(content: expected)
 
         let expectation = XCTestExpectation()
 
-        context.client.send(Team.Resources.List(organization: "buildkite", userId: UUID())) { result in
+        context.client.send(Pipeline.Resources.List(organization: "buildkite"), pageOptions: PageOptions(page: 1, perPage: 30)) { result in
             do {
                 let response = try result.get()
                 XCTAssertEqual(expected, response.content)

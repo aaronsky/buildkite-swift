@@ -27,11 +27,8 @@ extension Build.Resources {
         
         public var queryOptions: QueryOptions?
         
-        public var pageOptions: PageOptions?
-        
-        public init(queryOptions: Build.Resources.QueryOptions? = nil, pageOptions: PageOptions? = nil) {
+        public init(queryOptions: Build.Resources.QueryOptions? = nil) {
             self.queryOptions = queryOptions
-            self.pageOptions = pageOptions
         }
         
         public func transformRequest(_ request: inout URLRequest) {
@@ -42,9 +39,6 @@ extension Build.Resources {
             var queryItems: [URLQueryItem] = []
             if let options = queryOptions {
                 queryItems.append(contentsOf: [URLQueryItem](queryOptions: options))
-            }
-            if let options = pageOptions {
-                queryItems.append(pageOptions: options)
             }
             components.queryItems = queryItems
             request.url = components.url
@@ -62,16 +56,13 @@ extension Build.Resources {
         
         public var queryOptions: QueryOptions?
         
-        public var pageOptions: PageOptions?
-        
         public var path: String {
             "organizations/\(organization)/builds"
         }
         
-        public init(organization: String, queryOptions: Build.Resources.QueryOptions? = nil, pageOptions: PageOptions? = nil) {
+        public init(organization: String, queryOptions: Build.Resources.QueryOptions? = nil) {
             self.organization = organization
             self.queryOptions = queryOptions
-            self.pageOptions = pageOptions
         }
 
         public func transformRequest(_ request: inout URLRequest) {
@@ -82,9 +73,6 @@ extension Build.Resources {
             var queryItems: [URLQueryItem] = []
             if let options = queryOptions {
                 queryItems.append(contentsOf: [URLQueryItem](queryOptions: options))
-            }
-            if let options = pageOptions {
-                queryItems.append(pageOptions: options)
             }
             components.queryItems = queryItems
             request.url = components.url
@@ -102,18 +90,15 @@ extension Build.Resources {
         public var pipeline: String
         
         public var queryOptions: QueryOptions?
-        
-        public var pageOptions: PageOptions?
 
         public var path: String {
             "organizations/\(organization)/pipelines/\(pipeline)/builds"
         }
         
-        public init(organization: String, pipeline: String, queryOptions: Build.Resources.QueryOptions? = nil, pageOptions: PageOptions? = nil) {
+        public init(organization: String, pipeline: String, queryOptions: Build.Resources.QueryOptions? = nil) {
             self.organization = organization
             self.pipeline = pipeline
             self.queryOptions = queryOptions
-            self.pageOptions = pageOptions
         }
         
         public func transformRequest(_ request: inout URLRequest) {
@@ -124,9 +109,6 @@ extension Build.Resources {
             var queryItems: [URLQueryItem] = []
             if let options = queryOptions {
                 queryItems.append(contentsOf: [URLQueryItem](queryOptions: options))
-            }
-            if let options = pageOptions {
-                queryItems.append(pageOptions: options)
             }
             components.queryItems = queryItems
             request.url = components.url

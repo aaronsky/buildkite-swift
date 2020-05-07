@@ -28,31 +28,15 @@ extension Artifact.Resources {
         public var pipeline: String
         /// build number
         public var build: Int
-        
-        public var pageOptions: PageOptions?
-        
+                
         public var path: String {
             "organizations/\(organization)/pipelines/\(pipeline)/builds/\(build)/artifacts"
         }
         
-        public init(organization: String, pipeline: String, build: Int, pageOptions: PageOptions? = nil) {
+        public init(organization: String, pipeline: String, build: Int) {
             self.organization = organization
             self.pipeline = pipeline
             self.build = build
-            self.pageOptions = pageOptions
-        }
-        
-        public func transformRequest(_ request: inout URLRequest) {
-            guard let url = request.url,
-                var components = URLComponents(url: url, resolvingAgainstBaseURL: true) else {
-                    return
-            }
-            var queryItems: [URLQueryItem] = []
-            if let options = pageOptions {
-                queryItems.append(pageOptions: options)
-            }
-            components.queryItems = queryItems
-            request.url = components.url
         }
     }
 
@@ -70,31 +54,15 @@ extension Artifact.Resources {
         /// job ID
         public var jobId: UUID
         
-        public var pageOptions: PageOptions?
-        
         public var path: String {
             "organizations/\(organization)/pipelines/\(pipeline)/builds/\(build)/jobs/\(jobId)/artifacts"
         }
         
-        public init(organization: String, pipeline: String, build: Int, jobId: UUID, pageOptions: PageOptions? = nil) {
+        public init(organization: String, pipeline: String, build: Int, jobId: UUID) {
             self.organization = organization
             self.pipeline = pipeline
             self.build = build
             self.jobId = jobId
-            self.pageOptions = pageOptions
-        }
-        
-        public func transformRequest(_ request: inout URLRequest) {
-            guard let url = request.url,
-                var components = URLComponents(url: url, resolvingAgainstBaseURL: true) else {
-                    return
-            }
-            var queryItems: [URLQueryItem] = []
-            if let options = pageOptions {
-                queryItems.append(pageOptions: options)
-            }
-            components.queryItems = queryItems
-            request.url = components.url
         }
     }
 

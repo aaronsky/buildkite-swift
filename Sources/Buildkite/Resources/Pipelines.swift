@@ -25,28 +25,12 @@ extension Pipeline.Resources {
         /// organization slug
         public var organization: String
         
-        public var pageOptions: PageOptions?
-        
         public var path: String {
             "organizations/\(organization)/pipelines"
         }
         
-        public init(organization: String, pageOptions: PageOptions? = nil) {
+        public init(organization: String) {
             self.organization = organization
-            self.pageOptions = pageOptions
-        }
-        
-        public func transformRequest(_ request: inout URLRequest) {
-            guard let url = request.url,
-                var components = URLComponents(url: url, resolvingAgainstBaseURL: true) else {
-                    return
-            }
-            var queryItems: [URLQueryItem] = []
-            if let options = pageOptions {
-                queryItems.append(pageOptions: options)
-            }
-            components.queryItems = queryItems
-            request.url = components.url
         }
     }
     

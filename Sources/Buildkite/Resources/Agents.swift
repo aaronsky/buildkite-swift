@@ -32,15 +32,12 @@ extension Agent.Resources {
         /// Filters the results by the given exact version number
         public var version: String?
         
-        public var pageOptions: PageOptions?
-        
         public var path: String {
             "organizations/\(organization)/agents"
         }
         
-        public init(organization: String, pageOptions: PageOptions? = nil) {
+        public init(organization: String) {
             self.organization = organization
-            self.pageOptions = pageOptions
         }
         
         public func transformRequest(_ request: inout URLRequest) {
@@ -52,9 +49,6 @@ extension Agent.Resources {
             queryItems.appendIfNeeded(name, forKey: "name")
             queryItems.appendIfNeeded(hostname, forKey: "hostname")
             queryItems.appendIfNeeded(version, forKey: "version")
-            if let options = pageOptions {
-                queryItems.append(pageOptions: options)
-            }
             components.queryItems = queryItems
             request.url = components.url
         }
