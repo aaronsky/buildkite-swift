@@ -21,6 +21,10 @@ public protocol HasResponseBody {
     associatedtype Content: Decodable
 }
 
+public protocol Paginated {
+    var pageOptions: PageOptions? { get }
+}
+
 public protocol Resource {
     var path: String { get }
     func transformRequest(_ request: inout URLRequest)

@@ -17,7 +17,7 @@ extension Team {
 }
 
 extension Team.Resources {
-    public struct List: Resource, HasResponseBody {
+    public struct List: Resource, HasResponseBody, Paginated {
         public typealias Content = [Team]
         /// organization slug
         public var organization: String
@@ -44,7 +44,7 @@ extension Team.Resources {
             var queryItems: [URLQueryItem] = []
             queryItems.appendIfNeeded(userId, forKey: "user_id")
             if let options = pageOptions {
-                queryItems.append(contentsOf: [URLQueryItem](pageOptions: options))
+                queryItems.append(pageOptions: options)
             }
             components.queryItems = queryItems
             request.url = components.url

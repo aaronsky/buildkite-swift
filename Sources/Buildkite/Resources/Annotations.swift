@@ -20,7 +20,7 @@ extension Annotation.Resources {
     /// List annotations for a build
     ///
     /// Returns a paginated list of a build’s annotations.
-    public struct List: Resource, HasResponseBody {
+    public struct List: Resource, HasResponseBody, Paginated {
         public typealias Content = [Annotation]
         /// organization slug
         public var organization: String
@@ -35,10 +35,11 @@ extension Annotation.Resources {
             "organizations/\(organization)/pipelines/\(pipeline)/builds/\(build)/annotations"
         }
         
-        public init(organization: String, pipeline: String, build: Int) {
+        public init(organization: String, pipeline: String, build: Int, pageOptions: PageOptions? = nil) {
             self.organization = organization
             self.pipeline = pipeline
             self.build = build
+            self.pageOptions = pageOptions
         }
         
         public func transformRequest(_ request: inout URLRequest) {
@@ -46,9 +47,11 @@ extension Annotation.Resources {
                 var components = URLComponents(url: url, resolvingAgainstBaseURL: true) else {
                     return
             }
+            var queryItems: [URLQueryItem] = []
             if let options = pageOptions {
-                components.queryItems = [URLQueryItem](pageOptions: options)
+                queryItems.append(pageOptions: options)
             }
+            components.queryItems = queryItems
             request.url = components.url
         }
     }

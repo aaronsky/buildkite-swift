@@ -20,7 +20,7 @@ extension Agent.Resources {
     /// List agents
     ///
     /// Returns a paginated list of an organization’s agents.
-    public struct List: Resource, HasResponseBody {
+    public struct List: Resource, HasResponseBody, Paginated {
         public typealias Content = [Agent]
         /// organization slug
         public var organization: String
@@ -38,8 +38,9 @@ extension Agent.Resources {
             "organizations/\(organization)/agents"
         }
         
-        public init(organization: String) {
+        public init(organization: String, pageOptions: PageOptions? = nil) {
             self.organization = organization
+            self.pageOptions = pageOptions
         }
         
         public func transformRequest(_ request: inout URLRequest) {
@@ -52,7 +53,7 @@ extension Agent.Resources {
             queryItems.appendIfNeeded(hostname, forKey: "hostname")
             queryItems.appendIfNeeded(version, forKey: "version")
             if let options = pageOptions {
-                queryItems.append(contentsOf: [URLQueryItem](pageOptions: options))
+                queryItems.append(pageOptions: options)
             }
             components.queryItems = queryItems
             request.url = components.url

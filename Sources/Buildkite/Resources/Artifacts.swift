@@ -20,7 +20,7 @@ extension Artifact.Resources {
     /// List artifacts for a build
     ///
     /// Returns a paginated list of a build’s artifacts across all of its jobs.
-    public struct ListByBuild: Resource, HasResponseBody {
+    public struct ListByBuild: Resource, HasResponseBody, Paginated {
         public typealias Content = [Artifact]
         /// organization slug
         public var organization: String
@@ -35,10 +35,11 @@ extension Artifact.Resources {
             "organizations/\(organization)/pipelines/\(pipeline)/builds/\(build)/artifacts"
         }
         
-        public init(organization: String, pipeline: String, build: Int) {
+        public init(organization: String, pipeline: String, build: Int, pageOptions: PageOptions? = nil) {
             self.organization = organization
             self.pipeline = pipeline
             self.build = build
+            self.pageOptions = pageOptions
         }
         
         public func transformRequest(_ request: inout URLRequest) {
@@ -46,9 +47,11 @@ extension Artifact.Resources {
                 var components = URLComponents(url: url, resolvingAgainstBaseURL: true) else {
                     return
             }
+            var queryItems: [URLQueryItem] = []
             if let options = pageOptions {
-                components.queryItems = [URLQueryItem](pageOptions: options)
+                queryItems.append(pageOptions: options)
             }
+            components.queryItems = queryItems
             request.url = components.url
         }
     }
@@ -56,7 +59,7 @@ extension Artifact.Resources {
     /// List artifacts for a job
     ///
     /// Returns a paginated list of a job’s artifacts.
-    public struct ListByJob: Resource, HasResponseBody {
+    public struct ListByJob: Resource, HasResponseBody, Paginated {
         public typealias Content = [Artifact]
         /// organization slug
         public var organization: String
@@ -73,11 +76,12 @@ extension Artifact.Resources {
             "organizations/\(organization)/pipelines/\(pipeline)/builds/\(build)/jobs/\(jobId)/artifacts"
         }
         
-        public init(organization: String, pipeline: String, build: Int, jobId: UUID) {
+        public init(organization: String, pipeline: String, build: Int, jobId: UUID, pageOptions: PageOptions? = nil) {
             self.organization = organization
             self.pipeline = pipeline
             self.build = build
             self.jobId = jobId
+            self.pageOptions = pageOptions
         }
         
         public func transformRequest(_ request: inout URLRequest) {
@@ -85,9 +89,11 @@ extension Artifact.Resources {
                 var components = URLComponents(url: url, resolvingAgainstBaseURL: true) else {
                     return
             }
+            var queryItems: [URLQueryItem] = []
             if let options = pageOptions {
-                components.queryItems = [URLQueryItem](pageOptions: options)
+                queryItems.append(pageOptions: options)
             }
+            components.queryItems = queryItems
             request.url = components.url
         }
     }

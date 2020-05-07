@@ -21,7 +21,7 @@ extension Build.Resources {
     ///
     /// Returns a paginated list of all builds across all the user’s organizations and pipelines. If using token-based authentication
     /// the list of builds will be for the authorized organizations only. Builds are listed in the order they were created (newest first).
-    public struct ListAll: Resource, HasResponseBody {
+    public struct ListAll: Resource, HasResponseBody, Paginated {
         public typealias Content = [Build]
         public let path = "builds"
         
@@ -44,7 +44,7 @@ extension Build.Resources {
                 queryItems.append(contentsOf: [URLQueryItem](queryOptions: options))
             }
             if let options = pageOptions {
-                queryItems.append(contentsOf: [URLQueryItem](pageOptions: options))
+                queryItems.append(pageOptions: options)
             }
             components.queryItems = queryItems
             request.url = components.url
@@ -55,7 +55,7 @@ extension Build.Resources {
     ///
     /// Returns a paginated list of an organization’s builds across all of an organization’s pipelines. Builds are listed in the order
     /// they were created (newest first).
-    public struct ListForOrganization: Resource, HasResponseBody {
+    public struct ListForOrganization: Resource, HasResponseBody, Paginated {
         public typealias Content = [Build]
         /// organization slug
         public var organization: String
@@ -84,7 +84,7 @@ extension Build.Resources {
                 queryItems.append(contentsOf: [URLQueryItem](queryOptions: options))
             }
             if let options = pageOptions {
-                queryItems.append(contentsOf: [URLQueryItem](pageOptions: options))
+                queryItems.append(pageOptions: options)
             }
             components.queryItems = queryItems
             request.url = components.url
@@ -94,7 +94,7 @@ extension Build.Resources {
     /// List builds for a pipeline
     ///
     /// Returns a paginated list of a pipeline’s builds. Builds are listed in the order they were created (newest first).
-    public struct ListForPipeline: Resource, HasResponseBody {
+    public struct ListForPipeline: Resource, HasResponseBody, Paginated {
         public typealias Content = [Build]
         /// organization slug
         public var organization: String
@@ -126,7 +126,7 @@ extension Build.Resources {
                 queryItems.append(contentsOf: [URLQueryItem](queryOptions: options))
             }
             if let options = pageOptions {
-                queryItems.append(contentsOf: [URLQueryItem](pageOptions: options))
+                queryItems.append(pageOptions: options)
             }
             components.queryItems = queryItems
             request.url = components.url

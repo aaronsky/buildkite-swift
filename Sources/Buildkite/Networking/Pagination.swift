@@ -69,8 +69,7 @@ public struct PageOptions {
 }
 
 extension Array where Element == URLQueryItem {
-    init(pageOptions: PageOptions) {
-        self.init()
+    mutating func append(pageOptions: PageOptions) {
         append(URLQueryItem(name: "page", value: String(pageOptions.page)))
         append(URLQueryItem(name: "per_page", value: String(pageOptions.perPage)))
     }

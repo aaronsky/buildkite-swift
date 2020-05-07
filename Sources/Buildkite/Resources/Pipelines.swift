@@ -20,7 +20,7 @@ extension Pipeline.Resources {
     /// List pipelines
     ///
     /// Returns a paginated list of an organization’s pipelines.
-    public struct List: Resource, HasResponseBody {
+    public struct List: Resource, HasResponseBody, Paginated {
         public typealias Content = [Pipeline]
         /// organization slug
         public var organization: String
@@ -41,9 +41,11 @@ extension Pipeline.Resources {
                 var components = URLComponents(url: url, resolvingAgainstBaseURL: true) else {
                     return
             }
+            var queryItems: [URLQueryItem] = []
             if let options = pageOptions {
-                components.queryItems = [URLQueryItem](pageOptions: options)
+                queryItems.append(pageOptions: options)
             }
+            components.queryItems = queryItems
             request.url = components.url
         }
     }
