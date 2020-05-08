@@ -167,6 +167,9 @@ extension Job.Resources {
     }
 }
 
+// JSONDecoder on Linux does not support decoding JSON fragments. Another
+// method will need to be explored here in order to restore this functionality.
+#if !os(Linux)
 extension Job.Resources.LogOutput {
     public struct Alternative: Resource, HasResponseBody {
         public enum Format: String {
@@ -199,3 +202,4 @@ extension Job.Resources.LogOutput {
         }
     }
 }
+#endif
