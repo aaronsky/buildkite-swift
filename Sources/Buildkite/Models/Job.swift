@@ -74,7 +74,7 @@ public enum Job: Codable, Equatable {
         public var rawLogUrl: URL
         public var artifactsUrl: URL
         public var softFailed: Bool
-        public var exitStatus: Int
+        public var exitStatus: Int?
         public var artifactPaths: String?
         public var agentQueryRules: [String]
         public var agent: AgentRef?
