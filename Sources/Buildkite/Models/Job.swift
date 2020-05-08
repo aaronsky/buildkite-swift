@@ -127,7 +127,7 @@ public enum Job: Codable, Equatable {
         }
     }
     
-    public struct LogOutput: Codable {
+    public struct LogOutput: Codable, Equatable {
         public var url: URL // Resource<Job.Resources.GetLogOutput>
         public var content: String
         public var size: Int

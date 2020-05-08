@@ -21,7 +21,7 @@ extension Team.Resources {
         public typealias Content = [Team]
         /// organization slug
         public var organization: String
-
+        /// Filters the results to teams that have the given user as a member.
         public var userId: UUID?
         
         public var path: String {

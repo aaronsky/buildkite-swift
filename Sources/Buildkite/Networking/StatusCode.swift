@@ -12,7 +12,7 @@ import Foundation
 import FoundationNetworking
 #endif
 
-public enum StatusCode: Int, Error {
+public enum StatusCode: Int, Error, Codable {
     /// The request was successfully processed by Buildkite.
     case ok = 200
 
@@ -22,6 +22,9 @@ public enum StatusCode: Int, Error {
     /// The request has been accepted, but not yet processed.
     case accepted = 202
 
+    /// The request was found
+    case found = 302
+    
     /// The response to the request can be found under a different URL in the Location header and can be retrieved using a GET method on that resource.
     case seeOther = 303
 
@@ -49,8 +52,6 @@ public enum StatusCode: Int, Error {
     case unprocessableEntity = 422
 
     /// The requested shop is currently locked. Shops are locked if they repeatedly exceed their API request limit, or if there is an issue with the account, such as a detected compromise or fraud risk.
-    ///
-    /// Contact support if your shop is locked.
     case locked = 423
 
     /// The request was not accepted because the application has exceeded the rate limit. See the API Call Limit documentation for a breakdown of Buildkite's rate-limiting mechanism.
@@ -72,5 +73,6 @@ public enum StatusCode: Int, Error {
         self == .ok
             || self == .created
             || self == .accepted
+            || self == .found
     }
 }

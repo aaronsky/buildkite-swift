@@ -55,13 +55,51 @@ class JobsTests: XCTestCase {
     }
 
     func testJobsLogOutput() throws {
-        let context = MockContext()
+        let expected = Job.LogOutput()
+        let context = try MockContext(content: expected)
 
         let expectation = XCTestExpectation()
 
         context.client.send(Job.Resources.LogOutput(organization: "buildkite", pipeline: "my-pipeline", build: 1, job: UUID())) { result in
             do {
-                _ = try result.get()
+                let response = try result.get()
+                XCTAssertEqual(expected, response.content)
+            } catch {
+                XCTFail(error.localizedDescription)
+            }
+            expectation.fulfill()
+        }
+        wait(for: [expectation])
+    }
+    
+    func testJobsLogOutputAlternativePlainText() throws {
+        let expected = "hello friends"
+        let context = try MockContext(content: expected)
+
+        let expectation = XCTestExpectation()
+
+        context.client.send(Job.Resources.LogOutput.Alternative(organization: "buildkite", pipeline: "my-pipeline", build: 1, job: UUID(), format: .plainText)) { result in
+            do {
+                let response = try result.get()
+                XCTAssertEqual(expected, response.content)
+            } catch {
+                XCTFail(error.localizedDescription)
+            }
+            expectation.fulfill()
+        }
+        wait(for: [expectation])
+    }
+    
+    func testJobsLogOutputAlternativeHTML() throws {
+        let expected = "hello friends"
+        let context = try MockContext(content: expected)
+
+        let expectation = XCTestExpectation()
+
+        context.client.send(Job.Resources.LogOutput.Alternative(organization: "buildkite", pipeline: "my-pipeline", build: 1, job: UUID(), format: .html)) { result in
+            do {
+                let response = try result.get()
+                XCTAssertEqual(expected, response.content)
             } catch {
                 XCTFail(error.localizedDescription)
             }
@@ -102,5 +140,14 @@ class JobsTests: XCTestCase {
             expectation.fulfill()
         }
         wait(for: [expectation])
+    }
+}
+
+extension Job.LogOutput {
+    init() {
+        self.init(url: URL(),
+                  content: "hello friends",
+                  size: 13,
+                  headerTimes: [])
     }
 }
