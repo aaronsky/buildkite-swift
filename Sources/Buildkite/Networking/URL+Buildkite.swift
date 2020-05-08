@@ -19,11 +19,11 @@ extension Array where Element == URLQueryItem {
         }
         append(URLQueryItem(name: key, value: String(value)))
     }
-
+    
     enum ArrayFormat {
         case indices
         case brackets
-
+        
         func format(for index: Int) -> String {
             switch self {
             case .indices:
@@ -33,7 +33,7 @@ extension Array where Element == URLQueryItem {
             }
         }
     }
-
+    
     mutating func append(_ items: [String], forKey key: String, arrayFormat: ArrayFormat = .brackets) {
         if items.isEmpty {
             return
@@ -48,7 +48,7 @@ extension Array where Element == URLQueryItem {
             })
         }
     }
-
+    
     mutating func append(_ items: [String: String], forKey key: String) {
         append(contentsOf: items.map {
             URLQueryItem(name: "\(key)[\($0.key)]",

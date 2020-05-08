@@ -20,7 +20,7 @@ struct MockResources {
     }
 
     var noContentNoBodyResource = NoContentNoBody()
-
+    
     struct HasContent: Resource, HasResponseBody {
         struct Content: Codable, Equatable {
             var name: String
@@ -28,51 +28,51 @@ struct MockResources {
         }
         let path = "mock"
     }
-
+    
     var contentResource = HasContent()
     var content = HasContent.Content(name: "Jeff", age: 35)
-
+    
     struct HasPaginatedContent: Resource, Paginated {
         struct Content: Codable, Equatable {
             var name: String
             var age: Int
         }
-
+        
         let path = "mock"
     }
-
+    
     var paginatedContentResource = HasPaginatedContent()
     var paginatedContent = HasPaginatedContent.Content(name: "Jeff", age: 35)
-
+    
     struct HasBody: Resource, HasRequestBody {
         struct Body: Codable, Equatable {
             var name: String
             var age: Int
         }
-
+        
         var body: Body
-
+        
         let path = "mock"
     }
-
+    
     var bodyResource = HasBody(body: HasBody.Body(name: "Jeff", age: 35))
-
+    
     struct HasBodyAndPaginated: Resource, HasRequestBody, Paginated {
         struct Body: Codable, Equatable {
             var name: String
             var age: Int
         }
-
+        
         struct Content: Codable, Equatable {
             var name: String
             var age: Int
         }
-
+        
         var body: Body
-
+        
         let path = "mock"
     }
-
+    
     var bodyAndPaginatedResource = HasBodyAndPaginated(body: HasBodyAndPaginated.Body(name: "Jeff", age: 35))
     var bodyAndPaginatedContent = HasBodyAndPaginated.Content(name: "Jeff", age: 35)
 }
@@ -120,7 +120,7 @@ extension MockData {
         HTTPURLResponse(url: url,
                         statusCode: status,
                         httpVersion: "HTTP/1.1",
-                        headerFields: ["Link": #"<https://api.buildkite.com/v2/organizations/my-great-org/pipelines/my-pipeline/builds?api_key=f8582f070276d764ce3dd4c6d57be92574dccf86&page=3>; rel="prev",<https://api.buildkite.com/v2/organizations/my-great-org/pipelines/my-pipeline/builds?api_key=f8582f070276d764ce3dd4c6d57be92574dccf86&page=5>; rel="next",<https://api.buildkite.com/v2/organizations/my-great-org/pipelines/my-pipeline/builds?api_key=f8582f070276d764ce3dd4c6d57be92574dccf86&page=1>; rel="first", <https://api.buildkite.com/v2/organizations/my-great-org/pipelines/my-pipeline/builds?api_key=f8582f070276d764ce3dd4c6d57be92574dccf86&page=10>; rel="last""#])!
+                        headerFields: ["Link":#"<https://api.buildkite.com/v2/organizations/my-great-org/pipelines/my-pipeline/builds?api_key=f8582f070276d764ce3dd4c6d57be92574dccf86&page=3>; rel="prev",<https://api.buildkite.com/v2/organizations/my-great-org/pipelines/my-pipeline/builds?api_key=f8582f070276d764ce3dd4c6d57be92574dccf86&page=5>; rel="next",<https://api.buildkite.com/v2/organizations/my-great-org/pipelines/my-pipeline/builds?api_key=f8582f070276d764ce3dd4c6d57be92574dccf86&page=1>; rel="first", <https://api.buildkite.com/v2/organizations/my-great-org/pipelines/my-pipeline/builds?api_key=f8582f070276d764ce3dd4c6d57be92574dccf86&page=10>; rel="last""#])!
     }
 }
 

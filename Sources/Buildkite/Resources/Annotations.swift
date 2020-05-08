@@ -28,11 +28,11 @@ extension Annotation.Resources {
         public var pipeline: String
         /// build number
         public var build: Int
-
+        
         public var path: String {
             "organizations/\(organization)/pipelines/\(pipeline)/builds/\(build)/annotations"
         }
-
+        
         public init(organization: String, pipeline: String, build: Int) {
             self.organization = organization
             self.pipeline = pipeline

@@ -24,13 +24,13 @@ extension Build.Resources {
     public struct ListAll: Resource, HasResponseBody, Paginated {
         public typealias Content = [Build]
         public let path = "builds"
-
+        
         public var queryOptions: QueryOptions?
-
+        
         public init(queryOptions: Build.Resources.QueryOptions? = nil) {
             self.queryOptions = queryOptions
         }
-
+        
         public func transformRequest(_ request: inout URLRequest) {
             guard let url = request.url,
                 var components = URLComponents(url: url, resolvingAgainstBaseURL: true) else {
@@ -53,13 +53,13 @@ extension Build.Resources {
         public typealias Content = [Build]
         /// organization slug
         public var organization: String
-
+        
         public var queryOptions: QueryOptions?
-
+        
         public var path: String {
             "organizations/\(organization)/builds"
         }
-
+        
         public init(organization: String, queryOptions: Build.Resources.QueryOptions? = nil) {
             self.organization = organization
             self.queryOptions = queryOptions
@@ -88,19 +88,19 @@ extension Build.Resources {
         public var organization: String
         /// pipeline slug
         public var pipeline: String
-
+        
         public var queryOptions: QueryOptions?
 
         public var path: String {
             "organizations/\(organization)/pipelines/\(pipeline)/builds"
         }
-
+        
         public init(organization: String, pipeline: String, queryOptions: Build.Resources.QueryOptions? = nil) {
             self.organization = organization
             self.pipeline = pipeline
             self.queryOptions = queryOptions
         }
-
+        
         public func transformRequest(_ request: inout URLRequest) {
             guard let url = request.url,
                 var components = URLComponents(url: url, resolvingAgainstBaseURL: true) else {
@@ -128,7 +128,7 @@ extension Build.Resources {
         public var path: String {
             "organizations/\(organization)/pipelines/\(pipeline)/builds/\(build)"
         }
-
+        
         public init(organization: String, pipeline: String, build: Int) {
             self.organization = organization
             self.pipeline = pipeline
@@ -150,7 +150,7 @@ extension Build.Resources {
             public struct Author: Codable {
                 public var name: String
                 public var email: String
-
+                
                 public init(name: String, email: String) {
                     self.name = name
                     self.email = email
@@ -180,8 +180,8 @@ extension Build.Resources {
             public var pullRequestId: Int?
             /// For a pull request build, the git repository of the pull request.
             public var pullRequestRepository: String?
-
-            public init(commit: String, branch: String, author: Build.Resources.Create.Body.Author? = nil, cleanCheckout: Bool? = nil, env: [String: String]? = nil, ignorePipelineBranchFilters: Bool? = nil, message: String? = nil, metaData: [String: String]? = nil, pullRequestBaseBranch: String? = nil, pullRequestId: Int? = nil, pullRequestRepository: String? = nil) {
+            
+            public init(commit: String, branch: String, author: Build.Resources.Create.Body.Author? = nil, cleanCheckout: Bool? = nil, env: [String : String]? = nil, ignorePipelineBranchFilters: Bool? = nil, message: String? = nil, metaData: [String : String]? = nil, pullRequestBaseBranch: String? = nil, pullRequestId: Int? = nil, pullRequestRepository: String? = nil) {
                 self.commit = commit
                 self.branch = branch
                 self.author = author
@@ -200,7 +200,7 @@ extension Build.Resources {
         public var path: String {
             "organizations/\(organization)/pipelines/\(pipeline)/builds"
         }
-
+        
         public init(organization: String, pipeline: String, body: Body) {
             self.organization = organization
             self.pipeline = pipeline
@@ -227,13 +227,13 @@ extension Build.Resources {
         public var path: String {
             "organizations/\(organization)/pipelines/\(pipeline)/builds/\(build)/cancel"
         }
-
+        
         public init(organization: String, pipeline: String, build: Int) {
             self.organization = organization
             self.pipeline = pipeline
             self.build = build
         }
-
+        
         public func transformRequest(_ request: inout URLRequest) {
             request.httpMethod = "PUT"
         }
@@ -254,7 +254,7 @@ extension Build.Resources {
         public var path: String {
             "organizations/\(organization)/pipelines/\(pipeline)/builds/\(build)/rebuild"
         }
-
+        
         public init(organization: String, pipeline: String, build: Int) {
             self.organization = organization
             self.pipeline = pipeline
@@ -265,7 +265,7 @@ extension Build.Resources {
             request.httpMethod = "PUT"
         }
     }
-
+    
     public struct QueryOptions {
         /// Filters the results by the given branch or branches.
         public var branches: [String] = []
@@ -285,8 +285,8 @@ extension Build.Resources {
         public var metadata: [String: String] = [:]
         /// Filters the results by the given build state. The finished state is a shortcut to automatically search for builds with passed, failed, blocked, canceled states.
         public var state: [Build.State]
-
-        public init(branches: [String] = [], commit: String? = nil, createdFrom: Date? = nil, createdTo: Date? = nil, creator: UUID? = nil, finishedFrom: Date? = nil, includeRetriedJobs: Bool? = nil, metadata: [String: String] = [:], state: [Build.State] = []) {
+        
+        public init(branches: [String] = [], commit: String? = nil, createdFrom: Date? = nil, createdTo: Date? = nil, creator: UUID? = nil, finishedFrom: Date? = nil, includeRetriedJobs: Bool? = nil, metadata: [String : String] = [:], state: [Build.State] = []) {
             self.branches = branches
             self.commit = commit
             self.createdFrom = createdFrom
@@ -299,6 +299,7 @@ extension Build.Resources {
         }
     }
 }
+
 
 private extension Array where Element == URLQueryItem {
     init(queryOptions: Build.Resources.QueryOptions) {

@@ -20,7 +20,7 @@ extension User.Resources {
     public struct Me: Resource, HasResponseBody {
         public typealias Content = User
         public let path = "user"
-
+        
         public init() {}
     }
 }

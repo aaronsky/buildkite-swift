@@ -169,7 +169,7 @@ public enum EnvVar: Codable, Equatable {
     case string(String)
     indirect case array([EnvVar])
     indirect case dictionary(EnvVars)
-
+    
     public init(from decoder: Decoder) throws {
         let container = try decoder.singleValueContainer()
 
@@ -202,10 +202,10 @@ public enum EnvVar: Codable, Equatable {
             self = .dictionary(dict)
             return
         } catch DecodingError.typeMismatch {}
-
+        
         throw DecodingError.typeMismatch(Self.self, DecodingError.Context(codingPath: container.codingPath, debugDescription: "Expected to decode \(Self.self) but the value in the container was incompatible"))
     }
-
+    
     public func encode(to encoder: Encoder) throws {
         var container = encoder.singleValueContainer()
         switch self {

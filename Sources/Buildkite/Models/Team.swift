@@ -29,7 +29,7 @@ public struct Team: Codable, Equatable, Identifiable {
     public var createdAt: Date
     /// User who created the team
     public var createdBy: User
-
+    
     public enum Visibility: String, Codable, Equatable {
         case visible
         case secret

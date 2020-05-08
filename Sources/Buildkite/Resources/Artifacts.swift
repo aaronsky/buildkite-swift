@@ -28,11 +28,11 @@ extension Artifact.Resources {
         public var pipeline: String
         /// build number
         public var build: Int
-
+                
         public var path: String {
             "organizations/\(organization)/pipelines/\(pipeline)/builds/\(build)/artifacts"
         }
-
+        
         public init(organization: String, pipeline: String, build: Int) {
             self.organization = organization
             self.pipeline = pipeline
@@ -53,11 +53,11 @@ extension Artifact.Resources {
         public var build: Int
         /// job ID
         public var jobId: UUID
-
+        
         public var path: String {
             "organizations/\(organization)/pipelines/\(pipeline)/builds/\(build)/jobs/\(jobId)/artifacts"
         }
-
+        
         public init(organization: String, pipeline: String, build: Int, jobId: UUID) {
             self.organization = organization
             self.pipeline = pipeline
@@ -83,7 +83,7 @@ extension Artifact.Resources {
         public var path: String {
             "organizations/\(organization)/pipelines/\(pipeline)/builds/\(build)/jobs/\(jobId)/artifacts/\(artifactId)"
         }
-
+        
         public init(organization: String, pipeline: String, build: Int, jobId: UUID, artifactId: UUID) {
             self.organization = organization
             self.pipeline = pipeline
@@ -112,7 +112,7 @@ extension Artifact.Resources {
         public var path: String {
             "organizations/\(organization)/pipelines/\(pipeline)/builds/\(build)/jobs/\(jobId)/artifacts/\(artifactId)/download"
         }
-
+        
         public init(organization: String, pipeline: String, build: Int, jobId: UUID, artifactId: UUID) {
             self.organization = organization
             self.pipeline = pipeline
@@ -141,7 +141,7 @@ extension Artifact.Resources {
         public var path: String {
             "organizations/\(organization)/pipelines/\(pipeline)/builds/\(build)/jobs/\(jobId)/artifacts/\(artifactId)"
         }
-
+        
         public init(organization: String, pipeline: String, build: Int, jobId: UUID, artifactId: UUID) {
             self.organization = organization
             self.pipeline = pipeline

@@ -208,7 +208,7 @@ extension PipelinesTests {
                 .number(1),
                 .number(2),
                 .number(3),
-                .number(4)
+                .number(4),
             ]),
             "bigs": .dictionary([
                 "vending": .string("machine"),
@@ -216,7 +216,7 @@ extension PipelinesTests {
             ])
         ]
     }
-
+    
     func testEnvVarDecodeEncode() throws {
         let testData = EnvVarTestData()
         let data = try JSONEncoder().encode(testData.object)

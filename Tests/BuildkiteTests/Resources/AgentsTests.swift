@@ -99,7 +99,7 @@ class AgentsTests: XCTestCase {
         let resource = Agent.Resources.Stop(organization: "buildkite",
                                             agentId: UUID(),
                                             body: Agent.Resources.Stop.Body(force: true))
-
+        
         let expectation = XCTestExpectation()
         context.client.send(resource) { result in
             do {

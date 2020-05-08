@@ -28,7 +28,7 @@ extension Emoji.Resources {
         public var path: String {
             "organizations/\(organization)/emojis"
         }
-
+        
         public init(organization: String) {
             self.organization = organization
         }

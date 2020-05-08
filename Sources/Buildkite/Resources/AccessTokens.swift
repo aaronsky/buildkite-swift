@@ -23,7 +23,7 @@ extension AccessToken.Resources {
     public struct Get: Resource, HasResponseBody {
         public typealias Content = AccessToken
         public let path = "access-token"
-
+        
         public init() {}
     }
 
@@ -35,7 +35,7 @@ extension AccessToken.Resources {
         public let path = "access-token"
 
         public init() {}
-
+        
         public func transformRequest(_ request: inout URLRequest) {
             request.httpMethod = "DELETE"
         }

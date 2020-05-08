@@ -24,7 +24,7 @@ public enum StatusCode: Int, Error, Codable {
 
     /// The request was found
     case found = 302
-
+    
     /// The response to the request can be found under a different URL in the Location header and can be retrieved using a GET method on that resource.
     case seeOther = 303
 

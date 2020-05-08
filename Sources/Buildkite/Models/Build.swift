@@ -33,7 +33,7 @@ public struct Build: Codable, Equatable, Identifiable {
     public var metaData: [String: String]
     public var pullRequest: [String: String?]?
     public var pipeline: Pipeline
-
+    
     public enum State: String, Codable, Equatable {
         case running
         case scheduled
