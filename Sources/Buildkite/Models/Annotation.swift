@@ -12,7 +12,7 @@ import Foundation
 import FoundationNetworking
 #endif
 
-public struct Annotation: Codable, Equatable {
+public struct Annotation: Codable, Equatable, Identifiable {
     public enum Context: String, Codable {
         case success
         case info

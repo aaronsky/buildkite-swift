@@ -12,7 +12,7 @@ import Foundation
 import FoundationNetworking
 #endif
 
-public struct Pipeline: Codable, Equatable {
+public struct Pipeline: Codable, Equatable, Identifiable {
     public var id: UUID
     public var url: URL
     public var webUrl: URL

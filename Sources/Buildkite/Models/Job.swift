@@ -57,7 +57,7 @@ public enum Job: Codable, Equatable {
         case type
     }
     
-    public struct Command: Codable, Equatable {
+    public struct Command: Codable, Equatable, Identifiable {
         public struct AgentRef: Codable, Equatable {
             public var id: UUID
             public var name: String
@@ -90,12 +90,12 @@ public enum Job: Codable, Equatable {
         public var parallelGroupTotal: Int?
     }
     
-    public struct Wait: Codable, Equatable {
+    public struct Wait: Codable, Equatable, Identifiable {
         public let type = "waiter"
         public var id: UUID
     }
     
-    public struct Block: Codable, Equatable {
+    public struct Block: Codable, Equatable, Identifiable {
         public let type = "manual"
         public var id: UUID
         public var label: String
@@ -119,7 +119,7 @@ public enum Job: Codable, Equatable {
         public var runnableAt: Date?
         public var triggeredBuild: TriggeredBuild
         
-        public struct TriggeredBuild: Codable, Equatable {
+        public struct TriggeredBuild: Codable, Equatable, Identifiable {
             public var id: UUID
             public var number: Int
             public var url: URL

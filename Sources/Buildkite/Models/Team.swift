@@ -12,7 +12,7 @@ import Foundation
 import FoundationNetworking
 #endif
 
-public struct Team: Codable, Equatable {
+public struct Team: Codable, Equatable, Identifiable {
     /// ID of the team
     public var id: UUID
     /// Name of the team
