@@ -17,14 +17,14 @@ public enum Job: Codable, Equatable {
     case waiter(Wait)
     case manual(Block)
     case trigger(Trigger)
-    
+
     private enum Unassociated: String, Codable {
         case script
         case waiter
         case manual
         case trigger
     }
-    
+
     public init(from decoder: Decoder) throws {
         let container = try decoder.container(keyedBy: CodingKeys.self)
         let type = try container.decode(Unassociated.self, forKey: .type)
@@ -39,7 +39,7 @@ public enum Job: Codable, Equatable {
             self = .trigger(try Trigger(from: decoder))
         }
     }
-    
+
     public func encode(to encoder: Encoder) throws {
         switch self {
         case .script(let step):
@@ -52,11 +52,11 @@ public enum Job: Codable, Equatable {
             try step.encode(to: encoder)
         }
     }
-    
+
     private enum CodingKeys: String, CodingKey {
         case type
     }
-    
+
     public struct Command: Codable, Equatable, Identifiable {
         public struct AgentRef: Codable, Equatable {
             public var id: UUID
@@ -89,12 +89,12 @@ public enum Job: Codable, Equatable {
         public var parallelGroupIndex: Int?
         public var parallelGroupTotal: Int?
     }
-    
+
     public struct Wait: Codable, Equatable, Identifiable {
         public let type = "waiter"
         public var id: UUID
     }
-    
+
     public struct Block: Codable, Equatable, Identifiable {
         public let type = "manual"
         public var id: UUID
@@ -106,7 +106,7 @@ public enum Job: Codable, Equatable {
         public var unblockable: Bool
         public var unblockUrl: URL
     }
-    
+
     public struct Trigger: Codable, Equatable {
         public let type = "trigger"
         public var name: String
@@ -118,7 +118,7 @@ public enum Job: Codable, Equatable {
         public var finishedAt: Date?
         public var runnableAt: Date?
         public var triggeredBuild: TriggeredBuild
-        
+
         public struct TriggeredBuild: Codable, Equatable, Identifiable {
             public var id: UUID
             public var number: Int
@@ -126,14 +126,14 @@ public enum Job: Codable, Equatable {
             public var webUrl: URL
         }
     }
-    
+
     public struct LogOutput: Codable, Equatable {
         public var url: URL // Resource<Job.Resources.GetLogOutput>
         public var content: String
         public var size: Int
         public var headerTimes: [Int]
     }
-    
+
     public struct EnvironmentVariables: Codable, Equatable {
         public var env: [String: String]
     }

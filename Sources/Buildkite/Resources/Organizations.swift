@@ -23,7 +23,7 @@ extension Organization.Resources {
     public struct List: Resource, HasResponseBody, Paginated {
         public typealias Content = [Organization]
         public let path = "organizations"
-                
+
         public init() {
         }
     }
@@ -37,7 +37,7 @@ extension Organization.Resources {
         public var path: String {
             "organizations/\(organization)"
         }
-        
+
         public init(organization: String) {
             self.organization = organization
         }
