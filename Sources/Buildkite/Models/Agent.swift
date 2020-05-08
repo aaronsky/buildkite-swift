@@ -14,7 +14,7 @@ import FoundationNetworking
 
 public struct Agent: Codable, Equatable, Identifiable {
     public var id: UUID
-    public var url: URL
+    public var url: URL // Resource<Agent.Resources.Get>
     public var webUrl: URL
     public var name: String
     public var connectionState: String

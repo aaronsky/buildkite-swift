@@ -14,7 +14,7 @@ import FoundationNetworking
 
 public struct Build: Codable, Equatable, Identifiable {
     public var id: UUID
-    public var url: URL
+    public var url: URL // Resource<Build.Resources.Get>
     public var webUrl: URL
     public var number: Int
     public var state: State

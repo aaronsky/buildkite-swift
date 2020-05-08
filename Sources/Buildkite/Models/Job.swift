@@ -70,8 +70,8 @@ public enum Job: Codable, Equatable {
         public var stepKey: String?
         public var buildUrl: URL
         public var webUrl: URL
-        public var logUrl: URL
-        public var rawLogUrl: URL
+        public var logUrl: URL // Resource<Job.Resources.GetLogOutput>
+        public var rawLogUrl: URL // Resource<Job.Resources.GetLogOutput>
         public var artifactsUrl: URL
         public var softFailed: Bool
         public var exitStatus: Int?
@@ -128,7 +128,7 @@ public enum Job: Codable, Equatable {
     }
     
     public struct LogOutput: Codable {
-        public var url: URL
+        public var url: URL // Resource<Job.Resources.GetLogOutput>
         public var content: String
         public var size: Int
         public var headerTimes: [Int]
