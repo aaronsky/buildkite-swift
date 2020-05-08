@@ -91,7 +91,7 @@ class BuildsTests: XCTestCase {
         let context = try MockContext(content: expected)
 
         let resource = Build.Resources.ListForOrganization(organization: "buildkite", queryOptions: Build.Resources.QueryOptions())
-        
+
         let expectation = XCTestExpectation()
 
         context.client.send(resource) { result in

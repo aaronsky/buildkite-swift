@@ -31,15 +31,15 @@ extension Agent.Resources {
         public var hostname: String?
         /// Filters the results by the given exact version number
         public var version: String?
-        
+
         public var path: String {
             "organizations/\(organization)/agents"
         }
-        
+
         public init(organization: String) {
             self.organization = organization
         }
-        
+
         public func transformRequest(_ request: inout URLRequest) {
             guard let url = request.url,
                 var components = URLComponents(url: url, resolvingAgainstBaseURL: true) else {
@@ -64,7 +64,7 @@ extension Agent.Resources {
         public var path: String {
             "organizations/\(organization)/agents/\(agentId)"
         }
-        
+
         public init(organization: String, agentId: UUID) {
             self.organization = organization
             self.agentId = agentId
@@ -82,7 +82,7 @@ extension Agent.Resources {
         public var agentId: UUID
         /// body of the request
         public var body: Body
-        
+
         public struct Body: Codable {
             /// If the agent is currently processing a job, the job and the build will be canceled.
             public var force: Bool?
@@ -91,7 +91,7 @@ extension Agent.Resources {
         public var path: String {
             "organizations/\(organization)/agents/\(agentId)/stop"
         }
-        
+
         public init(organization: String, agentId: UUID, body: Agent.Resources.Stop.Body) {
             self.organization = organization
             self.agentId = agentId

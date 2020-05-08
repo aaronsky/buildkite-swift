@@ -7,7 +7,7 @@ extension AccessTokensTests {
     // to regenerate.
     static let __allTests__AccessTokensTests = [
         ("testAccessTokenDelete", testAccessTokenDelete),
-        ("testAccessTokenGet", testAccessTokenGet),
+        ("testAccessTokenGet", testAccessTokenGet)
     ]
 }
 
@@ -18,7 +18,7 @@ extension AgentsTests {
     static let __allTests__AgentsTests = [
         ("testAgentsGet", testAgentsGet),
         ("testAgentsList", testAgentsList),
-        ("testAgentsStop", testAgentsStop),
+        ("testAgentsStop", testAgentsStop)
     ]
 }
 
@@ -27,7 +27,7 @@ extension AnnotationsTests {
     //   `swift test --generate-linuxmain`
     // to regenerate.
     static let __allTests__AnnotationsTests = [
-        ("testAnnotationsList", testAnnotationsList),
+        ("testAnnotationsList", testAnnotationsList)
     ]
 }
 
@@ -40,7 +40,7 @@ extension ArtifactsTests {
         ("testArtifactsDownload", testArtifactsDownload),
         ("testArtifactsGet", testArtifactsGet),
         ("testArtifactsListByBuild", testArtifactsListByBuild),
-        ("testArtifactsListByJob", testArtifactsListByJob),
+        ("testArtifactsListByJob", testArtifactsListByJob)
     ]
 }
 
@@ -56,7 +56,7 @@ extension BuildkiteTests {
         ("testClosureBasedRequestNoContent", testClosureBasedRequestNoContent),
         ("testClosureBasedRequestUnsuccessfulResponse", testClosureBasedRequestUnsuccessfulResponse),
         ("testClosureBasedRequestWithPagination", testClosureBasedRequestWithPagination),
-        ("testFailureFromTransport", testFailureFromTransport),
+        ("testFailureFromTransport", testFailureFromTransport)
     ]
 }
 
@@ -72,7 +72,7 @@ extension BuildsTests {
         ("testBuildsListAllSpecializedQuery", testBuildsListAllSpecializedQuery),
         ("testBuildsListForOrganization", testBuildsListForOrganization),
         ("testBuildsListForPipeline", testBuildsListForPipeline),
-        ("testBuildsRebuild", testBuildsRebuild),
+        ("testBuildsRebuild", testBuildsRebuild)
     ]
 }
 
@@ -81,7 +81,7 @@ extension EmojisTests {
     //   `swift test --generate-linuxmain`
     // to regenerate.
     static let __allTests__EmojisTests = [
-        ("testEmojisList", testEmojisList),
+        ("testEmojisList", testEmojisList)
     ]
 }
 
@@ -94,7 +94,7 @@ extension JobsTests {
         ("testJobsEnvironmentVariables", testJobsEnvironmentVariables),
         ("testJobsLogOutput", testJobsLogOutput),
         ("testJobsRetry", testJobsRetry),
-        ("testJobsUnblock", testJobsUnblock),
+        ("testJobsUnblock", testJobsUnblock)
     ]
 }
 
@@ -104,7 +104,7 @@ extension OrganizationsTests {
     // to regenerate.
     static let __allTests__OrganizationsTests = [
         ("testOrganizationsGet", testOrganizationsGet),
-        ("testOrganizationsList", testOrganizationsList),
+        ("testOrganizationsList", testOrganizationsList)
     ]
 }
 
@@ -118,7 +118,7 @@ extension PipelinesTests {
         ("testPipelinesDelete", testPipelinesDelete),
         ("testPipelinesGet", testPipelinesGet),
         ("testPipelinesList", testPipelinesList),
-        ("testPipelinesUpdate", testPipelinesUpdate),
+        ("testPipelinesUpdate", testPipelinesUpdate)
     ]
 }
 
@@ -127,7 +127,7 @@ extension StatusCodeTests {
     //   `swift test --generate-linuxmain`
     // to regenerate.
     static let __allTests__StatusCodeTests = [
-        ("testFlag", testFlag),
+        ("testFlag", testFlag)
     ]
 }
 
@@ -136,7 +136,7 @@ extension TeamsTests {
     //   `swift test --generate-linuxmain`
     // to regenerate.
     static let __allTests__TeamsTests = [
-        ("testTeamsList", testTeamsList),
+        ("testTeamsList", testTeamsList)
     ]
 }
 
@@ -146,7 +146,7 @@ extension TransportTests {
     // to regenerate.
     static let __allTests__TransportTests = [
         ("testURLSessionSendClosureBasedRequest", testURLSessionSendClosureBasedRequest),
-        ("testURLSessionSendClosureBasedRequestFailure", testURLSessionSendClosureBasedRequestFailure),
+        ("testURLSessionSendClosureBasedRequestFailure", testURLSessionSendClosureBasedRequestFailure)
     ]
 }
 
@@ -155,7 +155,7 @@ extension UsersTests {
     //   `swift test --generate-linuxmain`
     // to regenerate.
     static let __allTests__UsersTests = [
-        ("testUserMe", testUserMe),
+        ("testUserMe", testUserMe)
     ]
 }
 
@@ -174,7 +174,7 @@ public func __allTests() -> [XCTestCaseEntry] {
         testCase(StatusCodeTests.__allTests__StatusCodeTests),
         testCase(TeamsTests.__allTests__TeamsTests),
         testCase(TransportTests.__allTests__TransportTests),
-        testCase(UsersTests.__allTests__UsersTests),
+        testCase(UsersTests.__allTests__UsersTests)
     ]
 }
 #endif

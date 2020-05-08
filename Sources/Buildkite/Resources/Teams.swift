@@ -23,16 +23,16 @@ extension Team.Resources {
         public var organization: String
         /// Filters the results to teams that have the given user as a member.
         public var userId: UUID?
-        
+
         public var path: String {
             "organizations/\(organization)/teams"
         }
-        
+
         public init(organization: String, userId: UUID? = nil) {
             self.organization = organization
             self.userId = userId
         }
-        
+
         public func transformRequest(_ request: inout URLRequest) {
             guard let url = request.url,
                 var components = URLComponents(url: url, resolvingAgainstBaseURL: true) else {

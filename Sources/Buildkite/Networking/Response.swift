@@ -21,13 +21,13 @@ public struct BuildkiteError: Error {
     public var statusCode: StatusCode
     public var message: String
     public var errors: [String]
-    
+
     init(statusCode: StatusCode, intermediary: Intermediary) {
         self.statusCode = statusCode
         self.message = intermediary.message ?? ""
         self.errors = intermediary.errors ?? []
     }
-    
+
     struct Intermediary: Codable {
         var message: String?
         var errors: [String]?

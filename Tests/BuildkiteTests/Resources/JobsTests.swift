@@ -71,7 +71,7 @@ class JobsTests: XCTestCase {
         }
         wait(for: [expectation])
     }
-    
+
     #if !os(Linux)
     func testJobsLogOutputAlternativePlainText() throws {
         let expected = "hello friends"
@@ -90,7 +90,7 @@ class JobsTests: XCTestCase {
         }
         wait(for: [expectation])
     }
-    
+
     func testJobsLogOutputAlternativeHTML() throws {
         let expected = "hello friends"
         let context = try MockContext(content: expected)

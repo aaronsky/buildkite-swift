@@ -30,15 +30,15 @@ extension Job.Resources {
         public var build: Int
         /// job ID
         public var job: UUID
-        
+
         public var path: String {
             "organizations/\(organization)/pipelines/\(pipeline)/builds/\(build)/jobs/\(job)/retry"
         }
-        
+
         public func transformRequest(_ request: inout URLRequest) {
             request.httpMethod = "PUT"
         }
-        
+
         public init(organization: String, pipeline: String, build: Int, job: UUID) {
             self.organization = organization
             self.pipeline = pipeline
@@ -46,7 +46,7 @@ extension Job.Resources {
             self.job = job
         }
     }
-    
+
     /// Unblock a job
     ///
     /// Unblocks a build’s "Block pipeline" job. The job’s `unblockable` property indicates whether it is able to be unblocked, and the `unblock_url` property points to this endpoint.
@@ -62,21 +62,21 @@ extension Job.Resources {
         public var job: UUID
         /// body of the request
         public var body: Body
-        
+
         public struct Body: Codable {
             public var unblocker: UUID?
             public var fields: [String: String]
-            
-            public init(unblocker: UUID? = nil, fields: [String : String] = [:]) {
+
+            public init(unblocker: UUID? = nil, fields: [String: String] = [:]) {
                 self.unblocker = unblocker
                 self.fields = fields
             }
         }
-        
+
         public var path: String {
             "organizations/\(organization)/pipelines/\(pipeline)/builds/\(build)/jobs/\(job)/unblock"
         }
-        
+
         public init(organization: String, pipeline: String, build: Int, job: UUID, body: Job.Resources.Unblock.Body) {
             self.organization = organization
             self.pipeline = pipeline
@@ -84,12 +84,12 @@ extension Job.Resources {
             self.job = job
             self.body = body
         }
-        
+
         public func transformRequest(_ request: inout URLRequest) {
             request.httpMethod = "PUT"
         }
     }
-    
+
     /// Get a job’s log output
     public struct LogOutput: Resource, HasResponseBody {
         public typealias Content = Job.LogOutput
@@ -101,11 +101,11 @@ extension Job.Resources {
         public var build: Int
         /// job ID
         public var job: UUID
-        
+
         public var path: String {
             "organizations/\(organization)/pipelines/\(pipeline)/builds/\(build)/jobs/\(job)/log"
         }
-        
+
         public init(organization: String, pipeline: String, build: Int, job: UUID) {
             self.organization = organization
             self.pipeline = pipeline
@@ -113,7 +113,7 @@ extension Job.Resources {
             self.job = job
         }
     }
-    
+
     /// Delete a job’s log output
     public struct DeleteLogOutput: Resource {
         public typealias Content = Void
@@ -125,23 +125,23 @@ extension Job.Resources {
         public var build: Int
         /// job ID
         public var job: UUID
-        
+
         public var path: String {
             "organizations/\(organization)/pipelines/\(pipeline)/builds/\(build)/jobs/\(job)/log"
         }
-        
+
         public init(organization: String, pipeline: String, build: Int, job: UUID) {
             self.organization = organization
             self.pipeline = pipeline
             self.build = build
             self.job = job
         }
-        
+
         public func transformRequest(_ request: inout URLRequest) {
             request.httpMethod = "DELETE"
         }
     }
-    
+
     /// Get a job's environment variables
     public struct EnvironmentVariables: Resource, HasResponseBody {
         public typealias Content = Job.EnvironmentVariables
@@ -153,11 +153,11 @@ extension Job.Resources {
         public var build: Int
         /// job ID
         public var job: UUID
-        
+
         public var path: String {
             "organizations/\(organization)/pipelines/\(pipeline)/builds/\(build)/jobs/\(job)/env"
         }
-        
+
         public init(organization: String, pipeline: String, build: Int, job: UUID) {
             self.organization = organization
             self.pipeline = pipeline
@@ -176,7 +176,7 @@ extension Job.Resources.LogOutput {
             case html
             case plainText = "txt"
         }
-        
+
         public typealias Content = String
         /// organization slug
         public var organization: String
@@ -186,13 +186,13 @@ extension Job.Resources.LogOutput {
         public var build: Int
         /// job ID
         public var job: UUID
-        
+
         public var format: Format
-        
+
         public var path: String {
             "organizations/\(organization)/pipelines/\(pipeline)/builds/\(build)/jobs/\(job)/log.\(format)"
         }
-        
+
         public init(organization: String, pipeline: String, build: Int, job: UUID, format: Format) {
             self.organization = organization
             self.pipeline = pipeline

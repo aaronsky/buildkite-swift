@@ -17,29 +17,29 @@ public struct Page {
     public var previousPage: Int?
     public var firstPage: Int?
     public var lastPage: Int?
-    
+
     init?(for header: String) {
         guard !header.isEmpty else {
             return nil
         }
-        
+
         for link in header.split(separator: ",") {
             let segments = link
                 .trimmingCharacters(in: .whitespacesAndNewlines)
                 .split(separator: ";")
             guard
                 segments.count <= 2,
-                
+
                 let urlString = segments.first,
                 urlString.hasPrefix("<") && urlString.hasSuffix(">"),
-                
+
                 let url = URLComponents(string: String(urlString.dropFirst().dropLast())),
-                
+
                 let pageString = url.queryItems?.first(where: { $0.name == "page" })?.value,
                 let page = Int(pageString) else {
                     continue
             }
-            
+
             for segment in segments.dropFirst() {
                 switch segment.trimmingCharacters(in: .whitespacesAndNewlines) {
                 case "rel=\"next\"":
@@ -61,7 +61,7 @@ public struct Page {
 public struct PageOptions {
     public var page: Int
     public var perPage: Int
-    
+
     public init(page: Int, perPage: Int) {
         self.page = page
         self.perPage = perPage
@@ -87,4 +87,3 @@ private extension Array where Element == URLQueryItem {
         append(URLQueryItem(name: "per_page", value: String(pageOptions.perPage)))
     }
 }
-
