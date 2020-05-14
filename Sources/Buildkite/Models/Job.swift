@@ -79,7 +79,7 @@ public enum Job: Codable, Equatable {
         public var agentQueryRules: [String]
         public var agent: AgentRef?
         public var createdAt: Date
-        public var scheduledAt: Date
+        public var scheduledAt: Date?
         public var runnableAt: Date?
         public var startedAt: Date?
         public var finishedAt: Date?
@@ -114,7 +114,7 @@ public enum Job: Codable, Equatable {
         public var buildUrl: URL
         public var webUrl: URL
         public var createdAt: Date
-        public var scheduledAt: Date
+        public var scheduledAt: Date?
         public var finishedAt: Date?
         public var runnableAt: Date?
         public var triggeredBuild: TriggeredBuild

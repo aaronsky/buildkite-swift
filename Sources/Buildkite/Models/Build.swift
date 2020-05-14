@@ -27,7 +27,7 @@ public struct Build: Codable, Equatable, Identifiable {
     public var creator: User?
     public var jobs: [Job]
     public var createdAt: Date
-    public var scheduledAt: Date
+    public var scheduledAt: Date?
     public var startedAt: Date?
     public var finishedAt: Date?
     public var metaData: [String: String]
