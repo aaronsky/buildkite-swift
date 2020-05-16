@@ -66,6 +66,7 @@ public enum Job: Codable, Equatable {
         public let type = "script"
         public var id: UUID
         public var name: String
+        public var state: String
         public var command: String?
         public var stepKey: String?
         public var buildUrl: URL
