@@ -65,8 +65,8 @@ public enum Job: Codable, Equatable {
         }
         public let type = "script"
         public var id: UUID
-        public var name: String
-        public var state: String
+        public var name: String?
+        public var state: String?
         public var command: String?
         public var stepKey: String?
         public var buildUrl: URL
@@ -110,8 +110,8 @@ public enum Job: Codable, Equatable {
 
     public struct Trigger: Codable, Equatable {
         public let type = "trigger"
-        public var name: String
-        public var state: String
+        public var name: String?
+        public var state: String?
         public var buildUrl: URL
         public var webUrl: URL
         public var createdAt: Date
