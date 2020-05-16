@@ -29,6 +29,7 @@ extension Agent {
                   createdAt: Date(timeIntervalSince1970: 1000),
                   job: Job.script(Job.Command(id: UUID(),
                                               name: "📦",
+                                              state: "passed",
                                               command: nil,
                                               stepKey: nil,
                                               buildUrl: URL(),
