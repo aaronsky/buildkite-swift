@@ -12,6 +12,16 @@ import Foundation
 import FoundationNetworking
 #endif
 
+public protocol Resource {
+    associatedtype Content
+    var path: String { get }
+    func transformRequest(_ request: inout URLRequest)
+}
+
+extension Resource {
+    public func transformRequest(_ request: inout URLRequest) {}
+}
+
 public protocol HasRequestBody {
     associatedtype Body: Encodable
     var body: Body { get }
@@ -21,19 +31,7 @@ public protocol HasResponseBody {
     associatedtype Content: Decodable
 }
 
-public protocol Paginated: HasResponseBody {
-}
-
-public protocol Resource {
-    var path: String { get }
-    func transformRequest(_ request: inout URLRequest)
-}
-
-extension Resource {
-    public func transformRequest(_ request: inout URLRequest) {
-
-    }
-}
+public protocol Paginated: HasResponseBody {}
 
 extension URLRequest {
     init<R: Resource>(_ resource: R, configuration: Configuration) {

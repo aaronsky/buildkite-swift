@@ -45,6 +45,8 @@ struct MockResources {
     var paginatedContent = HasPaginatedContent.Content(name: "Jeff", age: 35)
 
     struct HasBody: Resource, HasRequestBody {
+        typealias Content = Void
+        
         struct Body: Codable, Equatable {
             var name: String
             var age: Int
@@ -122,10 +124,4 @@ extension MockData {
                         httpVersion: "HTTP/1.1",
                         headerFields: ["Link": #"<https://api.buildkite.com/v2/organizations/my-great-org/pipelines/my-pipeline/builds?api_key=f8582f070276d764ce3dd4c6d57be92574dccf86&page=3>; rel="prev",<https://api.buildkite.com/v2/organizations/my-great-org/pipelines/my-pipeline/builds?api_key=f8582f070276d764ce3dd4c6d57be92574dccf86&page=5>; rel="next",<https://api.buildkite.com/v2/organizations/my-great-org/pipelines/my-pipeline/builds?api_key=f8582f070276d764ce3dd4c6d57be92574dccf86&page=1>; rel="first", <https://api.buildkite.com/v2/organizations/my-great-org/pipelines/my-pipeline/builds?api_key=f8582f070276d764ce3dd4c6d57be92574dccf86&page=10>; rel="last""#])!
     }
-}
-
-// MARK: Response Mocks
-
-extension MockData {
-
 }
