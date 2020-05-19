@@ -8,8 +8,13 @@
 //  Copyright © 2020 Aaron Sky. All rights reserved.
 //
 
-@testable import Buildkite
+import Foundation
 import XCTest
+@testable import Buildkite
+
+#if canImport(FoundationNetworking)
+import FoundationNetworking
+#endif
 
 final class JSONValueTests: XCTestCase {
     func testDecodeArray() throws {

@@ -8,6 +8,10 @@
 
 import Foundation
 
+#if canImport(FoundationNetworking)
+import FoundationNetworking
+#endif
+
 public struct GraphQL<T: Codable>: Resource, HasResponseBody, HasRequestBody {    
     public struct Body: Encodable {
         /// The query or mutation to be sent
