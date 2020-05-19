@@ -32,8 +32,10 @@ public struct APIVersion {
     }
     
     func url(for path: String) -> URL {
-        baseURL
-            .appendingPathComponent(version)
-            .appendingPathComponent(path)
+        let url = baseURL.appendingPathComponent(version)
+        guard !path.isEmpty else {
+            return url
+        }
+        return url.appendingPathComponent(path)
     }
 }
