@@ -7,7 +7,7 @@ jobs:
     steps:
       - uses: actions/checkout@v1.0.0
       - name: SwiftPM Build
-        run: swift build
+        run: swift test --enable-test-discovery
   test-iOS:
     runs-on: macOS-latest
     steps:
