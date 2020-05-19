@@ -196,31 +196,3 @@ class PipelinesTests: XCTestCase {
         wait(for: [expectation])
     }
 }
-
-extension PipelinesTests {
-    private struct EnvVarTestData {
-        let object: EnvVars = [
-            "doors": nil,
-            "boats": .number(1),
-            "houses": .string("ghosts"),
-            "rocks": .bool(true),
-            "horses": .array([
-                .number(1),
-                .number(2),
-                .number(3),
-                .number(4)
-            ]),
-            "bigs": .dictionary([
-                "vending": .string("machine"),
-                "yes": nil
-            ])
-        ]
-    }
-
-    func testEnvVarDecodeEncode() throws {
-        let testData = EnvVarTestData()
-        let data = try JSONEncoder().encode(testData.object)
-        let object = try JSONDecoder().decode(EnvVars.self, from: data)
-        XCTAssertEqual(object, testData.object)
-    }
-}

@@ -44,54 +44,6 @@ public final class Buildkite {
         self.transport = transport
     }
 
-    public func send<R: Resource & HasResponseBody>(_ resource: R, completion: @escaping (Result<Response<R.Content>, Error>) -> Void) {
-        let request = URLRequest(resource, configuration: configuration)
-        transport.send(request: request, completion: handleContentfulResponse(completion: completion))
-    }
-
-    public func send<R: Resource & Paginated>(_ resource: R, pageOptions: PageOptions? = nil, completion: @escaping (Result<Response<R.Content>, Error>) -> Void) {
-        let request = URLRequest(resource, configuration: configuration, pageOptions: pageOptions)
-        transport.send(request: request, completion: handleContentfulResponse(completion: completion))
-    }
-
-    public func send<R: Resource & HasRequestBody & HasResponseBody>(_ resource: R, completion: @escaping (Result<Response<R.Content>, Error>) -> Void) {
-        let request: URLRequest
-        do {
-            request = try URLRequest(resource, configuration: configuration, encoder: encoder)
-        } catch {
-            completion(.failure(error))
-            return
-        }
-        transport.send(request: request, completion: handleContentfulResponse(completion: completion))
-    }
-
-    public func send<R: Resource & HasRequestBody & Paginated>(_ resource: R, pageOptions: PageOptions? = nil, completion: @escaping (Result<Response<R.Content>, Error>) -> Void) {
-        let request: URLRequest
-        do {
-            request = try URLRequest(resource, configuration: configuration, encoder: encoder, pageOptions: pageOptions)
-        } catch {
-            completion(.failure(error))
-            return
-        }
-        transport.send(request: request, completion: handleContentfulResponse(completion: completion))
-    }
-
-    public func send<R: Resource>(_ resource: R, completion: @escaping (Result<Response<Void>, Error>) -> Void) {
-        let request = URLRequest(resource, configuration: configuration)
-        transport.send(request: request, completion: handleEmptyResponse(completion: completion))
-    }
-
-    public func send<R: Resource & HasRequestBody>(_ resource: R, completion: @escaping (Result<Response<Void>, Error>) -> Void) {
-        let request: URLRequest
-        do {
-            request = try URLRequest(resource, configuration: configuration, encoder: encoder)
-        } catch {
-            completion(.failure(error))
-            return
-        }
-        transport.send(request: request, completion: handleEmptyResponse(completion: completion))
-    }
-
     private func handleContentfulResponse<Content: Decodable>(completion: @escaping (Result<Response<Content>, Error>) -> Void) -> Transport.Completion {
         return { [weak self] result in
             guard let self = self else {
@@ -144,6 +96,60 @@ public final class Buildkite {
         }
     }
 }
+
+// MARK: Closure API
+
+public extension Buildkite {
+    func send<R: Resource & HasResponseBody>(_ resource: R, completion: @escaping (Result<Response<R.Content>, Error>) -> Void) {
+        let request = URLRequest(resource, configuration: configuration)
+        transport.send(request: request, completion: handleContentfulResponse(completion: completion))
+    }
+    
+    func send<R: Resource & Paginated>(_ resource: R, pageOptions: PageOptions? = nil, completion: @escaping (Result<Response<R.Content>, Error>) -> Void) {
+        let request = URLRequest(resource, configuration: configuration, pageOptions: pageOptions)
+        transport.send(request: request, completion: handleContentfulResponse(completion: completion))
+    }
+    
+    func send<R: Resource & HasRequestBody & HasResponseBody>(_ resource: R, completion: @escaping (Result<Response<R.Content>, Error>) -> Void) {
+        let request: URLRequest
+        do {
+            request = try URLRequest(resource, configuration: configuration, encoder: encoder)
+        } catch {
+            completion(.failure(error))
+            return
+        }
+        transport.send(request: request, completion: handleContentfulResponse(completion: completion))
+    }
+    
+    func send<R: Resource & HasRequestBody & Paginated>(_ resource: R, pageOptions: PageOptions? = nil, completion: @escaping (Result<Response<R.Content>, Error>) -> Void) {
+        let request: URLRequest
+        do {
+            request = try URLRequest(resource, configuration: configuration, encoder: encoder, pageOptions: pageOptions)
+        } catch {
+            completion(.failure(error))
+            return
+        }
+        transport.send(request: request, completion: handleContentfulResponse(completion: completion))
+    }
+    
+    func send<R: Resource>(_ resource: R, completion: @escaping (Result<Response<Void>, Error>) -> Void) {
+        let request = URLRequest(resource, configuration: configuration)
+        transport.send(request: request, completion: handleEmptyResponse(completion: completion))
+    }
+    
+    func send<R: Resource & HasRequestBody>(_ resource: R, completion: @escaping (Result<Response<Void>, Error>) -> Void) {
+        let request: URLRequest
+        do {
+            request = try URLRequest(resource, configuration: configuration, encoder: encoder)
+        } catch {
+            completion(.failure(error))
+            return
+        }
+        transport.send(request: request, completion: handleEmptyResponse(completion: completion))
+    }
+}
+
+// MARK: Combine API
 
 #if canImport(Combine)
 import Combine

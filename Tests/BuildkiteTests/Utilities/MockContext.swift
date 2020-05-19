@@ -20,14 +20,14 @@ struct MockContext {
     init() {
         let configuration = Configuration.default
         self.init(configuration: configuration, responses: [
-            MockData.mockingSuccessNoContent(url: configuration.baseURL)
+            MockData.mockingSuccessNoContent(url: configuration.version.baseURL)
         ])
     }
 
     init<Content: Codable>(content: Content) throws {
         let configuration = Configuration.default
         try self.init(configuration: configuration, responses: [
-             MockData.mockingSuccess(with: content, url: configuration.baseURL)
+             MockData.mockingSuccess(with: content, url: configuration.version.baseURL)
         ])
     }
 

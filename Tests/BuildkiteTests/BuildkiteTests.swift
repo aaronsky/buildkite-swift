@@ -40,19 +40,19 @@ class BuildkiteTests: XCTestCase {
 
             switch testCase {
             case .success:
-                responses = [try MockData.mockingSuccess(with: resources.content, url: configuration.baseURL)]
+                responses = [try MockData.mockingSuccess(with: resources.content, url: configuration.version.baseURL)]
             case .successPaginated:
-                responses = [try MockData.mockingSuccess(with: resources.paginatedContent, url: configuration.baseURL)]
+                responses = [try MockData.mockingSuccess(with: resources.paginatedContent, url: configuration.version.baseURL)]
             case .successNoContent:
-                responses = [MockData.mockingSuccessNoContent(url: configuration.baseURL)]
+                responses = [MockData.mockingSuccessNoContent(url: configuration.version.baseURL)]
             case .successHasBody:
-                responses = [MockData.mockingSuccessNoContent(url: configuration.baseURL)]
+                responses = [MockData.mockingSuccessNoContent(url: configuration.version.baseURL)]
             case .successHasBodyPaginated:
-                responses = [try MockData.mockingSuccess(with: resources.bodyAndPaginatedContent, url: configuration.baseURL)]
+                responses = [try MockData.mockingSuccess(with: resources.bodyAndPaginatedContent, url: configuration.version.baseURL)]
             case .badResponse:
-                responses = [MockData.mockingIncompatibleResponse(for: configuration.baseURL)]
+                responses = [MockData.mockingIncompatibleResponse(for: configuration.version.baseURL)]
             case .unsuccessfulResponse:
-                responses = [MockData.mockingUnsuccessfulResponse(for: configuration.baseURL)]
+                responses = [MockData.mockingUnsuccessfulResponse(for: configuration.version.baseURL)]
             case .noData:
                 responses = []
             }

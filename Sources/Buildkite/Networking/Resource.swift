@@ -35,7 +35,7 @@ public protocol Paginated: HasResponseBody {}
 
 extension URLRequest {
     init<R: Resource>(_ resource: R, configuration: Configuration) {
-        let url = configuration.url(for: resource.path)
+        let url = configuration.version.url(for: resource.path)
         var request = URLRequest(url: url)
         configuration.transformRequest(&request)
         resource.transformRequest(&request)

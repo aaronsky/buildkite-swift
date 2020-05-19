@@ -36,7 +36,7 @@ public struct Pipeline: Codable, Equatable, Identifiable {
     public var waitingJobsCount: Int
     public var visibility: String
     public var steps: [Step]
-    public var env: EnvVars?
+    public var env: JSONValue?
 
     public struct Provider: Codable, Equatable {
         public var id: String
@@ -132,7 +132,7 @@ extension Pipeline {
             public var label: String?
             public var artifactPaths: String?
             public var branchConfiguration: String?
-            public var env: [String: EnvVar?]
+            public var env: JSONValue
             public var timeoutInMinutes: Int?
             public var agentQueryRules: [String]
             public var async: Bool?
@@ -158,67 +158,6 @@ extension Pipeline {
             public var triggerCommit: String?
             public var triggerBranch: String?
             public var triggerAsync: Bool?
-        }
-    }
-}
-
-public typealias EnvVars = [String: EnvVar?]
-public enum EnvVar: Codable, Equatable {
-    case bool(Bool)
-    case number(Double)
-    case string(String)
-    indirect case array([EnvVar])
-    indirect case dictionary(EnvVars)
-
-    public init(from decoder: Decoder) throws {
-        let container = try decoder.singleValueContainer()
-
-        do {
-            let bool = try container.decode(Bool.self)
-            self = .bool(bool)
-            return
-        } catch DecodingError.typeMismatch {}
-
-        do {
-            let number = try container.decode(Double.self)
-            self = .number(number)
-            return
-        } catch DecodingError.typeMismatch {}
-
-        do {
-            let string = try container.decode(String.self)
-            self = .string(string)
-            return
-        } catch DecodingError.typeMismatch {}
-
-        do {
-            let array = try container.decode([EnvVar].self)
-            self = .array(array)
-            return
-        } catch DecodingError.typeMismatch {}
-
-        do {
-            let dict = try container.decode(EnvVars.self)
-            self = .dictionary(dict)
-            return
-        } catch DecodingError.typeMismatch {}
-
-        throw DecodingError.typeMismatch(Self.self, DecodingError.Context(codingPath: container.codingPath, debugDescription: "Expected to decode \(Self.self) but the value in the container was incompatible"))
-    }
-
-    public func encode(to encoder: Encoder) throws {
-        var container = encoder.singleValueContainer()
-        switch self {
-        case .bool(let bool):
-            try container.encode(bool)
-        case .number(let number):
-            try container.encode(number)
-        case .string(let string):
-            try container.encode(string)
-        case .array(let array):
-            try container.encode(array)
-        case .dictionary(let dict):
-            try container.encode(dict)
         }
     }
 }

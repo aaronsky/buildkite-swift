@@ -13,17 +13,27 @@ import FoundationNetworking
 #endif
 
 public struct APIVersion {
-    public static let v2: APIVersion = "v2"
-
-    let id: String
-
-    init(_ version: String) {
-        id = version
+    public enum REST {
+        private static let baseURL = URL(string: "https://api.buildkite.com")!
+        public static let v2 = APIVersion(baseURL: baseURL, version: "v2")
     }
-}
+    
+    public enum GraphQL {
+        private static let baseURL = URL(string: "https://graphql.buildkite.com")!
+        public static let v1 = APIVersion(baseURL: baseURL, version: "v1")
+    }
 
-extension APIVersion: ExpressibleByStringLiteral {
-    public init(stringLiteral value: StringLiteralType) {
-        self.init(value)
+    public let baseURL: URL
+    public let version: String
+
+    init(baseURL: URL, version: String) {
+        self.baseURL = baseURL
+        self.version = version
+    }
+    
+    func url(for path: String) -> URL {
+        baseURL
+            .appendingPathComponent(version)
+            .appendingPathComponent(path)
     }
 }
