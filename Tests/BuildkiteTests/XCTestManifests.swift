@@ -121,8 +121,6 @@ extension JobsTests {
     static let __allTests__JobsTests = [
         ("testJobsDeleteLogOutput", testJobsDeleteLogOutput),
         ("testJobsEnvironmentVariables", testJobsEnvironmentVariables),
-        ("testJobsLogOutputAlternativeHTML", testJobsLogOutputAlternativeHTML),
-        ("testJobsLogOutputAlternativePlainText", testJobsLogOutputAlternativePlainText),
         ("testJobsLogOutput", testJobsLogOutput),
         ("testJobsRetry", testJobsRetry),
         ("testJobsUnblock", testJobsUnblock),
