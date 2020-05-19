@@ -51,8 +51,8 @@ client.token = "..." // Your scoped Buildkite API access token
 var cancellables: Set<AnyCancellable> = []
 client.sendPublisher(Pipeline.Resources.List(organization: "buildkite"))
     .map(\.content)
-    .sink(recieveCompletion: { _ in }) { pipelines in
-        print(pipelines)   
+    .sink(receiveCompletion: { _ in }) { pipelines in
+        print(pipelines)
     }.store(in: &cancellables)
 ```
 
@@ -87,7 +87,7 @@ query MyPipelines($first: Int!) {
 struct MyPipeline: Codable {
     var organization: Organization?
 
-    struct Organizations: Codable {
+    struct Organization: Codable {
         var pipelines: Pipelines
 
         struct Pipelines: Codable {
@@ -108,16 +108,16 @@ struct MyPipeline: Codable {
 var cancellables: Set<AnyCancellable> = []
 client.sendPublisher(GraphQL<MyPipeline>(rawQuery: query, variables: ["first": 30]))
     .map(\.content)
-    .sink(recieveCompletion: { _ in }) { pipelines in
-        print(pipelines)   
+    .sink(receiveCompletion: { _ in }) { pipelines in
+        print(pipelines)
     }.store(in: &cancellables)
 ```
 
 ## References
 
-- [Buildkite](https://buildkite.com/)
-- [Buildkite API Documentation](https://buildkite.com/docs/apis)
-- [Buildkite GraphQL Explorer](https://graphql.buildkite.com/explorer)
+-   [Buildkite](https://buildkite.com/)
+-   [Buildkite API Documentation](https://buildkite.com/docs/apis)
+-   [Buildkite GraphQL Explorer](https://graphql.buildkite.com/explorer)
 
 ## License
 
