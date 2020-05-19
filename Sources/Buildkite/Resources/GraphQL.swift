@@ -40,6 +40,10 @@ public struct GraphQL<T: Codable>: Resource, HasResponseBody, HasRequestBody {
     
     public var body: Body
     
+    public var version: APIVersion {
+        APIVersion.GraphQL.v1
+    }
+    
     public let path = ""
 
     public init(rawQuery query: String, variables: [String: JSONValue] = [:]) {
@@ -47,7 +51,6 @@ public struct GraphQL<T: Codable>: Resource, HasResponseBody, HasRequestBody {
     }
     
     public func transformRequest(_ request: inout URLRequest) {
-        request.url = APIVersion.GraphQL.v1.url(for: path)
         request.httpMethod = "POST"
     }
 }

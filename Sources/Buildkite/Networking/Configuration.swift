@@ -12,18 +12,18 @@ import Foundation
 import FoundationNetworking
 #endif
 
-let libraryVersion = "0.0.1"
-
 public struct Configuration {
-    public let userAgent = "buildkite-swift/\(libraryVersion)"
+    public let userAgent = "buildkite-swift"
     public var version: APIVersion
+    public var graphQLVersion: APIVersion
 
     public static var `default`: Configuration {
-        .init(version: APIVersion.REST.v2)
+        .init(version: APIVersion.REST.v2, graphQLVersion: APIVersion.GraphQL.v1)
     }
 
-    public init(version: APIVersion) {
+    public init(version: APIVersion = APIVersion.REST.v2, graphQLVersion: APIVersion = APIVersion.GraphQL.v1) {
         self.version = version
+        self.graphQLVersion = graphQLVersion
     }
 
     var token: String?

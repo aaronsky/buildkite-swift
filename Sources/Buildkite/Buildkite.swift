@@ -19,17 +19,17 @@ public final class Buildkite {
         encoder.keyEncodingStrategy = .convertToSnakeCase
         return encoder
     }()
-
+    
     let decoder: JSONDecoder = {
         let decoder = JSONDecoder()
         decoder.dateDecodingStrategy = .custom(Formatters.decodeISO8601)
         decoder.keyDecodingStrategy = .convertFromSnakeCase
         return decoder
     }()
-
+    
     var configuration: Configuration
     var transport: Transport
-
+    
     public var token: String? {
         get {
             configuration.token
@@ -38,12 +38,12 @@ public final class Buildkite {
             configuration.token = newValue
         }
     }
-
+    
     public init(configuration: Configuration = .default, transport: Transport = URLSession.shared) {
         self.configuration = configuration
         self.transport = transport
     }
-
+    
     private func handleContentfulResponse<Content: Decodable>(completion: @escaping (Result<Response<Content>, Error>) -> Void) -> Transport.Completion {
         return { [weak self] result in
             guard let self = self else {
@@ -63,7 +63,7 @@ public final class Buildkite {
             completion(.success(Response(content: content, response: response)))
         }
     }
-
+    
     private func handleEmptyResponse(completion: @escaping (Result<Response<Void>, Error>) -> Void) -> Transport.Completion {
         return { [weak self] result in
             guard let self = self else {
@@ -80,7 +80,7 @@ public final class Buildkite {
             completion(.success(Response(content: (), response: response)))
         }
     }
-
+    
     private func checkResponseForIssues(_ response: URLResponse, data: Data? = nil) throws {
         guard let response = response as? HTTPURLResponse,
             let statusCode = StatusCode(rawValue: response.statusCode) else {
@@ -101,12 +101,24 @@ public final class Buildkite {
 
 public extension Buildkite {
     func send<R: Resource & HasResponseBody>(_ resource: R, completion: @escaping (Result<Response<R.Content>, Error>) -> Void) {
-        let request = URLRequest(resource, configuration: configuration)
+        let request: URLRequest
+        do {
+            request = try URLRequest(resource, configuration: configuration)
+        } catch {
+            completion(.failure(error))
+            return
+        }
         transport.send(request: request, completion: handleContentfulResponse(completion: completion))
     }
     
     func send<R: Resource & Paginated>(_ resource: R, pageOptions: PageOptions? = nil, completion: @escaping (Result<Response<R.Content>, Error>) -> Void) {
-        let request = URLRequest(resource, configuration: configuration, pageOptions: pageOptions)
+        let request: URLRequest
+        do {
+            request = try URLRequest(resource, configuration: configuration, pageOptions: pageOptions)
+        } catch {
+            completion(.failure(error))
+            return
+        }
         transport.send(request: request, completion: handleContentfulResponse(completion: completion))
     }
     
@@ -133,7 +145,13 @@ public extension Buildkite {
     }
     
     func send<R: Resource>(_ resource: R, completion: @escaping (Result<Response<Void>, Error>) -> Void) {
-        let request = URLRequest(resource, configuration: configuration)
+        let request: URLRequest
+        do {
+            request = try URLRequest(resource, configuration: configuration)
+        } catch {
+            completion(.failure(error))
+            return
+        }
         transport.send(request: request, completion: handleEmptyResponse(completion: completion))
     }
     
@@ -157,7 +175,9 @@ import Combine
 @available(iOS 13.0, macOS 10.15, tvOS 13.0, watchOS 6.0, *)
 extension Buildkite {
     public func sendPublisher<R: Resource & HasResponseBody>(_ resource: R) -> AnyPublisher<Response<R.Content>, Error> {
-        transport.sendPublisher(request: URLRequest(resource, configuration: configuration))
+        Result { try URLRequest(resource, configuration: configuration) }
+            .publisher
+            .flatMap(transport.sendPublisher)
             .tryMap {
                 try self.checkResponseForIssues($0.response, data: $0.data)
                 let content = try self.decoder.decode(R.Content.self, from: $0.data)
@@ -165,9 +185,11 @@ extension Buildkite {
         }
         .eraseToAnyPublisher()
     }
-
+    
     public func sendPublisher<R: Resource & HasResponseBody & Paginated>(_ resource: R, pageOptions: PageOptions? = nil) -> AnyPublisher<Response<R.Content>, Error> {
-        transport.sendPublisher(request: URLRequest(resource, configuration: configuration, pageOptions: pageOptions))
+        Result { try URLRequest(resource, configuration: configuration, pageOptions: pageOptions) }
+            .publisher
+            .flatMap(transport.sendPublisher)
             .tryMap {
                 try self.checkResponseForIssues($0.response, data: $0.data)
                 let content = try self.decoder.decode(R.Content.self, from: $0.data)
@@ -175,7 +197,7 @@ extension Buildkite {
         }
         .eraseToAnyPublisher()
     }
-
+    
     public func sendPublisher<R: Resource & HasRequestBody & HasResponseBody>(_ resource: R) -> AnyPublisher<Response<R.Content>, Error> {
         Result { try URLRequest(resource, configuration: configuration, encoder: encoder) }
             .publisher
@@ -187,7 +209,7 @@ extension Buildkite {
         }
         .eraseToAnyPublisher()
     }
-
+    
     public func sendPublisher<R: Resource & HasRequestBody & Paginated>(_ resource: R, pageOptions: PageOptions? = nil) -> AnyPublisher<Response<R.Content>, Error> {
         Result { try URLRequest(resource, configuration: configuration, encoder: encoder, pageOptions: pageOptions) }
             .publisher
@@ -199,16 +221,18 @@ extension Buildkite {
         }
         .eraseToAnyPublisher()
     }
-
+    
     public func sendPublisher<R: Resource>(_ resource: R) -> AnyPublisher<Response<Void>, Error> {
-        transport.sendPublisher(request: URLRequest(resource, configuration: configuration))
+        Result { try URLRequest(resource, configuration: configuration) }
+            .publisher
+            .flatMap(transport.sendPublisher)
             .tryMap {
                 try self.checkResponseForIssues($0.response)
                 return Response(content: (), response: $0.response)
         }
         .eraseToAnyPublisher()
     }
-
+    
     func sendPublisher<R: Resource & HasRequestBody>(_ resource: R) -> AnyPublisher<Response<Void>, Error> {
         Result { try URLRequest(resource, configuration: configuration, encoder: encoder) }
             .publisher

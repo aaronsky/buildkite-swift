@@ -13,6 +13,7 @@ import FoundationNetworking
 #endif
 
 enum ResponseError: Error {
+    case incompatibleVersion
     case missingResponse
     case unexpectedlyNoContent
 }
