@@ -19,8 +19,9 @@ class StatusCodeTests: XCTestCase {
         XCTAssertTrue(StatusCode.ok.isSuccess)
         XCTAssertTrue(StatusCode.created.isSuccess)
         XCTAssertTrue(StatusCode.accepted.isSuccess)
-        XCTAssertFalse(StatusCode.paymentRequired.isSuccess)
+        XCTAssertTrue(StatusCode.noContent.isSuccess)
         XCTAssertFalse(StatusCode.unauthorized.isSuccess)
         XCTAssertFalse(StatusCode.notFound.isSuccess)
+        XCTAssertFalse(StatusCode.internalServerError.isSuccess)
     }
 }
