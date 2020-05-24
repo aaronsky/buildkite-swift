@@ -17,7 +17,8 @@ import FoundationNetworking
 class GraphQLTests: XCTestCase {
     func testGraphQL() throws {
         let expected: JSONValue = ["jeff": [1, 2, 3], "horses": false]
-        let context = try MockContext(content: GraphQL.Content(data: expected))
+        let content: JSONValue = ["data": expected]
+        let context = try MockContext(content: content)
 
         let expectation = XCTestExpectation()
 

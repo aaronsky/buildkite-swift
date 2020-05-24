@@ -12,7 +12,7 @@ import Foundation
 import FoundationNetworking
 #endif
 
-public struct GraphQL<T: Codable>: Resource, HasResponseBody, HasRequestBody {
+public struct GraphQL<T: Decodable>: Resource, HasResponseBody, HasRequestBody {
     public struct Body: Encodable {
         /// The query or mutation to be sent
         public var query: String
@@ -20,18 +20,18 @@ public struct GraphQL<T: Codable>: Resource, HasResponseBody, HasRequestBody {
         public var variables: JSONValue
     }
 
-    public struct Content: Codable {
+    public struct Content: Decodable {
         public var data: T?
         public var type: String?
         public var errors: [Error]?
 
-        public struct Error: Swift.Error, Codable {
+        public struct Error: Swift.Error, Decodable {
             public var message: String
             public var locations: [Location]?
             public var path: [String]?
             public var extensions: JSONValue?
 
-            public struct Location: Codable {
+            public struct Location: Decodable {
                 public var line: Int
                 public var column: Int
             }

@@ -23,6 +23,57 @@ public enum JSONValue {
     indirect case object([String: JSONValue])
 }
 
+public extension JSONValue {
+    subscript(_ index: Int) -> JSONValue? {
+        get {
+            guard case let .array(array) = self else {
+                return nil
+            }
+            return array[index]
+        }
+        set {
+            guard case var .array(array) = self,
+                let newValue = newValue else {
+                return
+            }
+            array[index] = newValue
+        }
+    }
+    
+    subscript(_ key: String) -> JSONValue? {
+        get {
+            guard case let .object(object) = self else {
+                return nil
+            }
+            return object[key]
+        }
+        set {
+            guard case var .object(object) = self else {
+                return
+            }
+            object[key] = newValue
+        }
+    }
+    
+    subscript(_ key: JSONValue) -> JSONValue? {
+        get {
+            if case let .number(key) = key {
+                return self[Int(key)]
+            } else if case let .string(key) = key {
+                return self[key]
+            }
+            return nil
+        }
+        set {
+            if case let .number(key) = key {
+                self[Int(key)] = newValue
+            } else if case let .string(key) = key {
+                self[key] = newValue
+            }
+        }
+    }
+}
+
 extension JSONValue: Equatable, Hashable { }
 
 extension JSONValue: Encodable {
