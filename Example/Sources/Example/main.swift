@@ -9,7 +9,7 @@ import Foundation
 import Combine
 import Buildkite
 
-let client = Buildkite()
+let client = BuildkiteClient()
 client.token = "..."
 
 let query = """
@@ -29,16 +29,16 @@ query MyPipelines($first: Int!) {
 
 struct MyPipeline: Codable {
     var organization: Organization?
-    
+
     struct Organization: Codable {
         var pipelines: Pipelines
-        
+
         struct Pipelines: Codable {
             var edges: [PipelineEdge]
-            
+
             struct PipelineEdge: Codable {
                 var node: Pipeline
-                
+
                 struct Pipeline: Codable {
                     var name: String
                     var uuid: UUID
@@ -57,7 +57,7 @@ client.sendPublisher(GraphQL<MyPipeline>(rawQuery: query, variables: ["first": 3
             exit(1)
         }
     }) { pipelines in
-        print(pipelines)   
+        print(pipelines)
         exit(0)
 }.store(in: &cancellables)
 

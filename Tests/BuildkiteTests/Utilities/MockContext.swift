@@ -14,7 +14,7 @@ import FoundationNetworking
 #endif
 
 struct MockContext {
-    var client: Buildkite
+    var client: BuildkiteClient
     var resources = MockResources()
 
     init() {
@@ -33,7 +33,7 @@ struct MockContext {
 
     private init(configuration: Configuration, responses: [(Data, URLResponse)]) {
         let transport = MockTransport(responses: responses)
-        client = Buildkite(configuration: configuration,
-                               transport: transport)
+        client = BuildkiteClient(configuration: configuration,
+                                 transport: transport)
     }
 }

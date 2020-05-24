@@ -16,6 +16,10 @@ import FoundationNetworking
 import Combine
 #endif
 
+public enum TransportError: Error {
+    case noResponse
+}
+
 public protocol Transport {
     typealias Output = (data: Data, response: URLResponse)
     typealias Completion = (Result<Output, Error>) -> Void
@@ -36,10 +40,9 @@ extension URLSession: Transport {
                 return
             }
             guard let data = data, let response = response else {
-                completion(.failure(ResponseError.missingResponse))
+                completion(.failure(TransportError.noResponse))
                 return
             }
-
             completion(.success((data: data, response: response)))
         }
         task.resume()

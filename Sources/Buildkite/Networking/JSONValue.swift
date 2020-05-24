@@ -8,7 +8,6 @@
 //  Copyright © 2020 Aaron Sky. All rights reserved.
 //
 
-
 import Foundation
 
 #if canImport(FoundationNetworking)
@@ -49,7 +48,7 @@ extension JSONValue: Encodable {
 extension JSONValue: Decodable {
     public init(from decoder: Decoder) throws {
         let singleValueContainer = try decoder.singleValueContainer()
-        
+
         if singleValueContainer.decodeNil() {
             self = .null
             return

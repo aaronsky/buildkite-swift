@@ -12,10 +12,24 @@ import Foundation
 import FoundationNetworking
 #endif
 
-enum ResponseError: Error {
-    case incompatibleVersion
-    case missingResponse
-    case unexpectedlyNoContent
+public struct Response<T> {
+    public let content: T
+    public let response: URLResponse
+    public let page: Page?
+
+    init(content: T, response: URLResponse) {
+        self.content = content
+        self.response = response
+        if let response = response as? HTTPURLResponse, let link = response.allHeaderFields["Link"] as? String {
+            page = Page(for: link)
+        } else {
+            page = nil
+        }
+    }
+}
+
+public enum ResponseError: Error {
+    case incompatibleResponse(URLResponse)
 }
 
 public struct BuildkiteError: Error {
@@ -32,21 +46,5 @@ public struct BuildkiteError: Error {
     struct Intermediary: Codable {
         var message: String?
         var errors: [String]?
-    }
-}
-
-public struct Response<T> {
-    public let content: T
-    public let response: URLResponse
-    public let page: Page?
-
-    init(content: T, response: URLResponse) {
-        self.content = content
-        self.response = response
-        if let response = response as? HTTPURLResponse, let link = response.allHeaderFields["Link"] as? String {
-            page = Page(for: link)
-        } else {
-            page = nil
-        }
     }
 }

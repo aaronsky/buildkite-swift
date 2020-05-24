@@ -27,7 +27,7 @@ As an example, here is a way you can use the closure-based interface to list all
 ```swift
 import Buildkite
 
-let client = Buildkite()
+let client = BuildkiteClient()
 client.token = "..." // Your scoped Buildkite API access token
 client.send(Pipeline.Resources.List(organization: "buildkite")) { result in
     do {
@@ -45,7 +45,7 @@ You can even use Combine, if you'd like!
 ```swift
 import Buildkite
 
-let client = Buildkite()
+let client = BuildkiteClient()
 client.token = "..." // Your scoped Buildkite API access token
 
 var cancellables: Set<AnyCancellable> = []
@@ -66,7 +66,7 @@ GraphQL support is present, but currently rudimentary. For example, here's what 
 import Foundation
 import Buildkite
 
-let client = Buildkite()
+let client = BuildkiteClient()
 client.token = "..."
 
 let query = """

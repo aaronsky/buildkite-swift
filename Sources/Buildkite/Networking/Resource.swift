@@ -12,6 +12,10 @@ import Foundation
 import FoundationNetworking
 #endif
 
+public enum ResourceError: Error {
+    case incompatibleVersion(APIVersion)
+}
+
 public protocol Resource {
     associatedtype Content
     var version: APIVersion { get }
@@ -23,7 +27,7 @@ extension Resource {
     public var version: APIVersion {
         APIVersion.REST.v2
     }
-    
+
     public func transformRequest(_ request: inout URLRequest) {}
 }
 
@@ -43,10 +47,10 @@ extension URLRequest {
         let version = resource.version
         guard version == configuration.version
             || version == configuration.graphQLVersion else {
-                throw ResponseError.incompatibleVersion
+                throw ResourceError.incompatibleVersion(version)
         }
         let url = version.url(for: resource.path)
-        
+
         var request = URLRequest(url: url)
         configuration.transformRequest(&request)
         resource.transformRequest(&request)

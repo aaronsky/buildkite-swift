@@ -86,7 +86,7 @@ extension Agent.Resources {
         public struct Body: Codable {
             /// If the agent is currently processing a job, the job and the build will be canceled.
             public var force: Bool?
-            
+
             public init(force: Bool? = nil) {
                 self.force = force
             }

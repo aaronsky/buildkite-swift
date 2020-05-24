@@ -46,7 +46,7 @@ struct MockResources {
 
     struct HasBody: Resource, HasRequestBody {
         typealias Content = Void
-        
+
         struct Body: Codable, Equatable {
             var name: String
             var age: Int

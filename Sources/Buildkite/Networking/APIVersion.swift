@@ -17,7 +17,7 @@ public struct APIVersion: Equatable {
         private static let baseURL = URL(string: "https://api.buildkite.com")!
         public static let v2 = APIVersion(baseURL: baseURL, version: "v2")
     }
-    
+
     public enum GraphQL {
         private static let baseURL = URL(string: "https://graphql.buildkite.com")!
         public static let v1 = APIVersion(baseURL: baseURL, version: "v1")
@@ -30,7 +30,7 @@ public struct APIVersion: Equatable {
         self.baseURL = baseURL
         self.version = version
     }
-    
+
     func url(for path: String) -> URL {
         let url = baseURL.appendingPathComponent(version)
         guard !path.isEmpty else {
