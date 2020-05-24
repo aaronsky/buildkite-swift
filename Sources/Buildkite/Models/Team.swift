@@ -20,7 +20,7 @@ public struct Team: Codable, Equatable, Identifiable {
     /// URL slug of the team
     public var slug: String
     /// Description of the team
-    public var description: String
+    public var description: String?
     /// Privacy setting of the team
     public var privacy: Visibility
     /// Whether users join this team by default
@@ -28,7 +28,7 @@ public struct Team: Codable, Equatable, Identifiable {
     /// Time of when the team was created
     public var createdAt: Date
     /// User who created the team
-    public var createdBy: User
+    public var createdBy: User?
 
     public enum Visibility: String, Codable, Equatable {
         case visible
