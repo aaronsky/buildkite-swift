@@ -24,8 +24,7 @@ extension Organization.Resources {
         public typealias Content = [Organization]
         public let path = "organizations"
 
-        public init() {
-        }
+        public init() {}
     }
 
     /// Get an organization
