@@ -21,7 +21,7 @@ public enum StatusCode: Int, Error, Codable {
 
     /// The request has been accepted, but not yet processed.
     case accepted = 202
-    
+
     /// The request has been successfully processed, and is not returning any content
     case noContent = 204
 
@@ -48,7 +48,7 @@ public enum StatusCode: Int, Error, Codable {
 
     /// An internal error occurred in Buildkite.
     case internalServerError = 500
-    
+
     /// The server was acting as a gateway or proxy and received an invalid response from the upstream server.
     case badGateway = 502
 

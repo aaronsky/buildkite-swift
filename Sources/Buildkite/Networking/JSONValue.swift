@@ -14,6 +14,7 @@ import Foundation
 import FoundationNetworking
 #endif
 
+@dynamicMemberLookup
 public enum JSONValue {
     case null
     case bool(Bool)
@@ -24,53 +25,31 @@ public enum JSONValue {
 }
 
 public extension JSONValue {
-    subscript(_ index: Int) -> JSONValue? {
-        get {
-            guard case let .array(array) = self else {
-                return nil
-            }
-            return array[index]
-        }
-        set {
-            guard case var .array(array) = self,
-                let newValue = newValue else {
-                return
-            }
-            array[index] = newValue
-        }
+    subscript(dynamicMember key: JSONValue) -> JSONValue? {
+        self[key]
     }
-    
-    subscript(_ key: String) -> JSONValue? {
-        get {
-            guard case let .object(object) = self else {
-                return nil
-            }
-            return object[key]
-        }
-        set {
-            guard case var .object(object) = self else {
-                return
-            }
-            object[key] = newValue
-        }
-    }
-    
+
     subscript(_ key: JSONValue) -> JSONValue? {
-        get {
-            if case let .number(key) = key {
-                return self[Int(key)]
-            } else if case let .string(key) = key {
-                return self[key]
-            }
+        if case let .number(key) = key {
+            return self[Int(key)]
+        } else if case let .string(key) = key {
+            return self[key]
+        }
+        return nil
+    }
+
+    subscript(_ index: Int) -> JSONValue? {
+        guard case let .array(array) = self else {
             return nil
         }
-        set {
-            if case let .number(key) = key {
-                self[Int(key)] = newValue
-            } else if case let .string(key) = key {
-                self[key] = newValue
-            }
+        return array[index]
+    }
+
+    subscript(_ key: String) -> JSONValue? {
+        guard case let .object(object) = self else {
+            return nil
         }
+        return object[key]
     }
 }
 
@@ -80,16 +59,16 @@ extension JSONValue: Encodable {
     public func encode(to encoder: Encoder) throws {
         var container = encoder.singleValueContainer()
         switch self {
-            case .null:
-                try container.encodeNil()
+        case .null:
+            try container.encodeNil()
         case .bool(let boolValue):
             try container.encode(boolValue)
         case .number(let doubleValue):
             try container.encode(doubleValue)
-            case .string(let stringValue):
-                try container.encode(stringValue)
-            case .array(let arrayValue):
-                try container.encode(arrayValue)
+        case .string(let stringValue):
+            try container.encode(stringValue)
+        case .array(let arrayValue):
+            try container.encode(arrayValue)
         case .object(let objectValue):
             try container.encode(objectValue)
         }
@@ -102,32 +81,21 @@ extension JSONValue: Decodable {
 
         if singleValueContainer.decodeNil() {
             self = .null
-            return
-        }
-        if let boolValue = try? singleValueContainer.decode(Bool.self) {
+        } else if let boolValue = try? singleValueContainer.decode(Bool.self) {
             self = .bool(boolValue)
-            return
-        }
-        if let doubleValue = try? singleValueContainer.decode(Double.self) {
+        } else if let doubleValue = try? singleValueContainer.decode(Double.self) {
             self = .number(doubleValue)
-            return
-        }
-        if let stringValue = try? singleValueContainer.decode(String.self) {
+        } else if let stringValue = try? singleValueContainer.decode(String.self) {
             self = .string(stringValue)
-            return
-        }
-        if let arrayValue = try? singleValueContainer.decode([JSONValue].self) {
+        } else if let arrayValue = try? singleValueContainer.decode([JSONValue].self) {
             self = .array(arrayValue)
-            return
-        }
-        if let objectValue = try? singleValueContainer.decode([String: JSONValue].self) {
+        } else if let objectValue = try? singleValueContainer.decode([String: JSONValue].self) {
             self = .object(objectValue)
-            return
+        } else {
+            throw DecodingError.dataCorruptedError(
+                in: singleValueContainer,
+                debugDescription: "invalid JSON structure or the input was not JSON")
         }
-
-        throw DecodingError.dataCorruptedError(
-            in: singleValueContainer,
-            debugDescription: "invalid JSON structure or the input was not JSON")
     }
 }
 
