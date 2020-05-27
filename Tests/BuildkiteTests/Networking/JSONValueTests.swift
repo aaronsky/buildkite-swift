@@ -113,4 +113,29 @@ final class JSONValueTests: XCTestCase {
         let actual = try JSONDecoder().decode(JSONValue.self, from: JSONEncoder().encode(expected))
         XCTAssertEqual(expected, actual)
     }
+
+    func testSubscripts() throws {
+        let abcs: JSONValue = ["a", "b", "c"]
+        let oneTwoThrees: JSONValue = ["1": 1, "2": 2, "3": 3]
+        let expected: JSONValue = ["foo": ["bar": false, "baz": abcs, "qux": oneTwoThrees]]
+
+        XCTAssertNil(expected[expected])
+        XCTAssertNil(expected[abcs])
+        XCTAssertNil(expected[false])
+        XCTAssertNil(expected[1])
+
+        XCTAssertNil(abcs["0"])
+        XCTAssertNotNil(abcs[0])
+        XCTAssertEqual(abcs[1], abcs[.number(1)])
+
+        XCTAssertNil(oneTwoThrees[1])
+        XCTAssertNotNil(oneTwoThrees["1"])
+        XCTAssertEqual(oneTwoThrees["1"], oneTwoThrees[.string("1")])
+
+        XCTAssertEqual(expected.foo, expected["foo"])
+        XCTAssertEqual(expected.foo?.bar, false)
+        XCTAssertEqual(expected.foo?.baz, abcs)
+        XCTAssertEqual(expected.foo?.qux, oneTwoThrees)
+
+    }
 }
