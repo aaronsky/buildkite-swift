@@ -112,7 +112,7 @@ class BuildsTests: XCTestCase {
 
         let expectation = XCTestExpectation()
 
-        context.client.send(Build.Resources.ListForPipeline(organization: "buildkite", pipeline: "my-pipeline")) { result in
+        context.client.send(Build.Resources.ListForPipeline(organization: "buildkite", pipeline: "my-pipeline", queryOptions: Build.Resources.QueryOptions())) { result in
             do {
                 let response = try result.get()
                 XCTAssertEqual(expected, response.content)
@@ -150,7 +150,7 @@ class BuildsTests: XCTestCase {
 
         let body = Build.Resources.Create.Body(commit: "HEAD",
                                                branch: "master",
-                                               author: nil,
+                                               author: Build.Resources.Create.Body.Author(name: "", email: ""),
                                                cleanCheckout: nil,
                                                env: nil,
                                                ignorePipelineBranchFilters: nil,

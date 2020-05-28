@@ -59,6 +59,25 @@ struct MockResources {
 
     var bodyResource = HasBody(body: HasBody.Body(name: "Jeff", age: 35))
 
+    struct HasBodyAndContent: Resource, HasResponseBody, HasRequestBody {
+        struct Body: Codable, Equatable {
+            var name: String
+            var age: Int
+        }
+
+        struct Content: Codable, Equatable {
+            var name: String
+            var age: Int
+        }
+
+        var body: Body
+
+        let path = "mock"
+    }
+    
+    var bodyAndContentResource = HasBodyAndContent(body: HasBodyAndContent.Body(name: "Jeff", age: 35))
+    var bodyAndContent = HasBodyAndContent.Content(name: "Jeff", age: 35)
+    
     struct HasBodyAndPaginated: Resource, HasRequestBody, Paginated {
         struct Body: Codable, Equatable {
             var name: String
@@ -77,6 +96,14 @@ struct MockResources {
 
     var bodyAndPaginatedResource = HasBodyAndPaginated(body: HasBodyAndPaginated.Body(name: "Jeff", age: 35))
     var bodyAndPaginatedContent = HasBodyAndPaginated.Content(name: "Jeff", age: 35)
+    
+    struct IsAPIIncompatible: Resource {
+        typealias Content = Void
+        var version: APIVersion {
+            APIVersion(baseURL: URL(), version: "v99999")
+        }
+        let path = "mock"
+    }
 }
 
 enum MockData {
@@ -112,6 +139,10 @@ extension MockData {
 
     static func mockingError(for request: URLRequest) throws -> (Data, URLResponse) {
         throw URLError(.notConnectedToInternet)
+    }
+    
+    static func mockingError(_ error: Error) throws -> (Data, URLResponse) {
+        throw error
     }
 
     private static func urlResponse(for url: URL, status: StatusCode) -> URLResponse {

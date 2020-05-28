@@ -1,5 +1,5 @@
 //
-//  BuildkiteTests.swift
+//  BuildkiteClientTests.swift
 //  Buildkite
 //
 //  Created by Aaron Sky on 3/22/20.
@@ -18,26 +18,27 @@ import FoundationNetworking
 import Combine
 #endif
 
-class BuildkiteTests: XCTestCase {
+class BuildkiteClientTests: XCTestCase {
     private struct TestData {
         enum Case {
             case success
             case successPaginated
             case successNoContent
             case successHasBody
+            case successHasBodyAndContent
             case successHasBodyPaginated
             case badResponse
             case unsuccessfulResponse
             case noData
         }
-
+        
         var configuration = Configuration.default
         var client: BuildkiteClient
         var resources = MockResources()
-
+        
         init(testCase: Case = .success) throws {
             let responses: [(Data, URLResponse)]
-
+            
             switch testCase {
             case .success:
                 responses = [try MockData.mockingSuccess(with: resources.content, url: configuration.version.baseURL)]
@@ -47,6 +48,8 @@ class BuildkiteTests: XCTestCase {
                 responses = [MockData.mockingSuccessNoContent(url: configuration.version.baseURL)]
             case .successHasBody:
                 responses = [MockData.mockingSuccessNoContent(url: configuration.version.baseURL)]
+            case .successHasBodyAndContent:
+                responses = [try MockData.mockingSuccess(with: resources.bodyAndContent, url: configuration.version.baseURL)]
             case .successHasBodyPaginated:
                 responses = [try MockData.mockingSuccess(with: resources.bodyAndPaginatedContent, url: configuration.version.baseURL)]
             case .badResponse:
@@ -56,19 +59,39 @@ class BuildkiteTests: XCTestCase {
             case .noData:
                 responses = []
             }
-
+            
             client = BuildkiteClient(configuration: configuration,
-                               transport: MockTransport(responses: responses))
+                                     transport: MockTransport(responses: responses))
+            client.token = "a valid token, i guess"
+            XCTAssertEqual(client.token, client.configuration.token)
         }
+    }
+    
+    func testResourceWithIncompatibleAPIVersion() throws {
+        let testData = try TestData(testCase: .success)
+        let resource = MockResources.IsAPIIncompatible()
+        let expectation = XCTestExpectation()
+        testData.client.send(resource) { result in
+            do {
+                _ = try result.get()
+                XCTFail("Expected to have failed with an error, but closure fulfilled normally")
+            } catch ResourceError.incompatibleVersion(resource.version) {
+                
+            } catch {
+                XCTFail("Expected to have failed with an error, but not this one: \(error)")
+            }
+            expectation.fulfill()
+        }
+        wait(for: [expectation])
     }
 }
 
 // MARK: Closure-based Requests
 
-extension BuildkiteTests {
+extension BuildkiteClientTests {
     func testClosureBasedRequest() throws {
         let testData = try TestData(testCase: .success)
-
+        
         let expectation = XCTestExpectation()
         testData.client.send(testData.resources.contentResource) { result in
             do {
@@ -81,10 +104,10 @@ extension BuildkiteTests {
         }
         wait(for: [expectation])
     }
-
+    
     func testClosureBasedRequestWithPagination() throws {
         let testData = try TestData(testCase: .success)
-
+        
         let expectation = XCTestExpectation()
         testData.client.send(testData.resources.paginatedContentResource, pageOptions: PageOptions(page: 1, perPage: 30)) { result in
             do {
@@ -98,30 +121,46 @@ extension BuildkiteTests {
         }
         wait(for: [expectation])
     }
-
+    
     func testClosureBasedRequestNoContent() throws {
         let testData = try TestData(testCase: .successNoContent)
-
+        
         let expectation = XCTestExpectation()
         testData.client.send(testData.resources.noContentNoBodyResource) { _ in
             expectation.fulfill()
         }
         wait(for: [expectation])
     }
-
+    
     func testClosureBasedRequestHasBody() throws {
         let testData = try TestData(testCase: .successHasBody)
-
+        
         let expectation = XCTestExpectation()
         testData.client.send(testData.resources.bodyResource) { _ in
             expectation.fulfill()
         }
         wait(for: [expectation])
     }
-
+    
+    func testClosureBasedRequestHasBodyWithContent() throws {
+        let testData = try TestData(testCase: .successHasBodyAndContent)
+        
+        let expectation = XCTestExpectation()
+        testData.client.send(testData.resources.bodyAndContentResource) { result in
+            do {
+                let response = try result.get()
+                XCTAssertEqual(testData.resources.bodyAndContent, response.content)
+            } catch {
+                XCTFail(error.localizedDescription)
+            }
+            expectation.fulfill()
+        }
+        wait(for: [expectation])
+    }
+    
     func testClosureBasedRequestHasBodyWithPagination() throws {
         let testData = try TestData(testCase: .successHasBodyPaginated)
-
+        
         let expectation = XCTestExpectation()
         testData.client.send(testData.resources.bodyAndPaginatedResource, pageOptions: PageOptions(page: 1, perPage: 30)) { result in
             do {
@@ -135,7 +174,7 @@ extension BuildkiteTests {
         }
         wait(for: [expectation])
     }
-
+    
     func testClosureBasedRequestInvalidResponse() throws {
         let testData = try TestData(testCase: .badResponse)
         let expectation = XCTestExpectation()
@@ -149,7 +188,7 @@ extension BuildkiteTests {
         }
         wait(for: [expectation])
     }
-
+    
     func testClosureBasedRequestUnsuccessfulResponse() throws {
         let testData = try TestData(testCase: .unsuccessfulResponse)
         let expectation = XCTestExpectation()
@@ -164,7 +203,7 @@ extension BuildkiteTests {
         }
         wait(for: [expectation])
     }
-
+    
     func testFailureFromTransport() throws {
         let testData = try TestData(testCase: .noData)
         let expectation = XCTestExpectation()
@@ -185,7 +224,7 @@ extension BuildkiteTests {
 
 #if canImport(Combine)
 @available(iOS 13.0, macOS 10.15, tvOS 13.0, watchOS 6.0, *)
-extension BuildkiteTests {
+extension BuildkiteClientTests {
     func testPublisherBasedRequest() throws {
         let testData = try TestData(testCase: .success)
         let expectation = XCTestExpectation()
@@ -201,7 +240,7 @@ extension BuildkiteTests {
             .store(in: &cancellables)
         wait(for: [expectation])
     }
-
+    
     func testPublisherBasedRequestWithPagination() throws {
         let testData = try TestData(testCase: .success)
         let expectation = XCTestExpectation()
@@ -220,7 +259,7 @@ extension BuildkiteTests {
             .store(in: &cancellables)
         wait(for: [expectation])
     }
-
+    
     func testPublisherBasedRequestNoContent() throws {
         let testData = try TestData(testCase: .success)
         let expectation = XCTestExpectation()
@@ -235,7 +274,7 @@ extension BuildkiteTests {
             .store(in: &cancellables)
         wait(for: [expectation])
     }
-
+    
     func testPublisherBasedRequestHasBody() throws {
         let testData = try TestData(testCase: .successHasBody)
         let expectation = XCTestExpectation()
@@ -250,7 +289,25 @@ extension BuildkiteTests {
             .store(in: &cancellables)
         wait(for: [expectation])
     }
-
+    
+    func testPublisherBasedRequestHasBodyWithContent() throws {
+        let testData = try TestData(testCase: .successHasBodyAndContent)
+        let expectation = XCTestExpectation()
+        var cancellables: Set<AnyCancellable> = []
+        testData.client.sendPublisher(testData.resources.bodyAndContentResource)
+            .sink(receiveCompletion: {
+                if case let .failure(error) = $0 {
+                    XCTFail(error.localizedDescription)
+                }
+                expectation.fulfill()
+            },
+                  receiveValue: {
+                    XCTAssertEqual(testData.resources.bodyAndContent, $0.content)
+            })
+            .store(in: &cancellables)
+        wait(for: [expectation])
+    }
+    
     func testPublisherBasedRequestHasBodyWithPagination() throws {
         let testData = try TestData(testCase: .successHasBodyPaginated)
         let expectation = XCTestExpectation()
@@ -269,7 +326,7 @@ extension BuildkiteTests {
             .store(in: &cancellables)
         wait(for: [expectation])
     }
-
+    
     func testPublisherBasedRequestInvalidResponse() throws {
         let testData = try TestData(testCase: .badResponse)
         let expectation = XCTestExpectation()
@@ -284,7 +341,7 @@ extension BuildkiteTests {
             .store(in: &cancellables)
         wait(for: [expectation])
     }
-
+    
     func testPublisherBasedRequestUnsuccessfulResponse() throws {
         let testData = try TestData(testCase: .unsuccessfulResponse)
         let expectation = XCTestExpectation()

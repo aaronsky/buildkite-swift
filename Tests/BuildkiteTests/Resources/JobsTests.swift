@@ -15,8 +15,37 @@ import FoundationNetworking
 #endif
 
 class JobsTests: XCTestCase {
-    func testJobsRetry() throws {
-        let expected = Job.waiter(Job.Wait(id: UUID()))
+    func testJobsRetryWaiter() throws {
+        let expected: Job = .waiter(Job.Wait(id: UUID()))
+        let context = try MockContext(content: expected)
+
+        let expectation = XCTestExpectation()
+
+        context.client.send(Job.Resources.Retry(organization: "buildkite", pipeline: "my-pipeline", build: 1, job: UUID())) { result in
+            do {
+                let response = try result.get()
+                XCTAssertEqual(expected, response.content)
+            } catch {
+                XCTFail(error.localizedDescription)
+            }
+            expectation.fulfill()
+        }
+        wait(for: [expectation])
+    }
+    
+    func testJobsRetryTrigger() throws {
+        let expected: Job = .trigger(Job.Trigger(name: nil,
+                                                 state: nil,
+                                                 buildUrl: URL(),
+                                                 webUrl: URL(),
+                                                 createdAt: Date(timeIntervalSince1970: 1000),
+                                                 scheduledAt: nil,
+                                                 finishedAt: nil,
+                                                 runnableAt: nil,
+                                                 triggeredBuild: Job.Trigger.TriggeredBuild(id: UUID(),
+                                                                                            number: 0,
+                                                                                            url: URL(),
+                                                                                            webUrl: URL())))
         let context = try MockContext(content: expected)
 
         let expectation = XCTestExpectation()
@@ -34,7 +63,14 @@ class JobsTests: XCTestCase {
     }
 
     func testJobsUnblock() throws {
-        let expected = Job.waiter(Job.Wait(id: UUID()))
+        let expected: Job = .manual(Job.Block(id: UUID(),
+                                              label: "",
+                                              state: "",
+                                              webUrl: nil,
+                                              unblockedBy: User(),
+                                              unblockedAt: Date(timeIntervalSince1970: 1000),
+                                              unblockable: true,
+                                              unblockUrl: URL()))
         let context = try MockContext(content: expected)
 
         let body = Job.Resources.Unblock.Body()

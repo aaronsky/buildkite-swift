@@ -35,7 +35,7 @@ class GraphQLTests: XCTestCase {
     }
 
     func testGraphQLErrors() throws {
-        let expectedErrors: [GraphQL<JSONValue>.Content.Error] = [
+        let expectedErrors: GraphQL<JSONValue>.Errors = .init(errors: [
             .init(message: "Field 'id' doesn't exist on type 'Query'",
                   locations: [.init(line: 2, column: 3)],
                   path: ["query SimpleQuery", "id"],
@@ -44,10 +44,11 @@ class GraphQLTests: XCTestCase {
                     "typeName": "Query",
                     "fieldName": "id"
             ])
-        ]
-        let expected: GraphQL<JSONValue>.Content = .errors(expectedErrors, type: nil)
+        ], type: nil)
+        
+        let expected: GraphQL<JSONValue>.Content = .errors(expectedErrors)
         let content: JSONValue = [
-            "errors": .array(expectedErrors.map { error in
+            "errors": .array(expectedErrors.errors.map { error in
                 let messageJSON: JSONValue = .string(error.message)
                 let locationsJSON: JSONValue
                 if let locations = error.locations {
@@ -98,5 +99,10 @@ class GraphQLTests: XCTestCase {
             expectation.fulfill()
         }
         wait(for: [expectation])
+    }
+    
+    func testGraphQLContentGet() throws {
+        try XCTAssertNoThrow(GraphQL.Content.data("hello").get())
+        try XCTAssertThrowsError(GraphQL<String>.Content.errors(.init(errors: [], type: nil)).get())
     }
 }
