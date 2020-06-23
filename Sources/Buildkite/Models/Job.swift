@@ -63,7 +63,8 @@ public enum Job: Codable, Equatable {
             public var name: String
             public var url: URL
         }
-        public let type = "script"
+        
+        public var type = "script"
         public var id: UUID
         public var name: String?
         public var state: String?
@@ -92,12 +93,12 @@ public enum Job: Codable, Equatable {
     }
 
     public struct Wait: Codable, Equatable, Identifiable {
-        public let type = "waiter"
+        public var type = "waiter"
         public var id: UUID
     }
 
     public struct Block: Codable, Equatable, Identifiable {
-        public let type = "manual"
+        public var type = "manual"
         public var id: UUID
         public var label: String
         public var state: String
@@ -109,7 +110,14 @@ public enum Job: Codable, Equatable {
     }
 
     public struct Trigger: Codable, Equatable {
-        public let type = "trigger"
+        public struct TriggeredBuild: Codable, Equatable, Identifiable {
+            public var id: UUID
+            public var number: Int
+            public var url: URL
+            public var webUrl: URL
+        }
+        
+        public var type = "trigger"
         public var name: String?
         public var state: String?
         public var buildUrl: URL
@@ -119,13 +127,6 @@ public enum Job: Codable, Equatable {
         public var finishedAt: Date?
         public var runnableAt: Date?
         public var triggeredBuild: TriggeredBuild
-
-        public struct TriggeredBuild: Codable, Equatable, Identifiable {
-            public var id: UUID
-            public var number: Int
-            public var url: URL
-            public var webUrl: URL
-        }
     }
 
     public struct LogOutput: Codable, Equatable {

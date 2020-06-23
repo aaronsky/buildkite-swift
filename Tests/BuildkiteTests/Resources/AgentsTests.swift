@@ -16,6 +16,32 @@ import FoundationNetworking
 
 extension Agent {
     init() {
+        let job = Job.script(Job.Command(id: UUID(),
+                                         name: "📦",
+                                         state: "passed",
+                                         command: nil,
+                                         stepKey: nil,
+                                         buildUrl: URL(),
+                                         webUrl: URL(),
+                                         logUrl: URL(),
+                                         rawLogUrl: URL(),
+                                         artifactsUrl: URL(),
+                                         softFailed: false,
+                                         exitStatus: 0,
+                                         artifactPaths: nil,
+                                         agentQueryRules: [],
+                                         agent: nil,
+                                         createdAt: Date(timeIntervalSince1970: 1000),
+                                         scheduledAt: Date(timeIntervalSince1970: 1000),
+                                         runnableAt: nil,
+                                         startedAt: nil,
+                                         finishedAt: nil,
+                                         retried: false,
+                                         retriedInJobId: nil,
+                                         retriesCount: nil,
+                                         parallelGroupIndex: nil,
+                                         parallelGroupTotal: nil))
+
         self.init(id: UUID(),
                   url: URL(),
                   webUrl: URL(),
@@ -27,31 +53,7 @@ extension Agent {
                   version: "3.20.0",
                   creator: User(),
                   createdAt: Date(timeIntervalSince1970: 1000),
-                  job: Job.script(Job.Command(id: UUID(),
-                                              name: "📦",
-                                              state: "passed",
-                                              command: nil,
-                                              stepKey: nil,
-                                              buildUrl: URL(),
-                                              webUrl: URL(),
-                                              logUrl: URL(),
-                                              rawLogUrl: URL(),
-                                              artifactsUrl: URL(),
-                                              softFailed: false,
-                                              exitStatus: 0,
-                                              artifactPaths: nil,
-                                              agentQueryRules: [],
-                                              agent: nil,
-                                              createdAt: Date(timeIntervalSince1970: 1000),
-                                              scheduledAt: Date(timeIntervalSince1970: 1000),
-                                              runnableAt: nil,
-                                              startedAt: nil,
-                                              finishedAt: nil,
-                                              retried: false,
-                                              retriedInJobId: nil,
-                                              retriesCount: nil,
-                                              parallelGroupIndex: nil,
-                                              parallelGroupTotal: nil) ),
+                  job: job,
                   lastJobFinishedAt: nil,
                   priority: nil,
                   metaData: [])
@@ -62,9 +64,9 @@ class AgentsTests: XCTestCase {
     func testAgentsList() throws {
         let expected = [Agent(), Agent()]
         let context = try MockContext(content: expected)
-
+        
         let expectation = XCTestExpectation()
-
+        
         context.client.send(Agent.Resources.List(organization: "buildkite")) { result in
             do {
                 let response = try result.get()
@@ -76,11 +78,11 @@ class AgentsTests: XCTestCase {
         }
         wait(for: [expectation])
     }
-
+    
     func testAgentsGet() throws {
         let expected = Agent()
         let context = try MockContext(content: expected)
-
+        
         let expectation = XCTestExpectation()
         context.client.send(Agent.Resources.Get(organization: "buildkite", agentId: UUID())) { result in
             do {
@@ -93,14 +95,14 @@ class AgentsTests: XCTestCase {
         }
         wait(for: [expectation])
     }
-
+    
     func testAgentsStop() throws {
         let context = MockContext()
-
+        
         let resource = Agent.Resources.Stop(organization: "buildkite",
                                             agentId: UUID(),
                                             body: Agent.Resources.Stop.Body(force: true))
-
+        
         let expectation = XCTestExpectation()
         context.client.send(resource) { result in
             do {

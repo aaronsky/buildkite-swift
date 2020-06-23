@@ -54,12 +54,14 @@ final class JSONValueTests: XCTestCase {
 { "fooKey": "fooVal" }
 """
         let expected = JSONValue.object(["fooKey": .string("fooVal")])
-        let actual = try JSONDecoder().decode(JSONValue.self, from: json.data(using: .utf8)!)
+        let data = try XCTUnwrap(json.data(using: .utf8))
+        let actual = try JSONDecoder().decode(JSONValue.self, from: data)
         XCTAssertEqual(expected, actual)
     }
 
     private func decodingTest(_ input: String, _ expected: JSONValue) throws {
-        let actual = try JSONDecoder().decode(JSONValue.self, from: input.data(using: .utf8)!)
+        let data = try XCTUnwrap(input.data(using: .utf8))
+        let actual = try JSONDecoder().decode(JSONValue.self, from: data)
         XCTAssertEqual(expected, actual)
     }
 

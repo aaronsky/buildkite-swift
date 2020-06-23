@@ -126,7 +126,7 @@ extension Pipeline {
         }
 
         public struct Command: Codable, Equatable {
-            public let type = "script"
+            public var type = "script"
             public var name: String?
             public var command: String?
             public var label: String?
@@ -141,18 +141,18 @@ extension Pipeline {
         }
 
         public struct Wait: Codable, Equatable {
-            public let type = "waiter"
+            public var type = "waiter"
             public var label: String?
             public var continueAfterFailure: Bool?
         }
 
         public struct Block: Codable, Equatable {
-            public let type = "manual"
+            public var type = "manual"
             public var label: String?
         }
 
         public struct Trigger: Codable, Equatable {
-            public let type = "trigger"
+            public var type = "trigger"
             public var triggerProjectSlug: String?
             public var label: String?
             public var triggerCommit: String?
