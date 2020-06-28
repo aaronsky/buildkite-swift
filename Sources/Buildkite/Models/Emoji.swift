@@ -15,5 +15,5 @@ import FoundationNetworking
 public struct Emoji: Codable, Equatable {
     public var name: String
     public var url: URL
-    public var aliases: [String] = []
+    public var aliases: [String]? = []
 }
