@@ -103,8 +103,8 @@ public enum Job: Codable, Equatable {
         public var label: String
         public var state: String
         public var webUrl: URL?
-        public var unblockedBy: User
-        public var unblockedAt: Date
+        public var unblockedBy: User?
+        public var unblockedAt: Date?
         public var unblockable: Bool
         public var unblockUrl: URL
     }
@@ -126,7 +126,7 @@ public enum Job: Codable, Equatable {
         public var scheduledAt: Date?
         public var finishedAt: Date?
         public var runnableAt: Date?
-        public var triggeredBuild: TriggeredBuild
+        public var triggeredBuild: TriggeredBuild?
     }
 
     public struct LogOutput: Codable, Equatable {
