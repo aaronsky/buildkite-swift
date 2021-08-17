@@ -12,7 +12,7 @@ import Foundation
 import FoundationNetworking
 #endif
 
-public final class BuildkiteClient {
+public final class BuildkiteClient<T: Transport> {
     var encoder: JSONEncoder {
         let encoder = JSONEncoder()
         encoder.dateEncodingStrategy = .custom(Formatters.encodeISO8601)
@@ -28,7 +28,7 @@ public final class BuildkiteClient {
     }
 
     var configuration: Configuration
-    var transport: Transport
+    var transport: T
 
     public var token: String? {
         get {
@@ -38,8 +38,13 @@ public final class BuildkiteClient {
             configuration.token = newValue
         }
     }
+    
+    public init(configuration: Configuration = .default, transport: T) {
+        self.configuration = configuration
+        self.transport = transport
+    }
 
-    public init(configuration: Configuration = .default, transport: Transport = URLSession.shared) {
+    public init(configuration: Configuration = .default, transport: T = .shared) where T == URLSession {
         self.configuration = configuration
         self.transport = transport
     }
@@ -96,7 +101,7 @@ public final class BuildkiteClient {
     }
 }
 
-// MARK: Closure API
+// MARK: - Closure API
 
 public extension BuildkiteClient {
     func send<R: Resource & HasResponseBody>(_ resource: R, completion: @escaping (Result<Response<R.Content>, Error>) -> Void) {
@@ -154,13 +159,13 @@ public extension BuildkiteClient {
     }
 }
 
-// MARK: Combine API
+// MARK: - Combine API
 
 #if canImport(Combine)
 import Combine
 
 @available(iOS 13.0, macOS 10.15, tvOS 13.0, watchOS 6.0, *)
-extension BuildkiteClient {
+extension BuildkiteClient where T: CombineTransport {
     public func sendPublisher<R: Resource & HasResponseBody>(_ resource: R) -> AnyPublisher<Response<R.Content>, Error> {
         Result { try URLRequest(resource, configuration: configuration) }
             .publisher
@@ -229,6 +234,77 @@ extension BuildkiteClient {
                 return Response(content: (), response: $0.response)
         }
         .eraseToAnyPublisher()
+    }
+}
+#endif
+
+// MARK: - Async/Await API
+
+#if swift(>=5.5)
+@available(macOS 12.0, iOS 15.0, tvOS 15.0, watchOS 8.0, *)
+extension BuildkiteClient where T: AsyncTransport {
+    func send<R: Resource & HasResponseBody>(_ resource: R) async throws -> Response<R.Content> {
+        let request = try URLRequest(resource, configuration: configuration)
+        
+        let (data, response) = try await transport.send(request: request)
+        
+        try checkResponseForIssues(response, data: data)
+        let content = try self.decoder.decode(R.Content.self, from: data)
+        
+        return Response(content: content, response: response)
+    }
+
+    func send<R: Resource & Paginated>(_ resource: R, pageOptions: PageOptions? = nil) async throws -> Response<R.Content> {
+        let request = try URLRequest(resource, configuration: configuration, pageOptions: pageOptions)
+
+        let (data, response) = try await transport.send(request: request)
+        
+        try checkResponseForIssues(response, data: data)
+        let content = try self.decoder.decode(R.Content.self, from: data)
+        
+        return Response(content: content, response: response)
+    }
+
+    func send<R: Resource & HasRequestBody & HasResponseBody>(_ resource: R) async throws -> Response<R.Content> {
+        let request = try URLRequest(resource, configuration: configuration, encoder: encoder)
+        
+        let (data, response) = try await transport.send(request: request)
+        
+        try checkResponseForIssues(response, data: data)
+        let content = try self.decoder.decode(R.Content.self, from: data)
+        
+        return Response(content: content, response: response)
+    }
+
+    func send<R: Resource & HasRequestBody & Paginated>(_ resource: R, pageOptions: PageOptions? = nil) async throws -> Response<R.Content> {
+        let request = try URLRequest(resource, configuration: configuration, encoder: encoder, pageOptions: pageOptions)
+
+        let (data, response) = try await transport.send(request: request)
+        
+        try checkResponseForIssues(response, data: data)
+        let content = try self.decoder.decode(R.Content.self, from: data)
+        
+        return Response(content: content, response: response)
+    }
+
+    func send<R: Resource>(_ resource: R) async throws -> Response<Void> {
+        let request = try URLRequest(resource, configuration: configuration)
+
+        let (data, response) = try await transport.send(request: request)
+        
+        try checkResponseForIssues(response, data: data)
+        
+        return Response(content: (), response: response)
+    }
+
+    func send<R: Resource & HasRequestBody>(_ resource: R) async throws -> Response<Void> {
+        let request = try URLRequest(resource, configuration: configuration, encoder: encoder)
+        
+        let (data, response) = try await transport.send(request: request)
+        
+        try checkResponseForIssues(response, data: data)
+        
+        return Response(content: (), response: response)
     }
 }
 #endif

@@ -100,7 +100,7 @@ extension JSONValue: Decodable {
 }
 
 extension JSONValue: ExpressibleByNilLiteral {
-    public init(nilLiteral: ()) {
+    public init(nilLiteral: Void) {
         self = .null
     }
 }

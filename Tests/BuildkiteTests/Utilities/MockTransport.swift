@@ -13,10 +13,6 @@ import Buildkite
 import FoundationNetworking
 #endif
 
-#if canImport(Combine)
-import Combine
-#endif
-
 final class MockTransport {
     enum Error: Swift.Error {
         case tooManyRequests
@@ -39,9 +35,14 @@ extension MockTransport: Transport {
         }
         completion(.success(responses.removeFirst()))
     }
+}
 
-    #if canImport(Combine)
-    @available(iOS 13.0, macOS 10.15, tvOS 13.0, watchOS 6.0, *)
+
+#if canImport(Combine)
+import Combine
+
+@available(iOS 13.0, macOS 10.15, tvOS 13.0, watchOS 6.0, *)
+extension MockTransport: CombineTransport{
     func sendPublisher(request: URLRequest) -> AnyPublisher<Output, Swift.Error> {
         history.append(request)
         return Future { [weak self] promise in
@@ -55,5 +56,18 @@ extension MockTransport: Transport {
             promise(.success(self.responses.removeFirst()))
         }.eraseToAnyPublisher()
     }
-    #endif
 }
+#endif
+
+#if swift(>=5.5)
+@available(macOS 12.0, iOS 15.0, tvOS 15.0, watchOS 8.0, *)
+extension MockTransport: AsyncTransport {
+    func send(request: URLRequest) async throws -> Output {
+        history.append(request)
+        guard !responses.isEmpty else {
+            throw MockTransport.Error.tooManyRequests
+        }
+        return responses.removeFirst()
+    }
+}
+#endif

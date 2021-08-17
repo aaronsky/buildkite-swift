@@ -14,7 +14,7 @@ import FoundationNetworking
 #endif
 
 struct MockContext {
-    var client: BuildkiteClient
+    var client: BuildkiteClient<MockTransport>
     var resources = MockResources()
 
     init() {

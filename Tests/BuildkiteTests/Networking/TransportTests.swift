@@ -6,16 +6,12 @@
 //  Copyright © 2020 Aaron Sky. All rights reserved.
 //
 
+@testable import Buildkite
 import Foundation
 import XCTest
-@testable import Buildkite
 
 #if canImport(FoundationNetworking)
 import FoundationNetworking
-#endif
-
-#if canImport(Combine)
-import Combine
 #endif
 
 class TransportTests: XCTestCase {
@@ -67,7 +63,7 @@ class TransportTests: XCTestCase {
     }
 }
 
-// MARK: Closure-based Requests
+// MARK: - Closure-based Requests
 
 extension TransportTests {
     func testURLSessionSendClosureBasedRequest() {
@@ -95,9 +91,11 @@ extension TransportTests {
     }
 }
 
-// MARK: Combine-based Requests
+// MARK: - Combine-based Requests
 
 #if canImport(Combine)
+import Combine
+
 @available(iOS 13.0, macOS 10.15, tvOS 13.0, watchOS 6.0, *)
 extension TransportTests {
     func testURLSessionSendPublisherBasedRequest() {
@@ -130,6 +128,26 @@ extension TransportTests {
             }, receiveValue: { _ in })
             .store(in: &cancellables)
             wait(for: [expectation])
+    }
+}
+#endif
+
+// MARK: - Async/Await-based Requests
+
+#if swift(>=5.5)
+@available(macOS 12.0, iOS 15.0, tvOS 15.0, watchOS 8.0, *)
+extension TransportTests {
+    func testURLSessionSendAsyncRequest() async throws {
+        let request = URLRequest(url: URL())
+        _ = try await createSession().send(request: request)
+    }
+    
+    func testURLSessionSendAsyncRequestFailure() async {
+        let request = URLRequest(url: URL())
+        do {
+            _ = try await createSession(testCase: .error).send(request: request)
+            XCTFail("Expected to have failed with an error, but task fulfilled normally")
+        } catch {}
     }
 }
 #endif

@@ -40,7 +40,7 @@ client.send(Pipeline.Resources.List(organization: "buildkite")) { result in
 }
 ```
 
-You can even use Combine, if you'd like!
+You can also use Combine, if you'd like!
 
 ```swift
 import Buildkite
@@ -54,6 +54,18 @@ client.sendPublisher(Pipeline.Resources.List(organization: "buildkite"))
     .sink(receiveCompletion: { _ in }) { pipelines in
         print(pipelines)
     }.store(in: &cancellables)
+```
+
+If you're using Swift 5.5 or Xcode 13, and are shipping on a supported OS, you can even use the new async/await syntax:
+
+```swift
+import Buildkite
+
+let client = BuildkiteClient()
+client.token = "..." // Your scoped Buildkite API access token
+let response = try await client.send(Pipeline.Resources.List(organization: "buildkite"))
+let pipelines = response.content
+print(pipelines)
 ```
 
 The entire publicly documented REST API surface is supported by this package.

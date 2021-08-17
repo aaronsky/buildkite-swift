@@ -14,10 +14,6 @@ import XCTest
 import FoundationNetworking
 #endif
 
-#if canImport(Combine)
-import Combine
-#endif
-
 class BuildkiteClientTests: XCTestCase {
     private struct TestData {
         enum Case {
@@ -33,7 +29,7 @@ class BuildkiteClientTests: XCTestCase {
         }
         
         var configuration = Configuration.default
-        var client: BuildkiteClient
+        var client: BuildkiteClient<MockTransport>
         var resources = MockResources()
         
         init(testCase: Case = .success) throws {
@@ -86,7 +82,7 @@ class BuildkiteClientTests: XCTestCase {
     }
 }
 
-// MARK: Closure-based Requests
+// MARK: - Closure-based Requests
 
 extension BuildkiteClientTests {
     func testClosureBasedRequest() throws {
@@ -220,9 +216,11 @@ extension BuildkiteClientTests {
     }
 }
 
-// MARK: Combine-based Requests
+// MARK: - Combine-based Requests
 
 #if canImport(Combine)
+import Combine
+
 @available(iOS 13.0, macOS 10.15, tvOS 13.0, watchOS 6.0, *)
 extension BuildkiteClientTests {
     func testPublisherBasedRequest() throws {
@@ -253,8 +251,8 @@ extension BuildkiteClientTests {
                 expectation.fulfill()
             },
                   receiveValue: {
-                    XCTAssertEqual(testData.resources.paginatedContent, $0.content)
-                    XCTAssertNotNil($0.page)
+                XCTAssertEqual(testData.resources.paginatedContent, $0.content)
+                XCTAssertNotNil($0.page)
             })
             .store(in: &cancellables)
         wait(for: [expectation])
@@ -302,7 +300,7 @@ extension BuildkiteClientTests {
                 expectation.fulfill()
             },
                   receiveValue: {
-                    XCTAssertEqual(testData.resources.bodyAndContent, $0.content)
+                XCTAssertEqual(testData.resources.bodyAndContent, $0.content)
             })
             .store(in: &cancellables)
         wait(for: [expectation])
@@ -320,8 +318,8 @@ extension BuildkiteClientTests {
                 expectation.fulfill()
             },
                   receiveValue: {
-                    XCTAssertEqual(testData.resources.bodyAndPaginatedContent, $0.content)
-                    XCTAssertNotNil($0.page)
+                XCTAssertEqual(testData.resources.bodyAndPaginatedContent, $0.content)
+                XCTAssertNotNil($0.page)
             })
             .store(in: &cancellables)
         wait(for: [expectation])
@@ -355,6 +353,67 @@ extension BuildkiteClientTests {
             }, receiveValue: { _ in })
             .store(in: &cancellables)
         wait(for: [expectation])
+    }
+}
+#endif
+
+// MARK: - Async/Await-based Requests
+
+#if swift(>=5.5)
+@available(macOS 12.0, iOS 15.0, tvOS 15.0, watchOS 8.0, *)
+extension BuildkiteClientTests {
+    func testAsyncBasedRequest() async throws {
+        let testData = try TestData(testCase: .success)
+        let response = try await testData.client.send(testData.resources.contentResource)
+        XCTAssertEqual(testData.resources.content, response.content)
+    }
+    
+    func testAsyncBasedRequestWithPagination() async throws {
+        let testData = try TestData(testCase: .success)
+        let response = try await testData.client.send(testData.resources.paginatedContentResource,
+                                                      pageOptions: PageOptions(page: 1, perPage: 30))
+        XCTAssertEqual(testData.resources.paginatedContent, response.content)
+        XCTAssertNotNil(response.page)
+    }
+    
+    func testAsyncBasedRequestNoContent() async throws {
+        let testData = try TestData(testCase: .success)
+        _ = try await testData.client.send(testData.resources.noContentNoBodyResource)
+    }
+    
+    func testAsyncBasedRequestHasBody() async throws {
+        let testData = try TestData(testCase: .successHasBody)
+        _ = try await testData.client.send(testData.resources.bodyResource)
+    }
+    
+    func testAsyncBasedRequestHasBodyWithContent() async throws {
+        let testData = try TestData(testCase: .successHasBodyAndContent)
+        let response = try await testData.client.send(testData.resources.bodyAndContentResource)
+        XCTAssertEqual(testData.resources.bodyAndContent, response.content)
+    }
+    
+    func testAsyncBasedRequestHasBodyWithPagination() async throws {
+        let testData = try TestData(testCase: .successHasBodyPaginated)
+        let response = try await testData.client.send(testData.resources.bodyAndPaginatedResource,
+                                                      pageOptions: PageOptions(page: 1, perPage: 30))
+        XCTAssertEqual(testData.resources.bodyAndPaginatedContent, response.content)
+        XCTAssertNotNil(response.page)
+    }
+    
+    func testAsyncBasedRequestInvalidResponse() async throws {
+        let testData = try TestData(testCase: .badResponse)
+        do {
+            _ = try await testData.client.send(testData.resources.contentResource)
+            XCTFail("Expected to have failed with an error, but task fulfilled normally")
+        } catch {}
+    }
+    
+    func testAsyncBasedRequestUnsuccessfulResponse() async throws {
+        let testData = try TestData(testCase: .unsuccessfulResponse)
+        do {
+            _ = try await testData.client.send(testData.resources.contentResource)
+            XCTFail("Expected to have failed with an error, but task fulfilled normally")
+        } catch {}
     }
 }
 #endif
