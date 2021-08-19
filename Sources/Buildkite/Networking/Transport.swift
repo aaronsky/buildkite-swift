@@ -21,8 +21,6 @@ public protocol Transport {
     typealias Completion = (Result<Output, Error>) -> Void
 
     func send(request: URLRequest, completion: @escaping Completion)
-
-    
 }
 
 extension URLSession: Transport {

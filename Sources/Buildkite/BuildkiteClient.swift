@@ -165,8 +165,8 @@ public extension BuildkiteClient {
 import Combine
 
 @available(iOS 13.0, macOS 10.15, tvOS 13.0, watchOS 6.0, *)
-extension BuildkiteClient where T: CombineTransport {
-    public func sendPublisher<R: Resource & HasResponseBody>(_ resource: R) -> AnyPublisher<Response<R.Content>, Error> {
+public extension BuildkiteClient where T: CombineTransport {
+    func sendPublisher<R: Resource & HasResponseBody>(_ resource: R) -> AnyPublisher<Response<R.Content>, Error> {
         Result { try URLRequest(resource, configuration: configuration) }
             .publisher
             .flatMap(transport.sendPublisher)
@@ -178,7 +178,7 @@ extension BuildkiteClient where T: CombineTransport {
         .eraseToAnyPublisher()
     }
 
-    public func sendPublisher<R: Resource & HasResponseBody & Paginated>(_ resource: R, pageOptions: PageOptions? = nil) -> AnyPublisher<Response<R.Content>, Error> {
+    func sendPublisher<R: Resource & HasResponseBody & Paginated>(_ resource: R, pageOptions: PageOptions? = nil) -> AnyPublisher<Response<R.Content>, Error> {
         Result { try URLRequest(resource, configuration: configuration, pageOptions: pageOptions) }
             .publisher
             .flatMap(transport.sendPublisher)
@@ -190,7 +190,7 @@ extension BuildkiteClient where T: CombineTransport {
         .eraseToAnyPublisher()
     }
 
-    public func sendPublisher<R: Resource & HasRequestBody & HasResponseBody>(_ resource: R) -> AnyPublisher<Response<R.Content>, Error> {
+    func sendPublisher<R: Resource & HasRequestBody & HasResponseBody>(_ resource: R) -> AnyPublisher<Response<R.Content>, Error> {
         Result { try URLRequest(resource, configuration: configuration, encoder: encoder) }
             .publisher
             .flatMap(transport.sendPublisher)
@@ -202,7 +202,7 @@ extension BuildkiteClient where T: CombineTransport {
         .eraseToAnyPublisher()
     }
 
-    public func sendPublisher<R: Resource & HasRequestBody & Paginated>(_ resource: R, pageOptions: PageOptions? = nil) -> AnyPublisher<Response<R.Content>, Error> {
+    func sendPublisher<R: Resource & HasRequestBody & Paginated>(_ resource: R, pageOptions: PageOptions? = nil) -> AnyPublisher<Response<R.Content>, Error> {
         Result { try URLRequest(resource, configuration: configuration, encoder: encoder, pageOptions: pageOptions) }
             .publisher
             .flatMap(transport.sendPublisher)
@@ -214,7 +214,7 @@ extension BuildkiteClient where T: CombineTransport {
         .eraseToAnyPublisher()
     }
 
-    public func sendPublisher<R: Resource>(_ resource: R) -> AnyPublisher<Response<Void>, Error> {
+    func sendPublisher<R: Resource>(_ resource: R) -> AnyPublisher<Response<Void>, Error> {
         Result { try URLRequest(resource, configuration: configuration) }
             .publisher
             .flatMap(transport.sendPublisher)
@@ -242,7 +242,7 @@ extension BuildkiteClient where T: CombineTransport {
 
 #if swift(>=5.5)
 @available(macOS 12.0, iOS 15.0, tvOS 15.0, watchOS 8.0, *)
-extension BuildkiteClient where T: AsyncTransport {
+public extension BuildkiteClient where T: AsyncTransport {
     func send<R: Resource & HasResponseBody>(_ resource: R) async throws -> Response<R.Content> {
         let request = try URLRequest(resource, configuration: configuration)
         
