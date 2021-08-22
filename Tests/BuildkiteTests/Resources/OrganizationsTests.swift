@@ -35,7 +35,7 @@ class OrganizationsTests: XCTestCase {
 
         let expectation = XCTestExpectation()
 
-        context.client.send(Organization.Resources.List()) { result in
+        context.client.send(.organizations) { result in
             do {
                 let response = try result.get()
                 XCTAssertEqual(expected, response.content)
@@ -53,7 +53,7 @@ class OrganizationsTests: XCTestCase {
 
         let expectation = XCTestExpectation()
 
-        context.client.send(Organization.Resources.Get(organization: "buildkite")) { result in
+        context.client.send(.organization("buildkite")) { result in
             do {
                 let response = try result.get()
                 XCTAssertEqual(expected, response.content)

@@ -21,7 +21,7 @@ class JobsTests: XCTestCase {
 
         let expectation = XCTestExpectation()
 
-        context.client.send(Job.Resources.Retry(organization: "buildkite", pipeline: "my-pipeline", build: 1, job: UUID())) { result in
+        context.client.send(.retryJob(UUID(), in: "buildkite", pipeline: "my-pipeline", build: 1)) { result in
             do {
                 let response = try result.get()
                 XCTAssertEqual(expected, response.content)
@@ -32,7 +32,7 @@ class JobsTests: XCTestCase {
         }
         wait(for: [expectation])
     }
-    
+
     func testJobsRetryTrigger() throws {
         let expected: Job = .trigger(Job.Trigger(name: nil,
                                                  state: nil,
@@ -50,7 +50,7 @@ class JobsTests: XCTestCase {
 
         let expectation = XCTestExpectation()
 
-        context.client.send(Job.Resources.Retry(organization: "buildkite", pipeline: "my-pipeline", build: 1, job: UUID())) { result in
+        context.client.send(.retryJob(UUID(), in: "buildkite", pipeline: "my-pipeline", build: 1)) { result in
             do {
                 let response = try result.get()
                 XCTAssertEqual(expected, response.content)
@@ -73,12 +73,9 @@ class JobsTests: XCTestCase {
                                               unblockUrl: URL()))
         let context = try MockContext(content: expected)
 
-        let body = Job.Resources.Unblock.Body()
-        let resource = Job.Resources.Unblock(organization: "buildkite", pipeline: "my-pipeline", build: 1, job: UUID(), body: body)
-
         let expectation = XCTestExpectation()
 
-        context.client.send(resource) { result in
+        context.client.send(.unblockJob(UUID(), in: "buildkite", pipeline: "my-pipeline", build: 1, with: .init())) { result in
             do {
                 let response = try result.get()
                 XCTAssertEqual(expected, response.content)
@@ -96,7 +93,7 @@ class JobsTests: XCTestCase {
 
         let expectation = XCTestExpectation()
 
-        context.client.send(Job.Resources.LogOutput(organization: "buildkite", pipeline: "my-pipeline", build: 1, job: UUID())) { result in
+        context.client.send(.logOutput(for: UUID(), in: "buildkite", pipeline: "my-pipeline", build: 1)) { result in
             do {
                 let response = try result.get()
                 XCTAssertEqual(expected, response.content)
@@ -115,7 +112,7 @@ class JobsTests: XCTestCase {
 
         let expectation = XCTestExpectation()
 
-        context.client.send(Job.Resources.LogOutput.Alternative(organization: "buildkite", pipeline: "my-pipeline", build: 1, job: UUID(), format: .plainText)) { result in
+        context.client.send(.logOutput(.plainText, for: UUID(), in: "buildkite", pipeline: "my-pipeline", build: 1)) { result in
             do {
                 let response = try result.get()
                 XCTAssertEqual(expected, response.content)
@@ -133,7 +130,7 @@ class JobsTests: XCTestCase {
 
         let expectation = XCTestExpectation()
 
-        context.client.send(Job.Resources.LogOutput.Alternative(organization: "buildkite", pipeline: "my-pipeline", build: 1, job: UUID(), format: .html)) { result in
+        context.client.send(.logOutput(.html, for: UUID(), in: "buildkite", pipeline: "my-pipeline", build: 1)) { result in
             do {
                 let response = try result.get()
                 XCTAssertEqual(expected, response.content)
@@ -151,7 +148,7 @@ class JobsTests: XCTestCase {
 
         let expectation = XCTestExpectation()
 
-        context.client.send(Job.Resources.DeleteLogOutput(organization: "buildkite", pipeline: "my-pipeline", build: 1, job: UUID())) { result in
+        context.client.send(.deleteLogOutput(for: UUID(), in: "buildkite", pipeline: "my-pipeline", build: 1)) { result in
             do {
                 _ = try result.get()
             } catch {
@@ -168,7 +165,7 @@ class JobsTests: XCTestCase {
 
         let expectation = XCTestExpectation()
 
-        context.client.send(Job.Resources.EnvironmentVariables(organization: "buildkite", pipeline: "my-pipeline", build: 1, job: UUID())) { result in
+        context.client.send(.environmentVariables(for: UUID(), in: "buildkite", pipeline: "my-pipeline", build: 1)) { result in
             do {
                 let response = try result.get()
                 XCTAssertEqual(expected, response.content)

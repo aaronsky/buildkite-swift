@@ -34,7 +34,7 @@ class TeamsTests: XCTestCase {
 
         let expectation = XCTestExpectation()
 
-        context.client.send(Team.Resources.List(organization: "buildkite", userId: UUID())) { result in
+        context.client.send(.teams(in: "buildkite", byUser: UUID())) { result in
             do {
                 let response = try result.get()
                 XCTAssertEqual(expected, response.content)

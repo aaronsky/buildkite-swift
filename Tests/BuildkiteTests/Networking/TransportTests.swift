@@ -141,7 +141,7 @@ extension TransportTests {
         let request = URLRequest(url: URL())
         _ = try await createSession().send(request: request)
     }
-    
+
     func testURLSessionSendAsyncRequestFailure() async {
         let request = URLRequest(url: URL())
         do {

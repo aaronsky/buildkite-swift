@@ -20,7 +20,7 @@ extension Agent.Resources {
     /// List agents
     ///
     /// Returns a paginated list of an organization’s agents.
-    public struct List: Resource, HasResponseBody, Paginated {
+    public struct List: PaginatedResource {
         public typealias Content = [Agent]
         /// organization slug
         public var organization: String
@@ -54,7 +54,7 @@ extension Agent.Resources {
         }
     }
 
-    public struct Get: Resource, HasResponseBody {
+    public struct Get: Resource {
         public typealias Content = Agent
         /// organization slug
         public var organization: String
@@ -74,8 +74,7 @@ extension Agent.Resources {
     /// Stop an agent
     ///
     /// Instruct an agent to stop accepting new build jobs and shut itself down.
-    public struct Stop: Resource, HasRequestBody {
-        public typealias Content = Void
+    public struct Stop: Resource {
         /// organization slug
         public var organization: String
         /// agent ID
@@ -96,14 +95,32 @@ extension Agent.Resources {
             "organizations/\(organization)/agents/\(agentId)/stop"
         }
 
-        public init(organization: String, agentId: UUID, body: Agent.Resources.Stop.Body) {
+        public init(organization: String, agentId: UUID, force: Bool? = nil) {
             self.organization = organization
             self.agentId = agentId
-            self.body = body
+            self.body = Body(force: force)
         }
 
         public func transformRequest(_ request: inout URLRequest) {
             request.httpMethod = "PUT"
         }
+    }
+}
+
+extension Resource where Self == Agent.Resources.List {
+    public static func agents(in organization: String) -> Agent.Resources.List {
+        .init(organization: organization)
+    }
+}
+
+extension Resource where Self == Agent.Resources.Get {
+    public static func agent(_ agentId: UUID, in organization: String) -> Agent.Resources.Get {
+        .init(organization: organization, agentId: agentId)
+    }
+}
+
+extension Resource where Self == Agent.Resources.Stop {
+    public static func stopAgent(_ agentId: UUID, in organization: String, force: Bool? = nil) -> Agent.Resources.Stop {
+        .init(organization: organization, agentId: agentId, force: force)
     }
 }

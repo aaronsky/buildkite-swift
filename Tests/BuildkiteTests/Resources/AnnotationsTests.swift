@@ -32,7 +32,7 @@ class AnnotationsTests: XCTestCase {
 
         let expectation = XCTestExpectation()
 
-        context.client.send(Annotation.Resources.List(organization: "buildkite", pipeline: "my-pipeline", build: 1)) { result in
+        context.client.send(.annotations(in: "buildkite", pipeline: "my-pipeline", build: 1)) { result in
             do {
                 let response = try result.get()
                 XCTAssertEqual(expected, response.content)

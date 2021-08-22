@@ -20,7 +20,7 @@ extension Artifact.Resources {
     /// List artifacts for a build
     ///
     /// Returns a paginated list of a build’s artifacts across all of its jobs.
-    public struct ListByBuild: Resource, HasResponseBody, Paginated {
+    public struct ListByBuild: PaginatedResource {
         public typealias Content = [Artifact]
         /// organization slug
         public var organization: String
@@ -43,7 +43,7 @@ extension Artifact.Resources {
     /// List artifacts for a job
     ///
     /// Returns a paginated list of a job’s artifacts.
-    public struct ListByJob: Resource, HasResponseBody, Paginated {
+    public struct ListByJob: PaginatedResource {
         public typealias Content = [Artifact]
         /// organization slug
         public var organization: String
@@ -67,7 +67,7 @@ extension Artifact.Resources {
     }
 
     /// Get an artifact
-    public struct Get: Resource, HasResponseBody {
+    public struct Get: Resource {
         public typealias Content = Artifact
         /// organization slug
         public var organization: String
@@ -96,7 +96,7 @@ extension Artifact.Resources {
     /// Download an artifact
     ///
     ///
-    public struct Download: Resource, HasResponseBody {
+    public struct Download: Resource {
         public typealias Content = Artifact.URLs
         /// organization slug
         public var organization: String
@@ -126,7 +126,6 @@ extension Artifact.Resources {
     ///
     ///
     public struct Delete: Resource {
-        public typealias Content = Void
         /// organization slug
         public var organization: String
         /// pipeline slug
@@ -153,5 +152,35 @@ extension Artifact.Resources {
         public func transformRequest(_ request: inout URLRequest) {
             request.httpMethod = "DELETE"
         }
+    }
+}
+
+extension Resource where Self == Artifact.Resources.ListByBuild {
+    public static func artifacts(byBuild build: Int, in organization: String, pipeline: String) -> Artifact.Resources.ListByBuild {
+        .init(organization: organization, pipeline: pipeline, build: build)
+    }
+}
+
+extension Resource where Self == Artifact.Resources.ListByJob {
+    public static func artifacts(byJob job: UUID, in organization: String, pipeline: String, build: Int) -> Artifact.Resources.ListByJob {
+        .init(organization: organization, pipeline: pipeline, build: build, jobId: job)
+    }
+}
+
+extension Resource where Self == Artifact.Resources.Get {
+    public static func artifact(_ id: UUID, in organization: String, pipeline: String, build: Int, job: UUID) -> Artifact.Resources.Get {
+        .init(organization: organization, pipeline: pipeline, build: build, jobId: job, artifactId: id)
+    }
+}
+
+extension Resource where Self == Artifact.Resources.Download {
+    public static func downloadArtifact(_ id: UUID, in organization: String, pipeline: String, build: Int, job: UUID) -> Artifact.Resources.Download {
+        .init(organization: organization, pipeline: pipeline, build: build, jobId: job, artifactId: id)
+    }
+}
+
+extension Resource where Self == Artifact.Resources.Delete {
+    public static func deleteArtifact(_ id: UUID, in organization: String, pipeline: String, build: Int, job: UUID) -> Artifact.Resources.Delete {
+        .init(organization: organization, pipeline: pipeline, build: build, jobId: job, artifactId: id)
     }
 }

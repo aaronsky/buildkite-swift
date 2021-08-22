@@ -20,7 +20,7 @@ extension Pipeline.Resources {
     /// List pipelines
     ///
     /// Returns a paginated list of an organization’s pipelines.
-    public struct List: Resource, HasResponseBody, Paginated {
+    public struct List: PaginatedResource {
         public typealias Content = [Pipeline]
         /// organization slug
         public var organization: String
@@ -35,7 +35,7 @@ extension Pipeline.Resources {
     }
 
     /// Get a pipeline
-    public struct Get: Resource, HasResponseBody {
+    public struct Get: Resource {
         public typealias Content = Pipeline
         /// organization slug
         public var organization: String
@@ -52,7 +52,8 @@ extension Pipeline.Resources {
         }
     }
 
-    public struct Create: Resource, HasRequestBody, HasResponseBody {
+    /// Create a YAML pipeline
+    public struct Create: Resource {
         public typealias Content = Pipeline
         /// organization slug
         public var organization: String
@@ -66,7 +67,7 @@ extension Pipeline.Resources {
             public var repository: URL
             /// The YAML pipeline that consists of the build pipeline steps.
             public var configuration: String
-            
+
             /// A branch filter pattern to limit which pushed branches trigger builds on this pipeline.
             public var branchConfiguration: String?
             /// Cancel intermediate builds. When a new build is created on a branch, any previous builds that are running on the same branch will be automatically canceled.
@@ -85,7 +86,7 @@ extension Pipeline.Resources {
             public var skipQueuedBranchBuildsFilter: String?
             /// An array of team UUIDs to add this pipeline to. You can find your team’s UUID either via the GraphQL API, or on the settings page for a team. This property is only available if your organization has enabled Teams.
             public var teamUUIDs: [UUID]?
-            
+
             public init(name: String, repository: URL, configuration: String, branchConfiguration: String? = nil, cancelRunningBranchBuilds: Bool? = nil, cancelRunningBranchBuildsFilter: String? = nil, defaultBranch: String? = nil, description: String? = nil, providerSettings: Pipeline.Provider.Settings? = nil, skipQueuedBranchBuilds: Bool? = nil, skipQueuedBranchBuildsFilter: String? = nil, teamUUIDs: [UUID]? = nil) {
                 self.name = name
                 self.repository = repository
@@ -101,12 +102,12 @@ extension Pipeline.Resources {
                 self.teamUUIDs = teamUUIDs
             }
         }
-        
+
         public var path: String {
             "organizations/\(organization)/pipelines"
         }
 
-        public init(organization: String, body: Pipeline.Resources.Create.Body) {
+        public init(organization: String, body: Body) {
             self.organization = organization
             self.body = body
         }
@@ -115,9 +116,9 @@ extension Pipeline.Resources {
             request.httpMethod = "POST"
         }
     }
-    
+
     /// Create a visual step pipeline
-    public struct CreateVisualSteps: Resource, HasRequestBody, HasResponseBody {
+    public struct CreateVisualSteps: Resource {
         public typealias Content = Pipeline
         /// organization slug
         public var organization: String
@@ -174,7 +175,7 @@ extension Pipeline.Resources {
             "organizations/\(organization)/pipelines"
         }
 
-        public init(organization: String, body: Pipeline.Resources.CreateVisualSteps.Body) {
+        public init(organization: String, body: Body) {
             self.organization = organization
             self.body = body
         }
@@ -187,7 +188,7 @@ extension Pipeline.Resources {
     /// Update a pipeline
     ///
     /// Updates one or more properties of an existing pipeline
-    public struct Update: Resource, HasRequestBody, HasResponseBody {
+    public struct Update: Resource {
         public typealias Content = Pipeline
         /// organization slug
         public var organization: String
@@ -245,14 +246,15 @@ extension Pipeline.Resources {
             "organizations/\(organization)/pipelines/\(pipeline)"
         }
 
-        public init(organization: String, pipeline: String, body: Pipeline.Resources.Update.Body) {
+        public init(organization: String, pipeline: String, body: Body) {
             self.organization = organization
             self.pipeline = pipeline
             self.body = body
         }
     }
-    
-    public struct Archive: Resource, HasResponseBody {
+
+    /// Archive a pipeline
+    public struct Archive: Resource {
         public typealias Content = Pipeline
         /// organization slug
         public var organization: String
@@ -262,7 +264,7 @@ extension Pipeline.Resources {
         public var path: String {
             "organizations/\(organization)/pipelines/\(pipeline)/archive"
         }
-        
+
         public init(organization: String, pipeline: String) {
             self.organization = organization
             self.pipeline = pipeline
@@ -272,8 +274,9 @@ extension Pipeline.Resources {
             request.httpMethod = "POST"
         }
     }
-    
-    public struct Unarchive: Resource, HasResponseBody {
+
+    /// Unarchive an archived pipeline
+    public struct Unarchive: Resource {
         public typealias Content = Pipeline
         /// organization slug
         public var organization: String
@@ -283,7 +286,7 @@ extension Pipeline.Resources {
         public var path: String {
             "organizations/\(organization)/pipelines/\(pipeline)/unarchive"
         }
-        
+
         public init(organization: String, pipeline: String) {
             self.organization = organization
             self.pipeline = pipeline
@@ -296,7 +299,6 @@ extension Pipeline.Resources {
 
     /// Delete a pipeline
     public struct Delete: Resource {
-        public typealias Content = Void
         /// organization slug
         public var organization: String
         /// pipeline slug
@@ -311,9 +313,9 @@ extension Pipeline.Resources {
             self.pipeline = pipeline
         }
     }
-    
+
+    /// Create a webhook for a pipeline
     public struct CreateWebhook: Resource {
-        public typealias Content = Void
         /// organization slug
         public var organization: String
         /// pipeline slug
@@ -322,7 +324,7 @@ extension Pipeline.Resources {
         public var path: String {
             "organizations/\(organization)/pipelines/\(pipeline)/webhook"
         }
-        
+
         public init(organization: String, pipeline: String) {
             self.organization = organization
             self.pipeline = pipeline
@@ -331,5 +333,59 @@ extension Pipeline.Resources {
         public func transformRequest(_ request: inout URLRequest) {
             request.httpMethod = "POST"
         }
+    }
+}
+
+extension Resource where Self == Pipeline.Resources.List {
+    public static func pipelines(in organization: String) -> Pipeline.Resources.List {
+        .init(organization: organization)
+    }
+}
+
+extension Resource where Self == Pipeline.Resources.Get {
+    public static func pipeline(_ pipeline: String, in organization: String) -> Pipeline.Resources.Get {
+        .init(organization: organization, pipeline: pipeline)
+    }
+}
+
+extension Resource where Self == Pipeline.Resources.Create {
+    public static func createPipeline(_ pipeline: Pipeline.Resources.Create.Body, in organization: String) -> Pipeline.Resources.Create {
+        .init(organization: organization, body: pipeline)
+    }
+}
+
+extension Resource where Self == Pipeline.Resources.CreateVisualSteps {
+    public static func createVisualStepsPipeline(_ pipeline: Pipeline.Resources.CreateVisualSteps.Body, in organization: String) -> Pipeline.Resources.CreateVisualSteps {
+        .init(organization: organization, body: pipeline)
+    }
+}
+
+extension Resource where Self == Pipeline.Resources.Update {
+    public static func updatePipeline(_ pipeline: String, in organization: String, with body: Pipeline.Resources.Update.Body) -> Pipeline.Resources.Update {
+        .init(organization: organization, pipeline: pipeline, body: body)
+    }
+}
+
+extension Resource where Self == Pipeline.Resources.Archive {
+    public static func archivePipeline(_ pipeline: String, in organization: String) -> Pipeline.Resources.Archive {
+        .init(organization: organization, pipeline: pipeline)
+    }
+}
+
+extension Resource where Self == Pipeline.Resources.Unarchive {
+    public static func unarchivePipeline(_ pipeline: String, in organization: String) -> Pipeline.Resources.Unarchive {
+        .init(organization: organization, pipeline: pipeline)
+    }
+}
+
+extension Resource where Self == Pipeline.Resources.Delete {
+    public static func deletePipeline(_ pipeline: String, in organization: String) -> Pipeline.Resources.Delete {
+        .init(organization: organization, pipeline: pipeline)
+    }
+}
+
+extension Resource where Self == Pipeline.Resources.CreateWebhook {
+    public static func createWebhookForPipeline(_ pipeline: String, in organization: String) -> Pipeline.Resources.CreateWebhook {
+        .init(organization: organization, pipeline: pipeline)
     }
 }

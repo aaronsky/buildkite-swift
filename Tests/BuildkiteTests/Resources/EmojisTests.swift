@@ -27,7 +27,7 @@ class EmojisTests: XCTestCase {
 
         let expectation = XCTestExpectation()
 
-        context.client.send(Emoji.Resources.List(organization: "buildkite")) { result in
+        context.client.send(.emojis(in: "buildkite")) { result in
             do {
                 let response = try result.get()
                 XCTAssertEqual(expected, response.content)

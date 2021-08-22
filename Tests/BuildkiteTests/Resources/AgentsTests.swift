@@ -64,10 +64,10 @@ class AgentsTests: XCTestCase {
     func testAgentsList() throws {
         let expected = [Agent(), Agent()]
         let context = try MockContext(content: expected)
-        
+
         let expectation = XCTestExpectation()
-        
-        context.client.send(Agent.Resources.List(organization: "buildkite")) { result in
+
+        context.client.send(.agents(in: "buildkite")) { result in
             do {
                 let response = try result.get()
                 XCTAssertEqual(expected, response.content)
@@ -78,13 +78,13 @@ class AgentsTests: XCTestCase {
         }
         wait(for: [expectation])
     }
-    
+
     func testAgentsGet() throws {
         let expected = Agent()
         let context = try MockContext(content: expected)
-        
+
         let expectation = XCTestExpectation()
-        context.client.send(Agent.Resources.Get(organization: "buildkite", agentId: UUID())) { result in
+        context.client.send(.agent(UUID(), in: "buildkite")) { result in
             do {
                 let response = try result.get()
                 XCTAssertEqual(expected, response.content)
@@ -95,16 +95,13 @@ class AgentsTests: XCTestCase {
         }
         wait(for: [expectation])
     }
-    
+
     func testAgentsStop() throws {
         let context = MockContext()
-        
-        let resource = Agent.Resources.Stop(organization: "buildkite",
-                                            agentId: UUID(),
-                                            body: Agent.Resources.Stop.Body(force: true))
-        
+
         let expectation = XCTestExpectation()
-        context.client.send(resource) { result in
+
+        context.client.send(.stopAgent(UUID(), in: "buildkite", force: true)) { result in
             do {
                 _ = try result.get()
             } catch {

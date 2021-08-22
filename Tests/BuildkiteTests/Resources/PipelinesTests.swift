@@ -63,10 +63,10 @@ class PipelinesTests: XCTestCase {
     func testPipelinesList() throws {
         let expected = [Pipeline(), Pipeline()]
         let context = try MockContext(content: expected)
-        
+
         let expectation = XCTestExpectation()
-        
-        context.client.send(Pipeline.Resources.List(organization: "buildkite")) { result in
+
+        context.client.send(.pipelines(in: "buildkite")) { result in
             do {
                 let response = try result.get()
                 XCTAssertEqual(expected, response.content)
@@ -77,14 +77,14 @@ class PipelinesTests: XCTestCase {
         }
         wait(for: [expectation])
     }
-    
+
     func testPipelinesGet() throws {
         let expected = Pipeline()
         let context = try MockContext(content: expected)
-        
+
         let expectation = XCTestExpectation()
-        
-        context.client.send(Pipeline.Resources.Get(organization: "buildkite", pipeline: "my-pipeline")) { result in
+
+        context.client.send(.pipeline("buildkite", in: "organization")) { result in
             do {
                 let response = try result.get()
                 XCTAssertEqual(expected, response.content)
@@ -95,7 +95,7 @@ class PipelinesTests: XCTestCase {
         }
         wait(for: [expectation])
     }
-    
+
     func testPipelinesCreate() throws {
         let steps: [Pipeline.Step] = [
             .script(Pipeline.Step.Command(name: "📦",
@@ -104,17 +104,15 @@ class PipelinesTests: XCTestCase {
                                           env: [:],
                                           agentQueryRules: []))
         ]
-        
+
         let expected = Pipeline(steps: steps)
         let context = try MockContext(content: expected)
-        
-        let resource = Pipeline.Resources.Create(organization: "buildkite",
-                                                 body: Pipeline.Resources.Create.Body(name: "My Pipeline",
-                                                                                      repository: URL(),
-                                                                                      configuration: "steps:\n\t- label: \"📦\"\n\t  command: \"echo true\""))
-        
+
         let expectation = XCTestExpectation()
-        context.client.send(resource) { result in
+        context.client.send(.createPipeline(.init(name: "My Pipeline",
+                                                  repository: URL(),
+                                                  configuration: "steps:\n\t- label: \"📦\"\n\t  command: \"echo true\""),
+                                            in: "buildkite")) { result in
             do {
                 _ = try result.get()
             } catch {
@@ -124,7 +122,7 @@ class PipelinesTests: XCTestCase {
         }
         wait(for: [expectation])
     }
-    
+
     func testPipelinesCreateVisualSteps() throws {
         let steps: [Pipeline.Step] = [
             .script(Pipeline.Step.Command(name: "📦",
@@ -149,56 +147,52 @@ class PipelinesTests: XCTestCase {
         ]
         let expected = Pipeline(steps: steps)
         let context = try MockContext(content: expected)
-        
-        let resource = Pipeline.Resources.CreateVisualSteps(organization: "buildkite",
-                                                            body: Pipeline.Resources.CreateVisualSteps.Body(name: "My Pipeline",
-                                                                                                            repository: URL(),
-                                                                                                            steps: steps,
-                                                                                                            branchConfiguration: nil,
-                                                                                                            cancelRunningBranchBuilds: nil,
-                                                                                                            cancelRunningBranchBuildsFilter: nil,
-                                                                                                            defaultBranch: nil,
-                                                                                                            description: nil,
-                                                                                                            env: nil,
-                                                                                                            providerSettings: nil,
-                                                                                                            skipQueuedBranchBuilds: nil,
-                                                                                                            skipQueuedBranchBuildsFilter: nil,
-                                                                                                            teamUUIDs: nil))
-        
+
         let expectation = XCTestExpectation()
-        context.client.send(resource) { result in
-            do {
-                _ = try result.get()
-            } catch {
+            context.client.send(.createVisualStepsPipeline(.init(name: "My Pipeline",
+                                                                 repository: URL(),
+                                                                 steps: steps,
+                                                                 branchConfiguration: nil,
+                                                                 cancelRunningBranchBuilds: nil,
+                                                                 cancelRunningBranchBuildsFilter: nil,
+                                                                 defaultBranch: nil,
+                                                                 description: nil,
+                                                                 env: nil,
+                                                                 providerSettings: nil,
+                                                                 skipQueuedBranchBuilds: nil,
+                                                                 skipQueuedBranchBuildsFilter: nil,
+                                                                 teamUUIDs: nil),
+                                                           in: "buildkite")) { result in
+                do {
+                    _ = try result.get()
+                } catch {
                 XCTFail(error.localizedDescription)
             }
             expectation.fulfill()
         }
         wait(for: [expectation])
     }
-    
+
     func testPipelinesUpdate() throws {
         let expected = Pipeline()
         let context = try MockContext(content: expected)
-        
-        let resource = Pipeline.Resources.Update(organization: "buildkite",
-                                                 pipeline: "my-pipeline",
-                                                 body: Pipeline.Resources.Update.Body(branchConfiguration: nil,
-                                                                                      cancelRunningBranchBuilds: nil,
-                                                                                      cancelRunningBranchBuildsFilter: nil,
-                                                                                      defaultBranch: nil,
-                                                                                      description: nil,
-                                                                                      env: nil,
-                                                                                      name: nil,
-                                                                                      providerSettings: nil,
-                                                                                      repository: nil,
-                                                                                      steps: nil,
-                                                                                      skipQueuedBranchBuilds: nil,
-                                                                                      skipQueuedBranchBuildsFilter: nil,
-                                                                                      visibility: nil))
-        
+
         let expectation = XCTestExpectation()
-        context.client.send(resource) { result in
+        context.client.send(.updatePipeline("my-pipeline",
+                                            in: "buildkite",
+                                            with: .init(branchConfiguration: nil,
+                                                        cancelRunningBranchBuilds: nil,
+                                                        cancelRunningBranchBuildsFilter: nil,
+                                                        defaultBranch: nil,
+                                                        description: nil,
+                                                        env: nil,
+                                                        name: nil,
+                                                        providerSettings: nil,
+                                                        repository: nil,
+                                                        steps: nil,
+                                                        skipQueuedBranchBuilds: nil,
+                                                        skipQueuedBranchBuildsFilter: nil,
+                                                        visibility: nil))) { result in
             do {
                 _ = try result.get()
             } catch {
@@ -208,13 +202,13 @@ class PipelinesTests: XCTestCase {
         }
         wait(for: [expectation])
     }
-    
+
     func testPipelinesDelete() throws {
         let context = MockContext()
-        
+
         let expectation = XCTestExpectation()
-        
-        context.client.send(Pipeline.Resources.Delete(organization: "buildkite", pipeline: "my-pipeline")) { result in
+
+        context.client.send(.deletePipeline("my-pipeline", in: "buildkite")) { result in
             do {
                 _ = try result.get()
             } catch {

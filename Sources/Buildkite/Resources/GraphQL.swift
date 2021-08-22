@@ -12,7 +12,7 @@ import Foundation
 import FoundationNetworking
 #endif
 
-public struct GraphQL<T: Decodable>: Resource, HasResponseBody, HasRequestBody {
+public struct GraphQL<T: Decodable>: Resource {
     public struct Body: Encodable {
         /// The query or mutation to be sent
         public var query: String
@@ -26,7 +26,7 @@ public struct GraphQL<T: Decodable>: Resource, HasResponseBody, HasRequestBody {
     public enum Content: Decodable {
         case data(T)
         case errors(Errors)
-        
+
         public init(from decoder: Decoder) throws {
             let container = try decoder.container(keyedBy: CodingKeys.self)
             if let errors = try container.decodeIfPresent([Error].self, forKey: .errors) {
@@ -35,10 +35,15 @@ public struct GraphQL<T: Decodable>: Resource, HasResponseBody, HasRequestBody {
             } else if let data = try container.decodeIfPresent(T.self, forKey: .data) {
                 self = .data(data)
             } else {
-                throw DecodingError.dataCorrupted(DecodingError.Context(codingPath: decoder.codingPath, debugDescription: "The GraphQL response does not contain either errors or data. One is required. If errors are present, they will be considered instead of any data that may have also been sent."))
+                throw DecodingError.dataCorrupted(
+                    DecodingError.Context(
+                        codingPath: decoder.codingPath,
+                        debugDescription: "The GraphQL response does not contain either errors or data. One is required. If errors are present, they will be considered instead of any data that may have also been sent."
+                    )
+                )
             }
         }
-        
+
         public func get() throws -> T {
             switch self {
             case let .data(data):
@@ -91,4 +96,3 @@ public struct GraphQL<T: Decodable>: Resource, HasResponseBody, HasRequestBody {
 
 extension GraphQL.Content: Equatable where T: Equatable {}
 extension GraphQL.Content: Hashable where T: Hashable {}
-

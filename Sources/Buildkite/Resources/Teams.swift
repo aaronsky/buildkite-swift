@@ -17,7 +17,7 @@ extension Team {
 }
 
 extension Team.Resources {
-    public struct List: Resource, HasResponseBody, Paginated {
+    public struct List: PaginatedResource {
         public typealias Content = [Team]
         /// organization slug
         public var organization: String
@@ -43,5 +43,11 @@ extension Team.Resources {
             components.queryItems = queryItems
             request.url = components.url
         }
+    }
+}
+
+extension Resource where Self == Team.Resources.List {
+    public static func teams(in organization: String, byUser userId: UUID? = nil) -> Team.Resources.List {
+        .init(organization: organization, userId: userId)
     }
 }

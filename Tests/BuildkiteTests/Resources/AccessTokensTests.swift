@@ -21,7 +21,7 @@ class AccessTokensTests: XCTestCase {
 
         let expectation = XCTestExpectation()
 
-        context.client.send(AccessToken.Resources.Get()) { result in
+        context.client.send(.getAccessToken) { result in
             do {
                 let response = try result.get()
                 XCTAssertEqual(expected, response.content)
@@ -38,7 +38,7 @@ class AccessTokensTests: XCTestCase {
 
         let expectation = XCTestExpectation()
 
-        context.client.send(AccessToken.Resources.Revoke()) { result in
+        context.client.send(.revokeAccessToken) { result in
             do {
                 _ = try result.get()
             } catch {

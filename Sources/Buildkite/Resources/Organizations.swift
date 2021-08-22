@@ -20,7 +20,7 @@ extension Organization.Resources {
     /// List organizations
     ///
     /// Returns a paginated list of the user’s organizations.
-    public struct List: Resource, HasResponseBody, Paginated {
+    public struct List: PaginatedResource {
         public typealias Content = [Organization]
         public let path = "organizations"
 
@@ -28,7 +28,7 @@ extension Organization.Resources {
     }
 
     /// Get an organization
-    public struct Get: Resource, HasResponseBody {
+    public struct Get: Resource {
         public typealias Content = Organization
         /// organization slug
         public var organization: String
@@ -41,5 +41,16 @@ extension Organization.Resources {
             self.organization = organization
         }
     }
+}
 
+extension Resource where Self == Organization.Resources.List {
+    public static var organizations: Organization.Resources.List {
+        .init()
+    }
+}
+
+extension Resource where Self == Organization.Resources.Get {
+    public static func organization(_ organization: String) -> Organization.Resources.Get {
+        .init(organization: organization)
+    }
 }

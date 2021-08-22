@@ -12,13 +12,13 @@ Add the dependency to your `Package.swift` file:
 let package = Package(
     name: "myproject",
     dependencies: [
-        .package(url: "https://github.com/aaronsky/buildkite-swift.git", from: "0.0.3"),
-        ],
+        .package(url: "https://github.com/aaronsky/buildkite-swift.git", from: "0.2.0"),
+    ],
     targets: [
         .target(
             name: "myproject",
             dependencies: ["Buildkite"]),
-        ]
+    ]
 )
 ```
 
@@ -29,7 +29,7 @@ import Buildkite
 
 let client = BuildkiteClient()
 client.token = "..." // Your scoped Buildkite API access token
-client.send(Pipeline.Resources.List(organization: "buildkite")) { result in
+client.send(.pipelines(in: "buildkite")) { result in
     do {
         let response = try result.get()
         let pipelines = response.content
@@ -49,7 +49,7 @@ let client = BuildkiteClient()
 client.token = "..." // Your scoped Buildkite API access token
 
 var cancellables: Set<AnyCancellable> = []
-client.sendPublisher(Pipeline.Resources.List(organization: "buildkite"))
+client.sendPublisher(.pipelines(in: "buildkite"))
     .map(\.content)
     .sink(receiveCompletion: { _ in }) { pipelines in
         print(pipelines)
@@ -63,8 +63,10 @@ import Buildkite
 
 let client = BuildkiteClient()
 client.token = "..." // Your scoped Buildkite API access token
-let response = try await client.send(Pipeline.Resources.List(organization: "buildkite"))
+
+let response = try await client.send(.pipelines(in: "buildkite"))
 let pipelines = response.content
+
 print(pipelines)
 ```
 
@@ -118,12 +120,12 @@ struct MyPipeline: Codable {
 }
 
 var cancellables: Set<AnyCancellable> = []
-client.sendPublisher(GraphQL<MyPipeline>(rawQuery: query, variables: ["first": 30]))
-    .map(\.content)
-    .sink(receiveCompletion: { _ in }) { pipelines in
-        print(pipelines)
-    }.store(in: &cancellables)
+let pipeline: MyPipeline = try await client.sendQuery(GraphQL(rawQuery: query, 
+                                                              variables: ["first": 30])
+print(pipeline))
 ```
+
+The helper method `sendQuery` can be used to automatically extract the data from a GraphQL response, without having to juggle HTTP, decoding and schema errors in separate calls. You can still use any of the `send` or `sendPublisher` methods to process a GraphQL query, if you require the response data as well. 
 
 ## References
 

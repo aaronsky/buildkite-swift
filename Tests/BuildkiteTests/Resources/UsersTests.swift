@@ -31,7 +31,7 @@ class UsersTests: XCTestCase {
 
         let expectation = XCTestExpectation()
 
-        context.client.send(User.Resources.Me()) { result in
+        context.client.send(.me) { result in
             do {
                 let response = try result.get()
                 XCTAssertEqual(expected, response.content)

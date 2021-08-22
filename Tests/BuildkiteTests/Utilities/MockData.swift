@@ -14,95 +14,81 @@ import FoundationNetworking
 #endif
 
 struct MockResources {
+    struct Body: Codable, Equatable {
+        var name: String
+        var age: Int
+    }
+
+    struct Content: Codable, Equatable {
+        var name: String
+        var age: Int
+    }
+
     struct NoContentNoBody: Resource {
-        typealias Content = Void
         let path = "mock"
     }
 
     var noContentNoBodyResource = NoContentNoBody()
 
-    struct HasContent: Resource, HasResponseBody {
-        struct Content: Codable, Equatable {
-            var name: String
-            var age: Int
-        }
+    struct HasContent: Resource {
+        typealias Content = MockResources.Content
         let path = "mock"
     }
 
     var contentResource = HasContent()
     var content = HasContent.Content(name: "Jeff", age: 35)
 
-    struct HasPaginatedContent: Resource, Paginated {
-        struct Content: Codable, Equatable {
-            var name: String
-            var age: Int
-        }
-
+    struct HasPaginatedContent: PaginatedResource {
+        typealias Content = MockResources.Content
         let path = "mock"
     }
 
     var paginatedContentResource = HasPaginatedContent()
     var paginatedContent = HasPaginatedContent.Content(name: "Jeff", age: 35)
 
-    struct HasBody: Resource, HasRequestBody {
-        typealias Content = Void
-
-        struct Body: Codable, Equatable {
-            var name: String
-            var age: Int
-        }
-
-        var body: Body
-
+    struct HasBody: Resource {
+        var body: MockResources.Body
         let path = "mock"
     }
 
     var bodyResource = HasBody(body: HasBody.Body(name: "Jeff", age: 35))
 
-    struct HasBodyAndContent: Resource, HasResponseBody, HasRequestBody {
-        struct Body: Codable, Equatable {
-            var name: String
-            var age: Int
-        }
+    struct HasBodyAndContent: Resource {
+        typealias Content = MockResources.Content
 
-        struct Content: Codable, Equatable {
-            var name: String
-            var age: Int
-        }
-
-        var body: Body
-
+        var body: MockResources.Body
         let path = "mock"
     }
-    
+
     var bodyAndContentResource = HasBodyAndContent(body: HasBodyAndContent.Body(name: "Jeff", age: 35))
     var bodyAndContent = HasBodyAndContent.Content(name: "Jeff", age: 35)
-    
-    struct HasBodyAndPaginated: Resource, HasRequestBody, Paginated {
-        struct Body: Codable, Equatable {
-            var name: String
-            var age: Int
-        }
 
-        struct Content: Codable, Equatable {
-            var name: String
-            var age: Int
-        }
+    struct HasBodyAndPaginated: PaginatedResource {
+        typealias Content = MockResources.Content
 
-        var body: Body
+        var body: MockResources.Body
 
         let path = "mock"
     }
 
     var bodyAndPaginatedResource = HasBodyAndPaginated(body: HasBodyAndPaginated.Body(name: "Jeff", age: 35))
     var bodyAndPaginatedContent = HasBodyAndPaginated.Content(name: "Jeff", age: 35)
-    
+
     struct IsAPIIncompatible: Resource {
-        typealias Content = Void
         var version: APIVersion {
             APIVersion(baseURL: URL(), version: "v99999")
         }
         let path = "mock"
+    }
+
+    var graphQLResource: GraphQL<Content> = GraphQL(rawQuery: "", variables: [:])
+    var graphQLContent = Content(name: "Jeff", age: 35)
+    var graphQLIntermediary: GraphQL<Content>.Intermediary = .init(data: Content(name: "Jeff", age: 35))
+}
+
+extension GraphQL {
+    struct Intermediary: Codable where T: Codable {
+        var data: T
     }
 }
 
@@ -147,7 +133,7 @@ extension MockData {
     static func mockingError(for request: URLRequest) throws -> (Data, URLResponse) {
         throw URLError(.notConnectedToInternet)
     }
-    
+
     static func mockingError(_ error: Error) throws -> (Data, URLResponse) {
         throw error
     }

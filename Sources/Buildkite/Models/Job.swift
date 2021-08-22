@@ -63,7 +63,7 @@ public enum Job: Codable, Equatable {
             public var name: String
             public var url: URL
         }
-        
+
         public var type = "script"
         public var id: UUID
         public var name: String?
@@ -116,7 +116,7 @@ public enum Job: Codable, Equatable {
             public var url: URL
             public var webUrl: URL
         }
-        
+
         public var type = "trigger"
         public var name: String?
         public var state: String?

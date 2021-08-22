@@ -20,7 +20,7 @@ extension Emoji.Resources {
     /// List emojis
     ///
     /// Returns a list of all the emojis for a given organization, including custom emojis and aliases. This list is not paginated.
-    public struct List: Resource, HasResponseBody {
+    public struct List: Resource {
         public typealias Content = [Emoji]
         /// organization slug
         public var organization: String
@@ -32,5 +32,11 @@ extension Emoji.Resources {
         public init(organization: String) {
             self.organization = organization
         }
+    }
+}
+
+extension Resource where Self == Emoji.Resources.List {
+    public static func emojis(in organization: String) -> Emoji.Resources.List {
+        .init(organization: organization)
     }
 }

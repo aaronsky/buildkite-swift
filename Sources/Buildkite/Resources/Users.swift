@@ -17,10 +17,16 @@ extension User {
 }
 
 extension User.Resources {
-    public struct Me: Resource, HasResponseBody {
+    public struct Me: Resource {
         public typealias Content = User
         public let path = "user"
 
         public init() {}
+    }
+}
+
+extension Resource where Self == User.Resources.Me {
+    public static var me: User.Resources.Me {
+        .init()
     }
 }

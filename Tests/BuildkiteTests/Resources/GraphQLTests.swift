@@ -22,10 +22,10 @@ class GraphQLTests: XCTestCase {
 
         let expectation = XCTestExpectation()
 
-        context.client.send(GraphQL<JSONValue>(rawQuery: "query MyQuery{jeff,horses}", variables: [:])) { result in
+        context.client.sendQuery(GraphQL<JSONValue>(rawQuery: "query MyQuery{jeff,horses}", variables: [:])) { result in
             do {
-                let response = try result.get()
-                XCTAssertEqual(GraphQL.Content.data(expected), response.content)
+                let content = try result.get()
+                XCTAssertEqual(expected, content)
             } catch {
                 XCTFail(error.localizedDescription)
             }
@@ -35,7 +35,7 @@ class GraphQLTests: XCTestCase {
     }
 
     func testGraphQLErrors() throws {
-        let expectedErrors: GraphQL<JSONValue>.Errors = .init(errors: [
+        let expected: GraphQL<JSONValue>.Errors = .init(errors: [
             .init(message: "Field 'id' doesn't exist on type 'Query'",
                   locations: [.init(line: 2, column: 3)],
                   path: ["query SimpleQuery", "id"],
@@ -45,10 +45,9 @@ class GraphQLTests: XCTestCase {
                     "fieldName": "id"
             ])
         ], type: nil)
-        
-        let expected: GraphQL<JSONValue>.Content = .errors(expectedErrors)
+
         let content: JSONValue = [
-            "errors": .array(expectedErrors.errors.map { error in
+            "errors": .array(expected.errors.map { error in
                 let messageJSON: JSONValue = .string(error.message)
                 let locationsJSON: JSONValue
                 if let locations = error.locations {
@@ -76,12 +75,14 @@ class GraphQLTests: XCTestCase {
 
         let expectation = XCTestExpectation()
 
-        context.client.send(GraphQL<JSONValue>(rawQuery: "query MyQuery{jeff,horses}", variables: [:])) { result in
+        context.client.sendQuery(GraphQL<JSONValue>(rawQuery: "query MyQuery{jeff,horses}", variables: [:])) { result in
             do {
-                let response = try result.get()
-                XCTAssertEqual(expected, response.content)
+                _ = try result.get()
+                XCTFail("Expected to have failed with an error, but closure fulfilled normally")
+            } catch let error as GraphQL<JSONValue>.Errors {
+                XCTAssertEqual(expected, error)
             } catch {
-                XCTFail(error.localizedDescription)
+                XCTFail("Expected to have failed with an error, but closure failed with unexpected error type")
             }
             expectation.fulfill()
         }
@@ -94,13 +95,13 @@ class GraphQLTests: XCTestCase {
 
         let expectation = XCTestExpectation()
 
-        context.client.send(GraphQL<JSONValue>(rawQuery: "", variables: [:])) {
+        context.client.sendQuery(GraphQL<JSONValue>(rawQuery: "", variables: [:])) {
             try? XCTAssertThrowsError($0.get(), "Expected to have failed with an error, but closure fulfilled normally")
             expectation.fulfill()
         }
         wait(for: [expectation])
     }
-    
+
     func testGraphQLContentGet() throws {
         try XCTAssertNoThrow(GraphQL.Content.data("hello").get())
         try XCTAssertThrowsError(GraphQL<String>.Content.errors(.init(errors: [], type: nil)).get())

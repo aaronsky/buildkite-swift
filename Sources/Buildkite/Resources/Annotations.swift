@@ -20,7 +20,7 @@ extension Annotation.Resources {
     /// List annotations for a build
     ///
     /// Returns a paginated list of a build’s annotations.
-    public struct List: Resource, HasResponseBody, Paginated {
+    public struct List: PaginatedResource {
         public typealias Content = [Annotation]
         /// organization slug
         public var organization: String
@@ -38,5 +38,11 @@ extension Annotation.Resources {
             self.pipeline = pipeline
             self.build = build
         }
+    }
+}
+
+extension Resource where Self == Annotation.Resources.List {
+    public static func annotations(in organization: String, pipeline: String, build: Int) -> Annotation.Resources.List {
+        .init(organization: organization, pipeline: pipeline, build: build)
     }
 }

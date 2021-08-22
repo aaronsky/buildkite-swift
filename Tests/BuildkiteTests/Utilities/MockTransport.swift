@@ -37,12 +37,11 @@ extension MockTransport: Transport {
     }
 }
 
-
 #if canImport(Combine)
 import Combine
 
 @available(iOS 13.0, macOS 10.15, tvOS 13.0, watchOS 6.0, *)
-extension MockTransport: CombineTransport{
+extension MockTransport: CombineTransport {
     func sendPublisher(request: URLRequest) -> AnyPublisher<Output, Swift.Error> {
         history.append(request)
         return Future { [weak self] promise in

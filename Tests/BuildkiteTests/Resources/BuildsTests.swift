@@ -46,7 +46,7 @@ class BuildsTests: XCTestCase {
 
         let expectation = XCTestExpectation()
 
-        context.client.send(Build.Resources.ListAll()) { result in
+        context.client.send(.builds()) { result in
             do {
                 let response = try result.get()
                 XCTAssertEqual(expected, response.content)
@@ -62,19 +62,17 @@ class BuildsTests: XCTestCase {
         let expected = [Build(), Build()]
         let context = try MockContext(content: expected)
 
-        let resource = Build.Resources.ListAll(queryOptions: Build.Resources.QueryOptions(branches: ["master"],
-                                                                                          commit: "HEAD",
-                                                                                          createdFrom: Date(timeIntervalSince1970: 1000),
-                                                                                          createdTo: Date(timeIntervalSince1970: 1000),
-                                                                                          creator: UUID(),
-                                                                                          finishedFrom: Date(timeIntervalSince1970: 1000),
-                                                                                          includeRetriedJobs: true,
-                                                                                          metadata: ["buildkite": "is cool"],
-                                                                                          state: [.passed, .blocked, .failed]))
-
         let expectation = XCTestExpectation()
 
-        context.client.send(resource) { result in
+        context.client.send(.builds(options: .init(branches: ["master"],
+                                                   commit: "HEAD",
+                                                   createdFrom: Date(timeIntervalSince1970: 1000),
+                                                   createdTo: Date(timeIntervalSince1970: 1000),
+                                                   creator: UUID(),
+                                                   finishedFrom: Date(timeIntervalSince1970: 1000),
+                                                   includeRetriedJobs: true,
+                                                   metadata: ["buildkite": "is cool"],
+                                                   state: [.passed, .blocked, .failed]))) { result in
             do {
                 let response = try result.get()
                 XCTAssertEqual(expected, response.content)
@@ -90,11 +88,9 @@ class BuildsTests: XCTestCase {
         let expected = [Build(), Build()]
         let context = try MockContext(content: expected)
 
-        let resource = Build.Resources.ListForOrganization(organization: "buildkite", queryOptions: Build.Resources.QueryOptions())
-
         let expectation = XCTestExpectation()
 
-        context.client.send(resource) { result in
+        context.client.send(.builds(inOrganization: "buildkite", options: .init())) { result in
             do {
                 let response = try result.get()
                 XCTAssertEqual(expected, response.content)
@@ -112,7 +108,7 @@ class BuildsTests: XCTestCase {
 
         let expectation = XCTestExpectation()
 
-        context.client.send(Build.Resources.ListForPipeline(organization: "buildkite", pipeline: "my-pipeline", queryOptions: Build.Resources.QueryOptions())) { result in
+        context.client.send(.builds(forPipeline: "my-pipeline", in: "buildkite", options: .init())) { result in
             do {
                 let response = try result.get()
                 XCTAssertEqual(expected, response.content)
@@ -130,7 +126,7 @@ class BuildsTests: XCTestCase {
 
         let expectation = XCTestExpectation()
 
-        context.client.send(Build.Resources.Get(organization: "buildkite", pipeline: "my-pipeline", build: 1)) { result in
+        context.client.send(.build(1, in: "buildkite", pipeline: "my-pipeline")) { result in
             do {
                 let response = try result.get()
                 XCTAssertEqual(expected, response.content)
@@ -148,19 +144,17 @@ class BuildsTests: XCTestCase {
 
         let expectation = XCTestExpectation()
 
-        let body = Build.Resources.Create.Body(commit: "HEAD",
-                                               branch: "master",
-                                               author: Build.Resources.Create.Body.Author(name: "", email: ""),
-                                               cleanCheckout: nil,
-                                               env: nil,
-                                               ignorePipelineBranchFilters: nil,
-                                               message: nil,
-                                               metaData: nil,
-                                               pullRequestBaseBranch: nil,
-                                               pullRequestId: nil,
-                                               pullRequestRepository: nil)
-
-        context.client.send(Build.Resources.Create(organization: "buildkite", pipeline: "my-pipeline", body: body)) { result in
+        context.client.send(.createBuild(in: "buildkite", pipeline: "my-pipeline", with: .init(commit: "HEAD",
+                                                                                               branch: "master",
+                                                                                               author: Build.Resources.Create.Body.Author(name: "", email: ""),
+                                                                                               cleanCheckout: nil,
+                                                                                               env: nil,
+                                                                                               ignorePipelineBranchFilters: nil,
+                                                                                               message: nil,
+                                                                                               metaData: nil,
+                                                                                               pullRequestBaseBranch: nil,
+                                                                                               pullRequestId: nil,
+                                                                                               pullRequestRepository: nil))) { result in
             do {
                 let response = try result.get()
                 XCTAssertEqual(expected, response.content)
@@ -178,7 +172,7 @@ class BuildsTests: XCTestCase {
 
         let expectation = XCTestExpectation()
 
-        context.client.send(Build.Resources.Cancel(organization: "buildkite", pipeline: "my-pipeline", build: 1)) { result in
+        context.client.send(.cancelBuild(1, in: "buildkite", pipeline: "my-pipeline")) { result in
             do {
                 let response = try result.get()
                 XCTAssertEqual(expected, response.content)
@@ -196,7 +190,7 @@ class BuildsTests: XCTestCase {
 
         let expectation = XCTestExpectation()
 
-        context.client.send(Build.Resources.Rebuild(organization: "buildkite", pipeline: "my-pipeline", build: 1)) { result in
+        context.client.send(.rebuild(1, in: "buildkite", pipeline: "my-pipeline")) { result in
             do {
                 let response = try result.get()
                 XCTAssertEqual(expected, response.content)

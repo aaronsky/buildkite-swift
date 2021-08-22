@@ -21,7 +21,7 @@ extension Build.Resources {
     ///
     /// Returns a paginated list of all builds across all the user’s organizations and pipelines. If using token-based authentication
     /// the list of builds will be for the authorized organizations only. Builds are listed in the order they were created (newest first).
-    public struct ListAll: Resource, HasResponseBody, Paginated {
+    public struct ListAll: PaginatedResource {
         public typealias Content = [Build]
         public let path = "builds"
 
@@ -49,7 +49,7 @@ extension Build.Resources {
     ///
     /// Returns a paginated list of an organization’s builds across all of an organization’s pipelines. Builds are listed in the order
     /// they were created (newest first).
-    public struct ListForOrganization: Resource, HasResponseBody, Paginated {
+    public struct ListForOrganization: PaginatedResource {
         public typealias Content = [Build]
         /// organization slug
         public var organization: String
@@ -82,7 +82,7 @@ extension Build.Resources {
     /// List builds for a pipeline
     ///
     /// Returns a paginated list of a pipeline’s builds. Builds are listed in the order they were created (newest first).
-    public struct ListForPipeline: Resource, HasResponseBody, Paginated {
+    public struct ListForPipeline: PaginatedResource {
         public typealias Content = [Build]
         /// organization slug
         public var organization: String
@@ -116,7 +116,7 @@ extension Build.Resources {
     }
 
     /// Get a build
-    public struct Get: Resource, HasResponseBody {
+    public struct Get: Resource {
         public typealias Content = Build
         /// organization slug
         public var organization: String
@@ -137,7 +137,7 @@ extension Build.Resources {
     }
 
     /// Create a build
-    public struct Create: Resource, HasRequestBody, HasResponseBody {
+    public struct Create: Resource {
         public typealias Content = Build
         /// organization slug
         public var organization: String
@@ -181,7 +181,7 @@ extension Build.Resources {
             /// For a pull request build, the git repository of the pull request.
             public var pullRequestRepository: String?
 
-            public init(commit: String, branch: String, author: Build.Resources.Create.Body.Author? = nil, cleanCheckout: Bool? = nil, env: [String: String]? = nil, ignorePipelineBranchFilters: Bool? = nil, message: String? = nil, metaData: [String: String]? = nil, pullRequestBaseBranch: String? = nil, pullRequestId: Int? = nil, pullRequestRepository: String? = nil) {
+            public init(commit: String, branch: String, author: Author? = nil, cleanCheckout: Bool? = nil, env: [String: String]? = nil, ignorePipelineBranchFilters: Bool? = nil, message: String? = nil, metaData: [String: String]? = nil, pullRequestBaseBranch: String? = nil, pullRequestId: Int? = nil, pullRequestRepository: String? = nil) {
                 self.commit = commit
                 self.branch = branch
                 self.author = author
@@ -215,7 +215,7 @@ extension Build.Resources {
     /// Cancel a build
     ///
     /// Cancels the build if it's state is either scheduled or running.
-    public struct Cancel: Resource, HasResponseBody {
+    public struct Cancel: Resource {
         public typealias Content = Build
         /// organization slug
         public var organization: String
@@ -242,7 +242,7 @@ extension Build.Resources {
     /// Rebuild a build
     ///
     /// Returns the newly created build.
-    public struct Rebuild: Resource, HasResponseBody {
+    public struct Rebuild: Resource {
         public typealias Content = Build
         /// organization slug
         public var organization: String
@@ -312,5 +312,47 @@ private extension Array where Element == URLQueryItem {
         appendIfNeeded(queryOptions.includeRetriedJobs, forKey: "include_retried_jobs")
         append(queryOptions.metadata, forKey: "meta_data")
         append(queryOptions.state.map(\.rawValue), forKey: "state")
+    }
+}
+
+extension Resource where Self == Build.Resources.ListAll {
+    public static func builds(options: Build.Resources.QueryOptions? = nil) -> Build.Resources.ListAll {
+        .init(queryOptions: options)
+    }
+}
+
+extension Resource where Self == Build.Resources.ListForOrganization {
+    public static func builds(inOrganization organization: String, options: Build.Resources.QueryOptions? = nil) -> Build.Resources.ListForOrganization {
+        .init(organization: organization, queryOptions: options)
+    }
+}
+
+extension Resource where Self == Build.Resources.ListForPipeline {
+    public static func builds(forPipeline pipeline: String, in organization: String, options: Build.Resources.QueryOptions? = nil) -> Build.Resources.ListForPipeline {
+        .init(organization: organization, pipeline: pipeline, queryOptions: options)
+    }
+}
+
+extension Resource where Self == Build.Resources.Get {
+    public static func build(_ build: Int, in organization: String, pipeline: String) -> Build.Resources.Get {
+        .init(organization: organization, pipeline: pipeline, build: build)
+    }
+}
+
+extension Resource where Self == Build.Resources.Create {
+    public static func createBuild(in organization: String, pipeline: String, with body: Build.Resources.Create.Body) -> Build.Resources.Create {
+        .init(organization: organization, pipeline: pipeline, body: body)
+    }
+}
+
+extension Resource where Self == Build.Resources.Cancel {
+    public static func cancelBuild(_ build: Int, in organization: String, pipeline: String) -> Build.Resources.Cancel {
+        .init(organization: organization, pipeline: pipeline, build: build)
+    }
+}
+
+extension Resource where Self == Build.Resources.Rebuild {
+    public static func rebuild(_ build: Int, in organization: String, pipeline: String) -> Build.Resources.Rebuild {
+        .init(organization: organization, pipeline: pipeline, build: build)
     }
 }

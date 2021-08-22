@@ -37,7 +37,7 @@ class ArtifactsTests: XCTestCase {
 
         let expectation = XCTestExpectation()
 
-        context.client.send(Artifact.Resources.ListByBuild(organization: "buildkite", pipeline: "my-pipeline", build: 1)) { result in
+        context.client.send(.artifacts(byBuild: 1, in: "buildkite", pipeline: "my-pipeline")) { result in
             do {
                 let response = try result.get()
                 XCTAssertEqual(expected, response.content)
@@ -55,7 +55,7 @@ class ArtifactsTests: XCTestCase {
 
         let expectation = XCTestExpectation()
 
-        context.client.send(Artifact.Resources.ListByJob(organization: "buildkite", pipeline: "my-pipeline", build: 1, jobId: UUID())) { result in
+        context.client.send(.artifacts(byJob: UUID(), in: "buildkite", pipeline: "my-pipeline", build: 1)) { result in
             do {
                 let response = try result.get()
                 XCTAssertEqual(expected, response.content)
@@ -73,7 +73,7 @@ class ArtifactsTests: XCTestCase {
 
         let expectation = XCTestExpectation()
 
-        context.client.send(Artifact.Resources.Get(organization: "buildkite", pipeline: "my-pipeline", build: 1, jobId: UUID(), artifactId: UUID())) { result in
+        context.client.send(.artifact(UUID(), in: "buildkite", pipeline: "my-pipeline", build: 1, job: UUID())) { result in
             do {
                 let response = try result.get()
                 XCTAssertEqual(expected, response.content)
@@ -91,7 +91,7 @@ class ArtifactsTests: XCTestCase {
 
         let expectation = XCTestExpectation()
 
-        context.client.send(Artifact.Resources.Download(organization: "buildkite", pipeline: "my-pipeline", build: 1, jobId: UUID(), artifactId: UUID())) { result in
+        context.client.send(.downloadArtifact(UUID(), in: "buildkite", pipeline: "my-pipeline", build: 1, job: UUID())) { result in
             do {
                 let response = try result.get()
                 XCTAssertEqual(expected, response.content)
@@ -108,7 +108,7 @@ class ArtifactsTests: XCTestCase {
 
         let expectation = XCTestExpectation()
 
-        context.client.send(Artifact.Resources.Delete(organization: "buildkite", pipeline: "my-pipeline", build: 1, jobId: UUID(), artifactId: UUID())) { result in
+        context.client.send(.deleteArtifact(UUID(), in: "buildkite", pipeline: "my-pipeline", build: 1, job: UUID())) { result in
             do {
                 _ = try result.get()
             } catch {
