@@ -42,7 +42,7 @@ extension Annotation.Resources {
 }
 
 extension Resource where Self == Annotation.Resources.List {
-    public static func annotations(in organization: String, pipeline: String, build: Int) -> Annotation.Resources.List {
-        .init(organization: organization, pipeline: pipeline, build: build)
+    public static func annotations(in organization: String, pipeline: String, build: Int) -> Self {
+        Self(organization: organization, pipeline: pipeline, build: build)
     }
 }

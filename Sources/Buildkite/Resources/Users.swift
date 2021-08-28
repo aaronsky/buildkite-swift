@@ -26,7 +26,7 @@ extension User.Resources {
 }
 
 extension Resource where Self == User.Resources.Me {
-    public static var me: User.Resources.Me {
-        .init()
+    public static var me: Self {
+        Self()
     }
 }

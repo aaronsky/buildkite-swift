@@ -108,19 +108,19 @@ extension Agent.Resources {
 }
 
 extension Resource where Self == Agent.Resources.List {
-    public static func agents(in organization: String) -> Agent.Resources.List {
-        .init(organization: organization)
+    public static func agents(in organization: String) -> Self {
+        Self(organization: organization)
     }
 }
 
 extension Resource where Self == Agent.Resources.Get {
-    public static func agent(_ agentId: UUID, in organization: String) -> Agent.Resources.Get {
-        .init(organization: organization, agentId: agentId)
+    public static func agent(_ agentId: UUID, in organization: String) -> Self {
+        Self(organization: organization, agentId: agentId)
     }
 }
 
 extension Resource where Self == Agent.Resources.Stop {
-    public static func stopAgent(_ agentId: UUID, in organization: String, force: Bool? = nil) -> Agent.Resources.Stop {
-        .init(organization: organization, agentId: agentId, force: force)
+    public static func stopAgent(_ agentId: UUID, in organization: String, force: Bool? = nil) -> Self {
+        Self(organization: organization, agentId: agentId, force: force)
     }
 }

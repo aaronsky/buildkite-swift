@@ -12,6 +12,10 @@ import Foundation
 import FoundationNetworking
 #endif
 
+#if canImport(Combine)
+import Combine
+#endif
+
 public enum TransportError: Error {
     case noResponse
 }
@@ -21,6 +25,16 @@ public protocol Transport {
     typealias Completion = (Result<Output, Error>) -> Void
 
     func send(request: URLRequest, completion: @escaping Completion)
+
+#if canImport(Combine)
+    @available(macOS 10.15, iOS 13.0, tvOS 13.0, watchOS 6.0, *)
+    func sendPublisher(request: URLRequest) -> AnyPublisher<Output, Error>
+#endif
+
+#if swift(>=5.5)
+    @available(macOS 12.0, iOS 15.0, tvOS 15.0, watchOS 8.0, *)
+    func send(request: URLRequest) async throws -> Output
+#endif
 }
 
 extension URLSession: Transport {
@@ -38,36 +52,20 @@ extension URLSession: Transport {
         }
         task.resume()
     }
-}
 
 #if canImport(Combine)
-import Combine
-
-@available(macOS 10.15, iOS 13.0, tvOS 13.0, watchOS 6.0, *)
-public protocol CombineTransport: Transport {
-    func sendPublisher(request: URLRequest) -> AnyPublisher<Output, Error>
-}
-
-@available(macOS 10.15, iOS 13.0, tvOS 13.0, watchOS 6.0, *)
-extension URLSession: CombineTransport {
+    @available(macOS 10.15, iOS 13.0, tvOS 13.0, watchOS 6.0, *)
     public func sendPublisher(request: URLRequest) -> AnyPublisher<Output, Error> {
         dataTaskPublisher(for: request)
             .mapError { $0 as Error }
             .eraseToAnyPublisher()
     }
-}
 #endif
 
 #if swift(>=5.5)
-@available(macOS 12.0, iOS 15.0, tvOS 15.0, watchOS 8.0, *)
-public protocol AsyncTransport: Transport {
-    func send(request: URLRequest) async throws -> Output
-}
-
-@available(macOS 12.0, iOS 15.0, tvOS 15.0, watchOS 8.0, *)
-extension URLSession: AsyncTransport {
+    @available(macOS 12.0, iOS 15.0, tvOS 15.0, watchOS 8.0, *)
     public func send(request: URLRequest) async throws -> Output {
         return try await data(for: request)
     }
-}
 #endif
+}

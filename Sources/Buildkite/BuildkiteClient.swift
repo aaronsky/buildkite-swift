@@ -12,7 +12,7 @@ import Foundation
 import FoundationNetworking
 #endif
 
-public final class BuildkiteClient<T: Transport> {
+public final class BuildkiteClient {
     var encoder: JSONEncoder {
         let encoder = JSONEncoder()
         encoder.dateEncodingStrategy = .custom(Formatters.encodeISO8601)
@@ -28,7 +28,7 @@ public final class BuildkiteClient<T: Transport> {
     }
 
     var configuration: Configuration
-    var transport: T
+    var transport: Transport
 
     public var token: String? {
         get {
@@ -39,12 +39,7 @@ public final class BuildkiteClient<T: Transport> {
         }
     }
 
-    public init(configuration: Configuration = .default, transport: T) {
-        self.configuration = configuration
-        self.transport = transport
-    }
-
-    public init(configuration: Configuration = .default, transport: T = .shared) where T == URLSession {
+    public init(configuration: Configuration = .default, transport: Transport = URLSession.shared) {
         self.configuration = configuration
         self.transport = transport
     }
@@ -180,7 +175,7 @@ public extension BuildkiteClient {
 import Combine
 
 @available(iOS 13.0, macOS 10.15, tvOS 13.0, watchOS 6.0, *)
-public extension BuildkiteClient where T: CombineTransport {
+public extension BuildkiteClient {
     func sendPublisher<R>(_ resource: R) -> AnyPublisher<Response<R.Content>, Error> where R: Resource, R.Content: Decodable {
         Result { try URLRequest(resource, configuration: configuration) }
             .publisher
@@ -264,7 +259,7 @@ public extension BuildkiteClient where T: CombineTransport {
 
 #if swift(>=5.5)
 @available(macOS 12.0, iOS 15.0, tvOS 15.0, watchOS 8.0, *)
-public extension BuildkiteClient where T: AsyncTransport {
+public extension BuildkiteClient {
     func send<R>(_ resource: R) async throws -> Response<R.Content> where R: Resource, R.Content: Decodable {
         let request = try URLRequest(resource, configuration: configuration)
         let (data, response) = try await transport.send(request: request)

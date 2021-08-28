@@ -156,31 +156,31 @@ extension Artifact.Resources {
 }
 
 extension Resource where Self == Artifact.Resources.ListByBuild {
-    public static func artifacts(byBuild build: Int, in organization: String, pipeline: String) -> Artifact.Resources.ListByBuild {
-        .init(organization: organization, pipeline: pipeline, build: build)
+    public static func artifacts(byBuild build: Int, in organization: String, pipeline: String) -> Self {
+        Self(organization: organization, pipeline: pipeline, build: build)
     }
 }
 
 extension Resource where Self == Artifact.Resources.ListByJob {
-    public static func artifacts(byJob job: UUID, in organization: String, pipeline: String, build: Int) -> Artifact.Resources.ListByJob {
-        .init(organization: organization, pipeline: pipeline, build: build, jobId: job)
+    public static func artifacts(byJob job: UUID, in organization: String, pipeline: String, build: Int) -> Self {
+        Self(organization: organization, pipeline: pipeline, build: build, jobId: job)
     }
 }
 
 extension Resource where Self == Artifact.Resources.Get {
-    public static func artifact(_ id: UUID, in organization: String, pipeline: String, build: Int, job: UUID) -> Artifact.Resources.Get {
-        .init(organization: organization, pipeline: pipeline, build: build, jobId: job, artifactId: id)
+    public static func artifact(_ id: UUID, in organization: String, pipeline: String, build: Int, job: UUID) -> Self {
+        Self(organization: organization, pipeline: pipeline, build: build, jobId: job, artifactId: id)
     }
 }
 
 extension Resource where Self == Artifact.Resources.Download {
-    public static func downloadArtifact(_ id: UUID, in organization: String, pipeline: String, build: Int, job: UUID) -> Artifact.Resources.Download {
-        .init(organization: organization, pipeline: pipeline, build: build, jobId: job, artifactId: id)
+    public static func downloadArtifact(_ id: UUID, in organization: String, pipeline: String, build: Int, job: UUID) -> Self {
+        Self(organization: organization, pipeline: pipeline, build: build, jobId: job, artifactId: id)
     }
 }
 
 extension Resource where Self == Artifact.Resources.Delete {
-    public static func deleteArtifact(_ id: UUID, in organization: String, pipeline: String, build: Int, job: UUID) -> Artifact.Resources.Delete {
-        .init(organization: organization, pipeline: pipeline, build: build, jobId: job, artifactId: id)
+    public static func deleteArtifact(_ id: UUID, in organization: String, pipeline: String, build: Int, job: UUID) -> Self {
+        Self(organization: organization, pipeline: pipeline, build: build, jobId: job, artifactId: id)
     }
 }

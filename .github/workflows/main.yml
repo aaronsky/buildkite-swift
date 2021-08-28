@@ -3,13 +3,17 @@ on: push
 
 jobs:
   test-macOS:
-    runs-on: macOS-latest
+    runs-on: macOS-11
+    env:
+      DEVELOPER_DIR: /Applications/Xcode_13.0.app/Contents/Developer
     steps:
       - uses: actions/checkout@v1.0.0
       - name: SwiftPM Build
-        run: swift test --enable-test-discovery
+        run: swift test
   test-iOS:
-    runs-on: macOS-latest
+    runs-on: macOS-11
+    env:
+      DEVELOPER_DIR: /Applications/Xcode_13.0.app/Contents/Developer
     steps:
       - uses: actions/checkout@v1.0.0
       - name: xcodebuild
@@ -27,4 +31,4 @@ jobs:
     steps:
       - uses: actions/checkout@v1.0.0
       - name: SwiftPM Build
-        run: swift test --enable-test-discovery
+        run: swift test

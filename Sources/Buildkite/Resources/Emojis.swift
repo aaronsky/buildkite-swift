@@ -36,7 +36,7 @@ extension Emoji.Resources {
 }
 
 extension Resource where Self == Emoji.Resources.List {
-    public static func emojis(in organization: String) -> Emoji.Resources.List {
-        .init(organization: organization)
+    public static func emojis(in organization: String) -> Self {
+        Self(organization: organization)
     }
 }

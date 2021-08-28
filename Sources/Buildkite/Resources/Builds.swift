@@ -316,43 +316,43 @@ private extension Array where Element == URLQueryItem {
 }
 
 extension Resource where Self == Build.Resources.ListAll {
-    public static func builds(options: Build.Resources.QueryOptions? = nil) -> Build.Resources.ListAll {
-        .init(queryOptions: options)
+    public static func builds(options: Build.Resources.QueryOptions? = nil) -> Self {
+        Self(queryOptions: options)
     }
 }
 
 extension Resource where Self == Build.Resources.ListForOrganization {
-    public static func builds(inOrganization organization: String, options: Build.Resources.QueryOptions? = nil) -> Build.Resources.ListForOrganization {
-        .init(organization: organization, queryOptions: options)
+    public static func builds(inOrganization organization: String, options: Build.Resources.QueryOptions? = nil) -> Self {
+        Self(organization: organization, queryOptions: options)
     }
 }
 
 extension Resource where Self == Build.Resources.ListForPipeline {
-    public static func builds(forPipeline pipeline: String, in organization: String, options: Build.Resources.QueryOptions? = nil) -> Build.Resources.ListForPipeline {
-        .init(organization: organization, pipeline: pipeline, queryOptions: options)
+    public static func builds(forPipeline pipeline: String, in organization: String, options: Build.Resources.QueryOptions? = nil) -> Self {
+        Self(organization: organization, pipeline: pipeline, queryOptions: options)
     }
 }
 
 extension Resource where Self == Build.Resources.Get {
-    public static func build(_ build: Int, in organization: String, pipeline: String) -> Build.Resources.Get {
-        .init(organization: organization, pipeline: pipeline, build: build)
+    public static func build(_ build: Int, in organization: String, pipeline: String) -> Self {
+        Self(organization: organization, pipeline: pipeline, build: build)
     }
 }
 
 extension Resource where Self == Build.Resources.Create {
-    public static func createBuild(in organization: String, pipeline: String, with body: Build.Resources.Create.Body) -> Build.Resources.Create {
-        .init(organization: organization, pipeline: pipeline, body: body)
+    public static func createBuild(in organization: String, pipeline: String, with body: Self.Body) -> Self {
+        Self(organization: organization, pipeline: pipeline, body: body)
     }
 }
 
 extension Resource where Self == Build.Resources.Cancel {
-    public static func cancelBuild(_ build: Int, in organization: String, pipeline: String) -> Build.Resources.Cancel {
-        .init(organization: organization, pipeline: pipeline, build: build)
+    public static func cancelBuild(_ build: Int, in organization: String, pipeline: String) -> Self {
+        Self(organization: organization, pipeline: pipeline, build: build)
     }
 }
 
 extension Resource where Self == Build.Resources.Rebuild {
-    public static func rebuild(_ build: Int, in organization: String, pipeline: String) -> Build.Resources.Rebuild {
-        .init(organization: organization, pipeline: pipeline, build: build)
+    public static func rebuild(_ build: Int, in organization: String, pipeline: String) -> Self {
+        Self(organization: organization, pipeline: pipeline, build: build)
     }
 }

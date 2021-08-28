@@ -42,13 +42,13 @@ extension AccessToken.Resources {
 }
 
 extension Resource where Self == AccessToken.Resources.Get {
-    public static var getAccessToken: AccessToken.Resources.Get {
-        .init()
+    public static var getAccessToken: Self {
+        Self()
     }
 }
 
 extension Resource where Self == AccessToken.Resources.Revoke {
-    public static var revokeAccessToken: AccessToken.Resources.Revoke {
-        .init()
+    public static var revokeAccessToken: Self {
+        Self()
     }
 }

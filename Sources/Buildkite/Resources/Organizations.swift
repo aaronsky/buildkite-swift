@@ -44,13 +44,13 @@ extension Organization.Resources {
 }
 
 extension Resource where Self == Organization.Resources.List {
-    public static var organizations: Organization.Resources.List {
-        .init()
+    public static var organizations: Self {
+        Self()
     }
 }
 
 extension Resource where Self == Organization.Resources.Get {
-    public static func organization(_ organization: String) -> Organization.Resources.Get {
-        .init(organization: organization)
+    public static func organization(_ organization: String) -> Self {
+        Self(organization: organization)
     }
 }

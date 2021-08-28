@@ -30,7 +30,7 @@ class BuildkiteClientTests: XCTestCase {
         }
 
         var configuration = Configuration.default
-        var client: BuildkiteClient<MockTransport>
+        var client: BuildkiteClient
         var resources = MockResources()
 
         init(testCase: Case = .success) throws {

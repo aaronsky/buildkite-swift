@@ -47,7 +47,7 @@ extension Team.Resources {
 }
 
 extension Resource where Self == Team.Resources.List {
-    public static func teams(in organization: String, byUser userId: UUID? = nil) -> Team.Resources.List {
-        .init(organization: organization, userId: userId)
+    public static func teams(in organization: String, byUser userId: UUID? = nil) -> Self {
+        Self(organization: organization, userId: userId)
     }
 }

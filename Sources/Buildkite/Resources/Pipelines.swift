@@ -337,55 +337,55 @@ extension Pipeline.Resources {
 }
 
 extension Resource where Self == Pipeline.Resources.List {
-    public static func pipelines(in organization: String) -> Pipeline.Resources.List {
-        .init(organization: organization)
+    public static func pipelines(in organization: String) -> Self {
+        Self(organization: organization)
     }
 }
 
 extension Resource where Self == Pipeline.Resources.Get {
-    public static func pipeline(_ pipeline: String, in organization: String) -> Pipeline.Resources.Get {
-        .init(organization: organization, pipeline: pipeline)
+    public static func pipeline(_ pipeline: String, in organization: String) -> Self {
+        Self(organization: organization, pipeline: pipeline)
     }
 }
 
 extension Resource where Self == Pipeline.Resources.Create {
-    public static func createPipeline(_ pipeline: Pipeline.Resources.Create.Body, in organization: String) -> Pipeline.Resources.Create {
-        .init(organization: organization, body: pipeline)
+    public static func createPipeline(_ pipeline: Self.Body, in organization: String) -> Self {
+        Self(organization: organization, body: pipeline)
     }
 }
 
 extension Resource where Self == Pipeline.Resources.CreateVisualSteps {
-    public static func createVisualStepsPipeline(_ pipeline: Pipeline.Resources.CreateVisualSteps.Body, in organization: String) -> Pipeline.Resources.CreateVisualSteps {
-        .init(organization: organization, body: pipeline)
+    public static func createVisualStepsPipeline(_ pipeline: Self.Body, in organization: String) -> Self {
+        Self(organization: organization, body: pipeline)
     }
 }
 
 extension Resource where Self == Pipeline.Resources.Update {
-    public static func updatePipeline(_ pipeline: String, in organization: String, with body: Pipeline.Resources.Update.Body) -> Pipeline.Resources.Update {
-        .init(organization: organization, pipeline: pipeline, body: body)
+    public static func updatePipeline(_ pipeline: String, in organization: String, with body: Self.Body) -> Self {
+        Self(organization: organization, pipeline: pipeline, body: body)
     }
 }
 
 extension Resource where Self == Pipeline.Resources.Archive {
-    public static func archivePipeline(_ pipeline: String, in organization: String) -> Pipeline.Resources.Archive {
-        .init(organization: organization, pipeline: pipeline)
+    public static func archivePipeline(_ pipeline: String, in organization: String) -> Self {
+        Self(organization: organization, pipeline: pipeline)
     }
 }
 
 extension Resource where Self == Pipeline.Resources.Unarchive {
-    public static func unarchivePipeline(_ pipeline: String, in organization: String) -> Pipeline.Resources.Unarchive {
-        .init(organization: organization, pipeline: pipeline)
+    public static func unarchivePipeline(_ pipeline: String, in organization: String) -> Self {
+        Self(organization: organization, pipeline: pipeline)
     }
 }
 
 extension Resource where Self == Pipeline.Resources.Delete {
-    public static func deletePipeline(_ pipeline: String, in organization: String) -> Pipeline.Resources.Delete {
-        .init(organization: organization, pipeline: pipeline)
+    public static func deletePipeline(_ pipeline: String, in organization: String) -> Self {
+        Self(organization: organization, pipeline: pipeline)
     }
 }
 
 extension Resource where Self == Pipeline.Resources.CreateWebhook {
-    public static func createWebhookForPipeline(_ pipeline: String, in organization: String) -> Pipeline.Resources.CreateWebhook {
-        .init(organization: organization, pipeline: pipeline)
+    public static func createWebhookForPipeline(_ pipeline: String, in organization: String) -> Self {
+        Self(organization: organization, pipeline: pipeline)
     }
 }
