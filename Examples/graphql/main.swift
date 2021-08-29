@@ -1,6 +1,6 @@
 //
 //  main.swift
-//  
+//  graphql
 //
 //  Created by Aaron Sky on 5/5/20.
 //
@@ -48,17 +48,15 @@ struct MyPipeline: Codable {
     }
 }
 
-var cancellables: Set<AnyCancellable> = []
-client.sendPublisher(GraphQL<MyPipeline>(rawQuery: query, variables: ["first": 30]))
-    .map(\.content)
-    .sink(receiveCompletion: { result in
-        if case let .failure(error) = result {
-            print(error)
-            exit(1)
-        }
-    }) { pipelines in
+client.sendQuery(GraphQL<MyPipeline>(rawQuery: query, variables: ["first": 30])) { result in
+    do {
+        let pipelines = try result.get()
         print(pipelines)
         exit(0)
-}.store(in: &cancellables)
+    } catch {
+        print(error)
+        exit(1)
+    }
+}
 
 RunLoop.main.run()
