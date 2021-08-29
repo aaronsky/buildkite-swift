@@ -75,7 +75,7 @@ class BuildkiteClientTests: XCTestCase {
                 _ = try result.get()
                 XCTFail("Expected to have failed with an error, but closure fulfilled normally")
             } catch ResourceError.incompatibleVersion(resource.version) {
-
+                // Expected error
             } catch {
                 XCTFail("Expected to have failed with an error, but not this one: \(error)")
             }
@@ -197,8 +197,7 @@ extension BuildkiteClientTests {
             do {
                 _ = try result.get()
                 XCTFail("Expected to have failed with an error, but closure fulfilled normally")
-            } catch {
-            }
+            } catch {}
             expectation.fulfill()
         }
         wait(for: [expectation])

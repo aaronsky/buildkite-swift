@@ -13,7 +13,7 @@ import FoundationNetworking
 #endif
 
 extension Job {
-    public enum Resources { }
+    public enum Resources {}
 }
 
 extension Job.Resources {

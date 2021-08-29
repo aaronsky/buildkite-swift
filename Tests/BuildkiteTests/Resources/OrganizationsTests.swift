@@ -17,14 +17,14 @@ import FoundationNetworking
 extension Organization {
     init() {
         self.init(id: UUID(),
-                  url: URL(),
+                  url: Followable(),
                   webUrl: URL(),
                   name: "Buildkite",
                   slug: "buildkite",
-                  pipelinesUrl: URL(),
-                  agentsUrl: URL(),
-                  emojisUrl: URL(),
-                  createdAt: URL())
+                  pipelinesUrl: Followable(),
+                  agentsUrl: Followable(),
+                  emojisUrl: Followable(),
+                  createdAt: Date(timeIntervalSince1970: 1000))
     }
 }
 

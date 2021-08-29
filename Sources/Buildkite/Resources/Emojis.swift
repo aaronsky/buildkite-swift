@@ -13,7 +13,7 @@ import FoundationNetworking
 #endif
 
 extension Emoji {
-    public enum Resources { }
+    public enum Resources {}
 }
 
 extension Emoji.Resources {

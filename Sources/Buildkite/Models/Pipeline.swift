@@ -14,7 +14,7 @@ import FoundationNetworking
 
 public struct Pipeline: Codable, Equatable, Identifiable {
     public var id: UUID
-    public var url: URL // Resource<Pipeline.Resources.Get>
+    public var url: Followable<Pipeline.Resources.Get>
     public var webUrl: URL
     public var name: String
     public var slug: String
@@ -26,7 +26,7 @@ public struct Pipeline: Codable, Equatable, Identifiable {
     public var skipQueuedBranchBuildsFilter: String?
     public var cancelRunningBranchBuilds: Bool
     public var cancelRunningBranchBuildsFilter: String?
-    public var buildsUrl: URL // Resource<Build.Resources.ListForPipeline>
+    public var buildsUrl: Followable<Build.Resources.ListForPipeline>
     public var badgeUrl: URL
     public var createdAt: Date
     public var scheduledBuildsCount: Int

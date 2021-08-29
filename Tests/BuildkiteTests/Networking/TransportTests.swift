@@ -58,8 +58,7 @@ class TransportTests: XCTestCase {
             }
         }
 
-        override func stopLoading() {
-        }
+        override func stopLoading() {}
     }
 }
 

@@ -17,7 +17,7 @@ import FoundationNetworking
 extension Build {
     init() {
         self.init(id: UUID(),
-                  url: URL(),
+                  url: Followable(),
                   webUrl: URL(),
                   number: 1,
                   state: .passed,

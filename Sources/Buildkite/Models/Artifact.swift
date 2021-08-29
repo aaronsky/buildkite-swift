@@ -22,8 +22,8 @@ public struct Artifact: Codable, Equatable, Identifiable {
 
     public var id: UUID
     public var jobId: UUID
-    public var url: URL // Resource<Artifact.Resources.Get>
-    public var downloadUrl: URL // Resource<Build.Resources.Download>
+    public var url: Followable<Artifact.Resources.Get>
+    public var downloadUrl: Followable<Artifact.Resources.Download>
     public var state: State
     public var path: String
     public var dirname: String

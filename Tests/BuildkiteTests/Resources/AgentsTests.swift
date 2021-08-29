@@ -23,8 +23,8 @@ extension Agent {
                                          stepKey: nil,
                                          buildUrl: URL(),
                                          webUrl: URL(),
-                                         logUrl: URL(),
-                                         rawLogUrl: URL(),
+                                         logUrl: Followable(),
+                                         rawLogUrl: Followable(),
                                          artifactsUrl: URL(),
                                          softFailed: false,
                                          exitStatus: 0,
@@ -43,7 +43,7 @@ extension Agent {
                                          parallelGroupTotal: nil))
 
         self.init(id: UUID(),
-                  url: URL(),
+                  url: Followable(),
                   webUrl: URL(),
                   name: "jeffrey",
                   connectionState: "connected",

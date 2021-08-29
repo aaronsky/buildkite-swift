@@ -180,7 +180,7 @@ class JobsTests: XCTestCase {
 
 extension Job.LogOutput {
     init() {
-        self.init(url: URL(),
+        self.init(url: Followable(),
                   content: "hello friends",
                   size: 13,
                   headerTimes: [])

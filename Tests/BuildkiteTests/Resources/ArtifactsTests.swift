@@ -18,8 +18,8 @@ extension Artifact {
     init() {
         self.init(id: UUID(),
                   jobId: UUID(),
-                  url: URL(),
-                  downloadUrl: URL(),
+                  url: Followable(),
+                  downloadUrl: Followable(),
                   state: .new,
                   path: "",
                   dirname: "",

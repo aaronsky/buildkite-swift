@@ -13,6 +13,7 @@ import XCTest
 #if canImport(FoundationNetworking)
 import FoundationNetworking
 #endif
+
 extension Emoji {
     init() {
         self.init(name: "jeff",

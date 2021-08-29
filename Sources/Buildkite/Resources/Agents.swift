@@ -13,7 +13,7 @@ import FoundationNetworking
 #endif
 
 extension Agent {
-    public enum Resources { }
+    public enum Resources {}
 }
 
 extension Agent.Resources {

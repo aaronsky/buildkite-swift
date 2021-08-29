@@ -24,11 +24,11 @@ struct MockContext {
         ])
     }
 
-    init<Content: Codable>(content: Content) throws {
+    init<Content: Codable>(content: Content...) throws {
         let configuration = Configuration.default
-        try self.init(configuration: configuration, responses: [
-             MockData.mockingSuccess(with: content, url: configuration.version.baseURL)
-        ])
+        try self.init(configuration: configuration, responses: content.map {
+            try MockData.mockingSuccess(with: $0, url: configuration.version.baseURL)
+        })
     }
 
     private init(configuration: Configuration, responses: [(Data, URLResponse)]) {

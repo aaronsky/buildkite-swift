@@ -53,7 +53,7 @@ public extension JSONValue {
     }
 }
 
-extension JSONValue: Equatable, Hashable { }
+extension JSONValue: Equatable, Hashable {}
 
 extension JSONValue: Encodable {
     public func encode(to encoder: Encoder) throws {

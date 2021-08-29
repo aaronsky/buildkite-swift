@@ -17,7 +17,7 @@ import FoundationNetworking
 extension Pipeline {
     init(steps: [Step] = []) {
         self.init(id: UUID(),
-                  url: URL(),
+                  url: Followable(),
                   webUrl: URL(),
                   name: "My Pipeline",
                   slug: "my-pipeline",
@@ -45,7 +45,7 @@ extension Pipeline {
                   skipQueuedBranchBuildsFilter: nil,
                   cancelRunningBranchBuilds: false,
                   cancelRunningBranchBuildsFilter: nil,
-                  buildsUrl: URL(),
+                  buildsUrl: Followable(),
                   badgeUrl: URL(),
                   createdAt: Date(timeIntervalSince1970: 1000),
                   scheduledBuildsCount: 0,

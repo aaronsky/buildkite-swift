@@ -13,7 +13,7 @@ import FoundationNetworking
 #endif
 
 extension Artifact {
-    public enum Resources { }
+    public enum Resources {}
 }
 
 extension Artifact.Resources {
