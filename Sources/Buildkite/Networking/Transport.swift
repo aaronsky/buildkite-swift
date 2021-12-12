@@ -27,12 +27,12 @@ public protocol Transport {
     func send(request: URLRequest, completion: @escaping Completion)
 
 #if canImport(Combine)
-    @available(macOS 10.15, iOS 13.0, tvOS 13.0, watchOS 6.0, *)
+    @available(iOS 13, macOS 10.15, tvOS 13, watchOS 6, *)
     func sendPublisher(request: URLRequest) -> AnyPublisher<Output, Error>
 #endif
 
-#if swift(>=5.5)
-    @available(macOS 12.0, iOS 15.0, tvOS 15.0, watchOS 8.0, *)
+#if compiler(>=5.5.2) && canImport(_Concurrency)
+    @available(iOS 13, macOS 10.15, tvOS 13, watchOS 6, *)
     func send(request: URLRequest) async throws -> Output
 #endif
 }
@@ -54,7 +54,7 @@ extension URLSession: Transport {
     }
 
 #if canImport(Combine)
-    @available(macOS 10.15, iOS 13.0, tvOS 13.0, watchOS 6.0, *)
+    @available(iOS 13, macOS 10.15, tvOS 13, watchOS 6, *)
     public func sendPublisher(request: URLRequest) -> AnyPublisher<Output, Error> {
         dataTaskPublisher(for: request)
             .mapError { $0 as Error }
@@ -62,10 +62,30 @@ extension URLSession: Transport {
     }
 #endif
 
-#if swift(>=5.5)
-    @available(macOS 12.0, iOS 15.0, tvOS 15.0, watchOS 8.0, *)
+#if compiler(>=5.5.2) && canImport(_Concurrency)
+    @available(iOS 13, macOS 10.15, tvOS 13, watchOS 6, *)
     public func send(request: URLRequest) async throws -> Output {
-        return try await data(for: request)
+        if #available(iOS 15, macOS 12, tvOS 15, watchOS 8, *) {
+            return try await data(for: request)
+        } else {
+            return try await withCheckedThrowingContinuation { continuation in
+                let task = dataTask(with: request) { data, response, error in
+                    if let error = error {
+                        continuation.resume(throwing: error)
+                        return
+                    }
+                    
+                    guard let data = data,
+                          let response = response else {
+                              continuation.resume(throwing: TransportError.noResponse)
+                        return
+                    }
+
+                    continuation.resume(returning: (data, response))
+                }
+                task.resume()
+            }
+        }
     }
 #endif
 }
