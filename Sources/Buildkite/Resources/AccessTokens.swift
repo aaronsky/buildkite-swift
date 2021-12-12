@@ -13,6 +13,7 @@ import FoundationNetworking
 #endif
 
 extension AccessToken {
+    /// Resources for performing operations on the current API access token.
     public enum Resources {}
 }
 
@@ -42,12 +43,18 @@ extension AccessToken.Resources {
 }
 
 extension Resource where Self == AccessToken.Resources.Get {
+    /// Get the current token
+    ///
+    /// Returns details about the API Access Token that was used to authenticate the request.
     public static var getAccessToken: Self {
         Self()
     }
 }
 
 extension Resource where Self == AccessToken.Resources.Revoke {
+    /// Revoke the current token
+    ///
+    /// Once revoked, the token can no longer be used for further requests.
     public static var revokeAccessToken: Self {
         Self()
     }

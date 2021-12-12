@@ -13,6 +13,7 @@ import FoundationNetworking
 #endif
 
 extension Organization {
+    /// Resources for performing operations on Buildkite organizations.
     public enum Resources {}
 }
 
@@ -44,12 +45,16 @@ extension Organization.Resources {
 }
 
 extension Resource where Self == Organization.Resources.List {
+    /// List organizations
+    ///
+    /// Returns a paginated list of the user’s organizations.
     public static var organizations: Self {
         Self()
     }
 }
 
 extension Resource where Self == Organization.Resources.Get {
+    /// Get an organization
     public static func organization(_ organization: String) -> Self {
         Self(organization: organization)
     }

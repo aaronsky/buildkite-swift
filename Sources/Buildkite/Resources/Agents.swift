@@ -13,11 +13,12 @@ import FoundationNetworking
 #endif
 
 extension Agent {
+    /// Resources for performing operations to the active Buildkite agents.
     public enum Resources {}
 }
 
 extension Agent.Resources {
-    /// List agents
+    /// List agents in the organization
     ///
     /// Returns a paginated list of an organization’s agents.
     public struct List: PaginatedResource {
@@ -54,6 +55,7 @@ extension Agent.Resources {
         }
     }
 
+    /// Get an agent by ID
     public struct Get: Resource {
         public typealias Content = Agent
         /// organization slug
@@ -71,7 +73,7 @@ extension Agent.Resources {
         }
     }
 
-    /// Stop an agent
+    /// Stop an agent by ID
     ///
     /// Instruct an agent to stop accepting new build jobs and shut itself down.
     public struct Stop: Resource {
@@ -108,18 +110,25 @@ extension Agent.Resources {
 }
 
 extension Resource where Self == Agent.Resources.List {
+    /// List agents in the organization
+    ///
+    /// Returns a paginated list of an organization’s agents.
     public static func agents(in organization: String) -> Self {
         Self(organization: organization)
     }
 }
 
 extension Resource where Self == Agent.Resources.Get {
+    /// Get an agent by ID
     public static func agent(_ agentId: UUID, in organization: String) -> Self {
         Self(organization: organization, agentId: agentId)
     }
 }
 
 extension Resource where Self == Agent.Resources.Stop {
+    /// Stop an agent by ID
+    ///
+    /// Instruct an agent to stop accepting new build jobs and shut itself down.
     public static func stopAgent(_ agentId: UUID, in organization: String, force: Bool? = nil) -> Self {
         Self(organization: organization, agentId: agentId, force: force)
     }

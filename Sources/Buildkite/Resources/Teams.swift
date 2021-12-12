@@ -13,10 +13,12 @@ import FoundationNetworking
 #endif
 
 extension Team {
+    /// Resources for managing Buildkite teams.
     public enum Resources {}
 }
 
 extension Team.Resources {
+    /// List all teams in the given organization
     public struct List: PaginatedResource {
         public typealias Content = [Team]
         /// organization slug
@@ -47,6 +49,7 @@ extension Team.Resources {
 }
 
 extension Resource where Self == Team.Resources.List {
+    /// List all teams in the given organization
     public static func teams(in organization: String, byUser userId: UUID? = nil) -> Self {
         Self(organization: organization, userId: userId)
     }

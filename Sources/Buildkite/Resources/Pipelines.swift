@@ -13,6 +13,7 @@ import FoundationNetworking
 #endif
 
 extension Pipeline {
+    /// Resources for performing operations on Buildkite pipelines.
     public enum Resources {}
 }
 
@@ -337,54 +338,67 @@ extension Pipeline.Resources {
 }
 
 extension Resource where Self == Pipeline.Resources.List {
+    /// List pipelines
+    ///
+    /// Returns a paginated list of an organization’s pipelines.
     public static func pipelines(in organization: String) -> Self {
         Self(organization: organization)
     }
 }
 
 extension Resource where Self == Pipeline.Resources.Get {
+    /// Get a pipeline.
     public static func pipeline(_ pipeline: String, in organization: String) -> Self {
         Self(organization: organization, pipeline: pipeline)
     }
 }
 
 extension Resource where Self == Pipeline.Resources.Create {
+    /// Create a YAML pipeline
     public static func createPipeline(_ pipeline: Self.Body, in organization: String) -> Self {
         Self(organization: organization, body: pipeline)
     }
 }
 
 extension Resource where Self == Pipeline.Resources.CreateVisualSteps {
+    /// Create a visual step pipeline
     public static func createVisualStepsPipeline(_ pipeline: Self.Body, in organization: String) -> Self {
         Self(organization: organization, body: pipeline)
     }
 }
 
 extension Resource where Self == Pipeline.Resources.Update {
+    /// Update a pipeline
+    ///
+    /// Updates one or more properties of an existing pipeline
     public static func updatePipeline(_ pipeline: String, in organization: String, with body: Self.Body) -> Self {
         Self(organization: organization, pipeline: pipeline, body: body)
     }
 }
 
 extension Resource where Self == Pipeline.Resources.Archive {
+    /// Archive a pipeline
     public static func archivePipeline(_ pipeline: String, in organization: String) -> Self {
         Self(organization: organization, pipeline: pipeline)
     }
 }
 
 extension Resource where Self == Pipeline.Resources.Unarchive {
+    /// Unarchive an archived pipeline
     public static func unarchivePipeline(_ pipeline: String, in organization: String) -> Self {
         Self(organization: organization, pipeline: pipeline)
     }
 }
 
 extension Resource where Self == Pipeline.Resources.Delete {
+    /// Delete a pipeline
     public static func deletePipeline(_ pipeline: String, in organization: String) -> Self {
         Self(organization: organization, pipeline: pipeline)
     }
 }
 
 extension Resource where Self == Pipeline.Resources.CreateWebhook {
+    /// Create a webhook for a pipeline
     public static func createWebhookForPipeline(_ pipeline: String, in organization: String) -> Self {
         Self(organization: organization, pipeline: pipeline)
     }

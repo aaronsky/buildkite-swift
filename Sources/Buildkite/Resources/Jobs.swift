@@ -166,9 +166,6 @@ extension Job.Resources {
     }
 }
 
-// JSONDecoder on Linux does not support decoding JSON fragments. Another
-// method will need to be explored here in order to restore this functionality.
-#if !os(Linux)
 extension Job.Resources.LogOutput {
     public struct Alternative: Resource {
         public enum Format: String {
@@ -201,7 +198,6 @@ extension Job.Resources.LogOutput {
         }
     }
 }
-#endif
 
 extension Resource where Self == Job.Resources.Retry {
     public static func retryJob(_ job: UUID, in organization: String, pipeline: String, build: Int) -> Self {
@@ -233,10 +229,8 @@ extension Resource where Self == Job.Resources.EnvironmentVariables {
     }
 }
 
-#if !os(Linux)
 extension Resource where Self == Job.Resources.LogOutput.Alternative {
     public static func logOutput(_ format: Job.Resources.LogOutput.Alternative.Format, for job: UUID, in organization: String, pipeline: String, build: Int) -> Self {
         Self(organization: organization, pipeline: pipeline, build: build, job: job, format: format)
     }
 }
-#endif
