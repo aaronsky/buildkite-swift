@@ -35,7 +35,12 @@ extension Job.Resources {
             "organizations/\(organization)/pipelines/\(pipeline)/builds/\(build)/jobs/\(job)/retry"
         }
 
-        public init(organization: String, pipeline: String, build: Int, job: UUID) {
+        public init(
+            organization: String,
+            pipeline: String,
+            build: Int,
+            job: UUID
+        ) {
             self.organization = organization
             self.pipeline = pipeline
             self.build = build
@@ -67,7 +72,10 @@ extension Job.Resources {
             public var unblocker: UUID?
             public var fields: [String: String]
 
-            public init(unblocker: UUID? = nil, fields: [String: String] = [:]) {
+            public init(
+                unblocker: UUID? = nil,
+                fields: [String: String] = [:]
+            ) {
                 self.unblocker = unblocker
                 self.fields = fields
             }
@@ -77,7 +85,13 @@ extension Job.Resources {
             "organizations/\(organization)/pipelines/\(pipeline)/builds/\(build)/jobs/\(job)/unblock"
         }
 
-        public init(organization: String, pipeline: String, build: Int, job: UUID, body: Body) {
+        public init(
+            organization: String,
+            pipeline: String,
+            build: Int,
+            job: UUID,
+            body: Body
+        ) {
             self.organization = organization
             self.pipeline = pipeline
             self.build = build
@@ -106,7 +120,12 @@ extension Job.Resources {
             "organizations/\(organization)/pipelines/\(pipeline)/builds/\(build)/jobs/\(job)/log"
         }
 
-        public init(organization: String, pipeline: String, build: Int, job: UUID) {
+        public init(
+            organization: String,
+            pipeline: String,
+            build: Int,
+            job: UUID
+        ) {
             self.organization = organization
             self.pipeline = pipeline
             self.build = build
@@ -129,7 +148,12 @@ extension Job.Resources {
             "organizations/\(organization)/pipelines/\(pipeline)/builds/\(build)/jobs/\(job)/log"
         }
 
-        public init(organization: String, pipeline: String, build: Int, job: UUID) {
+        public init(
+            organization: String,
+            pipeline: String,
+            build: Int,
+            job: UUID
+        ) {
             self.organization = organization
             self.pipeline = pipeline
             self.build = build
@@ -157,7 +181,12 @@ extension Job.Resources {
             "organizations/\(organization)/pipelines/\(pipeline)/builds/\(build)/jobs/\(job)/env"
         }
 
-        public init(organization: String, pipeline: String, build: Int, job: UUID) {
+        public init(
+            organization: String,
+            pipeline: String,
+            build: Int,
+            job: UUID
+        ) {
             self.organization = organization
             self.pipeline = pipeline
             self.build = build
@@ -189,7 +218,13 @@ extension Job.Resources.LogOutput {
             "organizations/\(organization)/pipelines/\(pipeline)/builds/\(build)/jobs/\(job)/log.\(format)"
         }
 
-        public init(organization: String, pipeline: String, build: Int, job: UUID, format: Format) {
+        public init(
+            organization: String,
+            pipeline: String,
+            build: Int,
+            job: UUID,
+            format: Format
+        ) {
             self.organization = organization
             self.pipeline = pipeline
             self.build = build
@@ -206,7 +241,13 @@ extension Resource where Self == Job.Resources.Retry {
 }
 
 extension Resource where Self == Job.Resources.Unblock {
-    public static func unblockJob(_ job: UUID, in organization: String, pipeline: String, build: Int, with body: Self.Body) -> Self {
+    public static func unblockJob(
+        _ job: UUID,
+        in organization: String,
+        pipeline: String,
+        build: Int,
+        with body: Self.Body
+    ) -> Self {
         Self(organization: organization, pipeline: pipeline, build: build, job: job, body: body)
     }
 }
@@ -224,13 +265,24 @@ extension Resource where Self == Job.Resources.DeleteLogOutput {
 }
 
 extension Resource where Self == Job.Resources.EnvironmentVariables {
-    public static func environmentVariables(for job: UUID, in organization: String, pipeline: String, build: Int) -> Self {
+    public static func environmentVariables(
+        for job: UUID,
+        in organization: String,
+        pipeline: String,
+        build: Int
+    ) -> Self {
         Self(organization: organization, pipeline: pipeline, build: build, job: job)
     }
 }
 
 extension Resource where Self == Job.Resources.LogOutput.Alternative {
-    public static func logOutput(_ format: Job.Resources.LogOutput.Alternative.Format, for job: UUID, in organization: String, pipeline: String, build: Int) -> Self {
+    public static func logOutput(
+        _ format: Job.Resources.LogOutput.Alternative.Format,
+        for job: UUID,
+        in organization: String,
+        pipeline: String,
+        build: Int
+    ) -> Self {
         Self(organization: organization, pipeline: pipeline, build: build, job: job, format: format)
     }
 }

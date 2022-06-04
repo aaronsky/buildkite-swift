@@ -7,6 +7,7 @@
 //
 
 import Foundation
+
 @testable import Buildkite
 
 #if canImport(FoundationNetworking)
@@ -143,9 +144,14 @@ extension MockData {
     }
 
     private static func urlResponse(for url: URL, rawStatus status: Int) -> URLResponse {
-        HTTPURLResponse(url: url,
-                        statusCode: status,
-                        httpVersion: "HTTP/1.1",
-                        headerFields: ["Link": #"<https://api.buildkite.com/v2/organizations/my-great-org/pipelines/my-pipeline/builds?api_key=f8582f070276d764ce3dd4c6d57be92574dccf86&page=3>; rel="prev",<https://api.buildkite.com/v2/organizations/my-great-org/pipelines/my-pipeline/builds?api_key=f8582f070276d764ce3dd4c6d57be92574dccf86&page=5>; rel="next",<https://api.buildkite.com/v2/organizations/my-great-org/pipelines/my-pipeline/builds?api_key=f8582f070276d764ce3dd4c6d57be92574dccf86&page=1>; rel="first", <https://api.buildkite.com/v2/organizations/my-great-org/pipelines/my-pipeline/builds?api_key=f8582f070276d764ce3dd4c6d57be92574dccf86&page=10>; rel="last""#])!
+        HTTPURLResponse(
+            url: url,
+            statusCode: status,
+            httpVersion: "HTTP/1.1",
+            headerFields: [
+                "Link":
+                    #"<https://api.buildkite.com/v2/organizations/my-great-org/pipelines/my-pipeline/builds?api_key=f8582f070276d764ce3dd4c6d57be92574dccf86&page=3>; rel="prev",<https://api.buildkite.com/v2/organizations/my-great-org/pipelines/my-pipeline/builds?api_key=f8582f070276d764ce3dd4c6d57be92574dccf86&page=5>; rel="next",<https://api.buildkite.com/v2/organizations/my-great-org/pipelines/my-pipeline/builds?api_key=f8582f070276d764ce3dd4c6d57be92574dccf86&page=1>; rel="first", <https://api.buildkite.com/v2/organizations/my-great-org/pipelines/my-pipeline/builds?api_key=f8582f070276d764ce3dd4c6d57be92574dccf86&page=10>; rel="last""#
+            ]
+        )!
     }
 }

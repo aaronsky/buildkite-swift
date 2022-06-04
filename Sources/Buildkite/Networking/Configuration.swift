@@ -18,11 +18,16 @@ public struct Configuration {
     public var graphQLVersion: APIVersion
 
     public static var `default`: Configuration {
-        .init(version: APIVersion.REST.v2,
-              graphQLVersion: APIVersion.GraphQL.v1)
+        .init(
+            version: APIVersion.REST.v2,
+            graphQLVersion: APIVersion.GraphQL.v1
+        )
     }
 
-    public init(version: APIVersion = APIVersion.REST.v2, graphQLVersion: APIVersion = APIVersion.GraphQL.v1) {
+    public init(
+        version: APIVersion = APIVersion.REST.v2,
+        graphQLVersion: APIVersion = APIVersion.GraphQL.v1
+    ) {
         self.version = version
         self.graphQLVersion = graphQLVersion
     }

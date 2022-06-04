@@ -8,6 +8,7 @@
 
 import Foundation
 import XCTest
+
 @testable import Buildkite
 
 #if canImport(FoundationNetworking)
@@ -16,106 +17,70 @@ import FoundationNetworking
 
 extension Artifact {
     init() {
-        self.init(id: UUID(),
-                  jobId: UUID(),
-                  url: Followable(),
-                  downloadUrl: Followable(),
-                  state: .new,
-                  path: "",
-                  dirname: "",
-                  filename: "",
-                  mimeType: "",
-                  fileSize: 0,
-                  sha1sum: "")
+        self.init(
+            id: UUID(),
+            jobId: UUID(),
+            url: Followable(),
+            downloadUrl: Followable(),
+            state: .new,
+            path: "",
+            dirname: "",
+            filename: "",
+            mimeType: "",
+            fileSize: 0,
+            sha1sum: ""
+        )
     }
 }
 
 class ArtifactsTests: XCTestCase {
-    func testArtifactsListByBuild() throws {
+    func testArtifactsListByBuild() async throws {
         let expected = [Artifact(), Artifact()]
         let context = try MockContext(content: expected)
 
-        let expectation = XCTestExpectation()
+        let response = try await context.client.send(.artifacts(byBuild: 1, in: "buildkite", pipeline: "my-pipeline"))
 
-        context.client.send(.artifacts(byBuild: 1, in: "buildkite", pipeline: "my-pipeline")) { result in
-            do {
-                let response = try result.get()
-                XCTAssertEqual(expected, response.content)
-            } catch {
-                XCTFail(error.localizedDescription)
-            }
-            expectation.fulfill()
-        }
-        wait(for: [expectation])
+        XCTAssertEqual(expected, response.content)
     }
 
-    func testArtifactsListByJob() throws {
+    func testArtifactsListByJob() async throws {
         let expected = [Artifact(), Artifact()]
         let context = try MockContext(content: expected)
 
-        let expectation = XCTestExpectation()
+        let response = try await context.client.send(
+            .artifacts(byJob: UUID(), in: "buildkite", pipeline: "my-pipeline", build: 1)
+        )
 
-        context.client.send(.artifacts(byJob: UUID(), in: "buildkite", pipeline: "my-pipeline", build: 1)) { result in
-            do {
-                let response = try result.get()
-                XCTAssertEqual(expected, response.content)
-            } catch {
-                XCTFail(error.localizedDescription)
-            }
-            expectation.fulfill()
-        }
-        wait(for: [expectation])
+        XCTAssertEqual(expected, response.content)
     }
 
-    func testArtifactsGet() throws {
+    func testArtifactsGet() async throws {
         let expected = Artifact()
         let context = try MockContext(content: expected)
 
-        let expectation = XCTestExpectation()
+        let response = try await context.client.send(
+            .artifact(UUID(), in: "buildkite", pipeline: "my-pipeline", build: 1, job: UUID())
+        )
 
-        context.client.send(.artifact(UUID(), in: "buildkite", pipeline: "my-pipeline", build: 1, job: UUID())) { result in
-            do {
-                let response = try result.get()
-                XCTAssertEqual(expected, response.content)
-            } catch {
-                XCTFail(error.localizedDescription)
-            }
-            expectation.fulfill()
-        }
-        wait(for: [expectation])
+        XCTAssertEqual(expected, response.content)
     }
 
-    func testArtifactsDownload() throws {
+    func testArtifactsDownload() async throws {
         let expected = Artifact.URLs(url: URL())
         let context = try MockContext(content: expected)
 
-        let expectation = XCTestExpectation()
+        let response = try await context.client.send(
+            .downloadArtifact(UUID(), in: "buildkite", pipeline: "my-pipeline", build: 1, job: UUID())
+        )
 
-        context.client.send(.downloadArtifact(UUID(), in: "buildkite", pipeline: "my-pipeline", build: 1, job: UUID())) { result in
-            do {
-                let response = try result.get()
-                XCTAssertEqual(expected, response.content)
-            } catch {
-                XCTFail(error.localizedDescription)
-            }
-            expectation.fulfill()
-        }
-        wait(for: [expectation])
+        XCTAssertEqual(expected, response.content)
     }
 
-    func testArtifactsDelete() throws {
+    func testArtifactsDelete() async throws {
         let context = MockContext()
 
-        let expectation = XCTestExpectation()
-
-        context.client.send(.deleteArtifact(UUID(), in: "buildkite", pipeline: "my-pipeline", build: 1, job: UUID())) { result in
-            do {
-                _ = try result.get()
-            } catch {
-                XCTFail(error.localizedDescription)
-            }
-            expectation.fulfill()
-        }
-        wait(for: [expectation])
+        _ = try await context.client.send(
+            .deleteArtifact(UUID(), in: "buildkite", pipeline: "my-pipeline", build: 1, job: UUID())
+        )
     }
 }

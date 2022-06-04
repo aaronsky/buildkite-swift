@@ -37,14 +37,17 @@ extension Agent.Resources {
             "organizations/\(organization)/agents"
         }
 
-        public init(organization: String) {
+        public init(
+            organization: String
+        ) {
             self.organization = organization
         }
 
         public func transformRequest(_ request: inout URLRequest) {
             guard let url = request.url,
-                var components = URLComponents(url: url, resolvingAgainstBaseURL: true) else {
-                    return
+                var components = URLComponents(url: url, resolvingAgainstBaseURL: true)
+            else {
+                return
             }
             var queryItems: [URLQueryItem] = []
             queryItems.appendIfNeeded(name, forKey: "name")
@@ -67,7 +70,10 @@ extension Agent.Resources {
             "organizations/\(organization)/agents/\(agentId)"
         }
 
-        public init(organization: String, agentId: UUID) {
+        public init(
+            organization: String,
+            agentId: UUID
+        ) {
             self.organization = organization
             self.agentId = agentId
         }
@@ -88,7 +94,9 @@ extension Agent.Resources {
             /// If the agent is currently processing a job, the job and the build will be canceled.
             public var force: Bool?
 
-            public init(force: Bool? = nil) {
+            public init(
+                force: Bool? = nil
+            ) {
                 self.force = force
             }
         }
@@ -97,7 +105,11 @@ extension Agent.Resources {
             "organizations/\(organization)/agents/\(agentId)/stop"
         }
 
-        public init(organization: String, agentId: UUID, force: Bool? = nil) {
+        public init(
+            organization: String,
+            agentId: UUID,
+            force: Bool? = nil
+        ) {
             self.organization = organization
             self.agentId = agentId
             self.body = Body(force: force)

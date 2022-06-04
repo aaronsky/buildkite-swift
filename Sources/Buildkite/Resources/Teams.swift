@@ -30,15 +30,19 @@ extension Team.Resources {
             "organizations/\(organization)/teams"
         }
 
-        public init(organization: String, userId: UUID? = nil) {
+        public init(
+            organization: String,
+            userId: UUID? = nil
+        ) {
             self.organization = organization
             self.userId = userId
         }
 
         public func transformRequest(_ request: inout URLRequest) {
             guard let url = request.url,
-                var components = URLComponents(url: url, resolvingAgainstBaseURL: true) else {
-                    return
+                var components = URLComponents(url: url, resolvingAgainstBaseURL: true)
+            else {
+                return
             }
             var queryItems: [URLQueryItem] = []
             queryItems.appendIfNeeded(userId, forKey: "user_id")

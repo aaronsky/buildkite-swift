@@ -18,13 +18,16 @@ public struct Page {
     public var firstPage: Int?
     public var lastPage: Int?
 
-    init?(for header: String) {
+    init?(
+        for header: String
+    ) {
         guard !header.isEmpty else {
             return nil
         }
 
         for link in header.split(separator: ",") {
-            let segments = link
+            let segments =
+                link
                 .trimmingCharacters(in: .whitespacesAndNewlines)
                 .split(separator: ";")
             guard
@@ -36,8 +39,9 @@ public struct Page {
                 let url = URLComponents(string: String(urlString.dropFirst().dropLast())),
 
                 let pageString = url.queryItems?.first(where: { $0.name == "page" })?.value,
-                let page = Int(pageString) else {
-                    continue
+                let page = Int(pageString)
+            else {
+                continue
             }
 
             for segment in segments.dropFirst() {
@@ -62,7 +66,10 @@ public struct PageOptions {
     public var page: Int
     public var perPage: Int
 
-    public init(page: Int, perPage: Int) {
+    public init(
+        page: Int,
+        perPage: Int
+    ) {
         self.page = page
         self.perPage = perPage
     }
@@ -71,8 +78,9 @@ public struct PageOptions {
 extension URLRequest {
     mutating func appendPageOptions(_ options: PageOptions) {
         guard let url = self.url,
-            var components = URLComponents(url: url, resolvingAgainstBaseURL: true) else {
-                return
+            var components = URLComponents(url: url, resolvingAgainstBaseURL: true)
+        else {
+            return
         }
         var queryItems = components.queryItems ?? []
         queryItems.append(pageOptions: options)
@@ -81,8 +89,8 @@ extension URLRequest {
     }
 }
 
-private extension Array where Element == URLQueryItem {
-    mutating func append(pageOptions: PageOptions) {
+extension Array where Element == URLQueryItem {
+    fileprivate mutating func append(pageOptions: PageOptions) {
         append(URLQueryItem(name: "page", value: String(pageOptions.page)))
         append(URLQueryItem(name: "per_page", value: String(pageOptions.perPage)))
     }

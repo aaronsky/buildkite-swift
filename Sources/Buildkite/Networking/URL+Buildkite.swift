@@ -40,25 +40,36 @@ extension Array where Element == URLQueryItem {
         } else if items.count == 1 {
             appendIfNeeded(items.first, forKey: key)
         } else {
-            append(contentsOf: items
-                .enumerated()
-                .map {
-                    URLQueryItem(name: "\(key)\(arrayFormat.format(for: $0.offset))",
-                        value: $0.element)
-            })
+            append(
+                contentsOf:
+                    items
+                    .enumerated()
+                    .map {
+                        URLQueryItem(
+                            name: "\(key)\(arrayFormat.format(for: $0.offset))",
+                            value: $0.element
+                        )
+                    }
+            )
         }
     }
 
     mutating func append(_ items: [String: String], forKey key: String) {
-        append(contentsOf: items.map {
-            URLQueryItem(name: "\(key)[\($0.key)]",
-                value: $0.value)
-        })
+        append(
+            contentsOf: items.map {
+                URLQueryItem(
+                    name: "\(key)[\($0.key)]",
+                    value: $0.value
+                )
+            }
+        )
     }
 }
 
 extension Date: LosslessStringConvertible {
-    public init?(_ description: String) {
+    public init?(
+        _ description: String
+    ) {
         guard let date = Formatters.dateIfPossible(fromISO8601: description) else {
             return nil
         }
@@ -67,7 +78,9 @@ extension Date: LosslessStringConvertible {
 }
 
 extension UUID: LosslessStringConvertible {
-    public init?(_ description: String) {
+    public init?(
+        _ description: String
+    ) {
         guard let id = UUID(uuidString: description) else {
             return nil
         }

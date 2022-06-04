@@ -1,6 +1,8 @@
 .DS_Store
 /.build
-/Example/.build
+/.vscode
+/Examples/.build
 /Packages
 /*.xcodeproj
 xcuserdata/
+Package.resolved

@@ -47,12 +47,17 @@ public final class BuildkiteClient {
     /// - Parameters:
     ///   - configuration: Configures supported API versions and the access token. Uses the latest supported API versions by default. See ``token`` for setting the client access token if using the default configuration.
     ///   - transport: Transport layer used for API communication. Uses the shared URLSession by default.
-    public init(configuration: Configuration = .default, transport: Transport = URLSession.shared) {
+    public init(
+        configuration: Configuration = .default,
+        transport: Transport = URLSession.shared
+    ) {
         self.configuration = configuration
         self.transport = transport
     }
 
-    private func handleContentfulResponse<Content: Decodable>(completion: @escaping (Result<Response<Content>, Error>) -> Void) -> Transport.Completion {
+    private func handleContentfulResponse<Content: Decodable>(
+        completion: @escaping (Result<Response<Content>, Error>) -> Void
+    ) -> Transport.Completion {
         return { [weak self] result in
             guard let self = self else {
                 return
@@ -72,7 +77,9 @@ public final class BuildkiteClient {
         }
     }
 
-    private func handleEmptyResponse(completion: @escaping (Result<Response<Void>, Error>) -> Void) -> Transport.Completion {
+    private func handleEmptyResponse(
+        completion: @escaping (Result<Response<Void>, Error>) -> Void
+    ) -> Transport.Completion {
         return { [weak self] result in
             guard let self = self else {
                 return
@@ -91,14 +98,16 @@ public final class BuildkiteClient {
 
     private func checkResponseForIssues(_ response: URLResponse, data: Data? = nil) throws {
         guard let httpResponse = response as? HTTPURLResponse,
-              let statusCode = StatusCode(rawValue: httpResponse.statusCode) else {
-                  throw ResponseError.incompatibleResponse(response)
-              }
+            let statusCode = StatusCode(rawValue: httpResponse.statusCode)
+        else {
+            throw ResponseError.incompatibleResponse(response)
+        }
         if !statusCode.isSuccess {
             guard let data = data,
-                  let errorIntermediary = try? decoder.decode(BuildkiteError.Intermediary.self, from: data) else {
-                      throw statusCode
-                  }
+                let errorIntermediary = try? decoder.decode(BuildkiteError.Intermediary.self, from: data)
+            else {
+                throw statusCode
+            }
             throw BuildkiteError(statusCode: statusCode, intermediary: errorIntermediary)
         }
     }
@@ -106,12 +115,13 @@ public final class BuildkiteClient {
 
 // MARK: - Closure API
 
-public extension BuildkiteClient {
+extension BuildkiteClient {
     /// Performs the given resource asynchronously, then calls a handler upon completion.
     /// - Parameters:
     ///    - resource:A resource.
     ///    - completion:The completion handler to call when the operation has completed. This handler is called on whatever queue the transport layer is implemented to use. You should generally assume this is happening on a global background queue, such as the case when using the shared URLSession.
-    func send<R>(_ resource: R, completion: @escaping (Result<Response<R.Content>, Error>) -> Void) where R: Resource, R.Content: Decodable {
+    public func send<R>(_ resource: R, completion: @escaping (Result<Response<R.Content>, Error>) -> Void)
+    where R: Resource, R.Content: Decodable {
         do {
             let request = try URLRequest(resource, configuration: configuration)
             transport.send(request: request, completion: handleContentfulResponse(completion: completion))
@@ -125,7 +135,11 @@ public extension BuildkiteClient {
     ///    - resource:A resource.
     ///    - pageOptions: Page options to perform pagination.
     ///    - completion:The completion handler to call when the operation has completed. This handler is called on whatever queue the transport layer is implemented to use. You should generally assume this is happening on a global background queue, such as the case when using the shared URLSession.
-    func send<R>(_ resource: R, pageOptions: PageOptions? = nil, completion: @escaping (Result<Response<R.Content>, Error>) -> Void) where R: PaginatedResource {
+    public func send<R>(
+        _ resource: R,
+        pageOptions: PageOptions? = nil,
+        completion: @escaping (Result<Response<R.Content>, Error>) -> Void
+    ) where R: PaginatedResource {
         do {
             let request = try URLRequest(resource, configuration: configuration, pageOptions: pageOptions)
             transport.send(request: request, completion: handleContentfulResponse(completion: completion))
@@ -138,7 +152,8 @@ public extension BuildkiteClient {
     /// - Parameters:
     ///    - resource:A resource.
     ///    - completion:The completion handler to call when the operation has completed. This handler is called on whatever queue the transport layer is implemented to use. You should generally assume this is happening on a global background queue, such as the case when using the shared URLSession.
-    func send<R>(_ resource: R, completion: @escaping (Result<Response<R.Content>, Error>) -> Void) where R: Resource, R.Body: Encodable, R.Content: Decodable {
+    public func send<R>(_ resource: R, completion: @escaping (Result<Response<R.Content>, Error>) -> Void)
+    where R: Resource, R.Body: Encodable, R.Content: Decodable {
         do {
             let request = try URLRequest(resource, configuration: configuration, encoder: encoder)
             transport.send(request: request, completion: handleContentfulResponse(completion: completion))
@@ -152,9 +167,18 @@ public extension BuildkiteClient {
     ///    - resource:A resource.
     ///    - pageOptions: Page options to perform pagination.
     ///    - completion:The completion handler to call when the operation has completed. This handler is called on whatever queue the transport layer is implemented to use. You should generally assume this is happening on a global background queue, such as the case when using the shared URLSession.
-    func send<R>(_ resource: R, pageOptions: PageOptions? = nil, completion: @escaping (Result<Response<R.Content>, Error>) -> Void) where R: PaginatedResource, R.Body: Encodable {
+    public func send<R>(
+        _ resource: R,
+        pageOptions: PageOptions? = nil,
+        completion: @escaping (Result<Response<R.Content>, Error>) -> Void
+    ) where R: PaginatedResource, R.Body: Encodable {
         do {
-            let request = try URLRequest(resource, configuration: configuration, encoder: encoder, pageOptions: pageOptions)
+            let request = try URLRequest(
+                resource,
+                configuration: configuration,
+                encoder: encoder,
+                pageOptions: pageOptions
+            )
             transport.send(request: request, completion: handleContentfulResponse(completion: completion))
         } catch {
             completion(.failure(error))
@@ -165,7 +189,8 @@ public extension BuildkiteClient {
     /// - Parameters:
     ///    - resource:A resource.
     ///    - completion:The completion handler to call when the operation has completed. This handler is called on whatever queue the transport layer is implemented to use. You should generally assume this is happening on a global background queue, such as the case when using the shared URLSession.
-    func send<R>(_ resource: R, completion: @escaping (Result<Response<R.Content>, Error>) -> Void) where R: Resource, R.Content == Void {
+    public func send<R>(_ resource: R, completion: @escaping (Result<Response<R.Content>, Error>) -> Void)
+    where R: Resource, R.Content == Void {
         do {
             let request = try URLRequest(resource, configuration: configuration)
             transport.send(request: request, completion: handleEmptyResponse(completion: completion))
@@ -178,7 +203,8 @@ public extension BuildkiteClient {
     /// - Parameters:
     ///    - resource:A resource.
     ///    - completion:The completion handler to call when the operation has completed. This handler is called on whatever queue the transport layer is implemented to use. You should generally assume this is happening on a global background queue, such as the case when using the shared URLSession.
-    func send<R>(_ resource: R, completion: @escaping (Result<Response<R.Content>, Error>) -> Void) where R: Resource, R.Body: Encodable, R.Content == Void {
+    public func send<R>(_ resource: R, completion: @escaping (Result<Response<R.Content>, Error>) -> Void)
+    where R: Resource, R.Body: Encodable, R.Content == Void {
         do {
             let request = try URLRequest(resource, configuration: configuration, encoder: encoder)
             transport.send(request: request, completion: handleEmptyResponse(completion: completion))
@@ -191,7 +217,7 @@ public extension BuildkiteClient {
     /// - Parameters:
     ///    - resource:A resource.
     ///    - completion:The completion handler to call when the operation has completed. This handler is called on whatever queue the transport layer is implemented to use. You should generally assume this is happening on a global background queue, such as the case when using the shared URLSession.
-    func sendQuery<T>(_ resource: GraphQL<T>, completion: @escaping (Result<T, Error>) -> Void) {
+    public func sendQuery<T>(_ resource: GraphQL<T>, completion: @escaping (Result<T, Error>) -> Void) {
         send(resource) { result in
             do {
                 switch (try result.get()).content {
@@ -213,20 +239,21 @@ public extension BuildkiteClient {
 import Combine
 
 @available(iOS 13, macOS 10.15, tvOS 13, watchOS 6, *)
-public extension BuildkiteClient {
+extension BuildkiteClient {
     /// Performs the given resource and publishes the response asynchronously.
     /// - Parameter resource: A resource.
     /// - Returns: The publisher publishes the response when the operation completes, or terminates if the operation fails with an error.
-    func sendPublisher<R>(_ resource: R) -> AnyPublisher<Response<R.Content>, Error> where R: Resource, R.Content: Decodable {
+    public func sendPublisher<R>(_ resource: R) -> AnyPublisher<Response<R.Content>, Error>
+    where R: Resource, R.Content: Decodable {
         Result { try URLRequest(resource, configuration: configuration) }
-        .publisher
-        .flatMap(transport.sendPublisher)
-        .tryMap {
-            try self.checkResponseForIssues($0.response, data: $0.data)
-            let content = try self.decoder.decode(R.Content.self, from: $0.data)
-            return Response(content: content, response: $0.response)
-        }
-        .eraseToAnyPublisher()
+            .publisher
+            .flatMap(transport.sendPublisher)
+            .tryMap {
+                try self.checkResponseForIssues($0.response, data: $0.data)
+                let content = try self.decoder.decode(R.Content.self, from: $0.data)
+                return Response(content: content, response: $0.response)
+            }
+            .eraseToAnyPublisher()
     }
 
     /// Performs the given resource and publishes the response asynchronously.
@@ -234,31 +261,35 @@ public extension BuildkiteClient {
     ///    - resource: A resource.
     ///    - pageOptions: Page options to perform pagination.
     /// - Returns: The publisher publishes the response when the operation completes, or terminates if the operation fails with an error.
-    func sendPublisher<R>(_ resource: R, pageOptions: PageOptions? = nil) -> AnyPublisher<Response<R.Content>, Error> where R: PaginatedResource {
+    public func sendPublisher<R>(
+        _ resource: R,
+        pageOptions: PageOptions? = nil
+    ) -> AnyPublisher<Response<R.Content>, Error> where R: PaginatedResource {
         Result { try URLRequest(resource, configuration: configuration, pageOptions: pageOptions) }
-        .publisher
-        .flatMap(transport.sendPublisher)
-        .tryMap {
-            try self.checkResponseForIssues($0.response, data: $0.data)
-            let content = try self.decoder.decode(R.Content.self, from: $0.data)
-            return Response(content: content, response: $0.response)
-        }
-        .eraseToAnyPublisher()
+            .publisher
+            .flatMap(transport.sendPublisher)
+            .tryMap {
+                try self.checkResponseForIssues($0.response, data: $0.data)
+                let content = try self.decoder.decode(R.Content.self, from: $0.data)
+                return Response(content: content, response: $0.response)
+            }
+            .eraseToAnyPublisher()
     }
 
     /// Performs the given resource and publishes the response asynchronously.
     /// - Parameter resource: A resource.
     /// - Returns: The publisher publishes the response when the operation completes, or terminates if the operation fails with an error.
-    func sendPublisher<R>(_ resource: R) -> AnyPublisher<Response<R.Content>, Error> where R: Resource, R.Body: Encodable, R.Content: Decodable {
+    public func sendPublisher<R>(_ resource: R) -> AnyPublisher<Response<R.Content>, Error>
+    where R: Resource, R.Body: Encodable, R.Content: Decodable {
         Result { try URLRequest(resource, configuration: configuration, encoder: encoder) }
-        .publisher
-        .flatMap(transport.sendPublisher)
-        .tryMap {
-            try self.checkResponseForIssues($0.response, data: $0.data)
-            let content = try self.decoder.decode(R.Content.self, from: $0.data)
-            return Response(content: content, response: $0.response)
-        }
-        .eraseToAnyPublisher()
+            .publisher
+            .flatMap(transport.sendPublisher)
+            .tryMap {
+                try self.checkResponseForIssues($0.response, data: $0.data)
+                let content = try self.decoder.decode(R.Content.self, from: $0.data)
+                return Response(content: content, response: $0.response)
+            }
+            .eraseToAnyPublisher()
     }
 
     /// Performs the given resource and publishes the response asynchronously.
@@ -266,50 +297,55 @@ public extension BuildkiteClient {
     ///    - resource: A resource.
     ///    - pageOptions: Page options to perform pagination.
     /// - Returns: The publisher publishes the response when the operation completes, or terminates if the operation fails with an error.
-    func sendPublisher<R>(_ resource: R, pageOptions: PageOptions? = nil) -> AnyPublisher<Response<R.Content>, Error> where R: PaginatedResource, R.Body: Encodable {
+    public func sendPublisher<R>(
+        _ resource: R,
+        pageOptions: PageOptions? = nil
+    ) -> AnyPublisher<Response<R.Content>, Error> where R: PaginatedResource, R.Body: Encodable {
         Result { try URLRequest(resource, configuration: configuration, encoder: encoder, pageOptions: pageOptions) }
-        .publisher
-        .flatMap(transport.sendPublisher)
-        .tryMap {
-            try self.checkResponseForIssues($0.response, data: $0.data)
-            let content = try self.decoder.decode(R.Content.self, from: $0.data)
-            return Response(content: content, response: $0.response)
-        }
-        .eraseToAnyPublisher()
+            .publisher
+            .flatMap(transport.sendPublisher)
+            .tryMap {
+                try self.checkResponseForIssues($0.response, data: $0.data)
+                let content = try self.decoder.decode(R.Content.self, from: $0.data)
+                return Response(content: content, response: $0.response)
+            }
+            .eraseToAnyPublisher()
     }
 
     /// Performs the given resource and publishes the response asynchronously.
     /// - Parameter resource: A resource.
     /// - Returns: The publisher publishes the response when the operation completes, or terminates if the operation fails with an error.
-    func sendPublisher<R>(_ resource: R) -> AnyPublisher<Response<R.Content>, Error> where R: Resource, R.Content == Void {
+    public func sendPublisher<R>(_ resource: R) -> AnyPublisher<Response<R.Content>, Error>
+    where R: Resource, R.Content == Void {
         Result { try URLRequest(resource, configuration: configuration) }
-        .publisher
-        .flatMap(transport.sendPublisher)
-        .tryMap {
-            try self.checkResponseForIssues($0.response)
-            return Response(content: (), response: $0.response)
-        }
-        .eraseToAnyPublisher()
+            .publisher
+            .flatMap(transport.sendPublisher)
+            .tryMap {
+                try self.checkResponseForIssues($0.response)
+                return Response(content: (), response: $0.response)
+            }
+            .eraseToAnyPublisher()
     }
 
     /// Performs the given resource and publishes the response asynchronously.
     /// - Parameter resource: A resource.
     /// - Returns: The publisher publishes the response when the operation completes, or terminates if the operation fails with an error.
-    func sendPublisher<R>(_ resource: R) -> AnyPublisher<Response<R.Content>, Error> where R: Resource, R.Body: Encodable, R.Content == Void {
+    public func sendPublisher<R>(_ resource: R) -> AnyPublisher<Response<R.Content>, Error>
+    where R: Resource, R.Body: Encodable, R.Content == Void {
         Result { try URLRequest(resource, configuration: configuration, encoder: encoder) }
-        .publisher
-        .flatMap(transport.sendPublisher)
-        .tryMap {
-            try self.checkResponseForIssues($0.response)
-            return Response(content: (), response: $0.response)
-        }
-        .eraseToAnyPublisher()
+            .publisher
+            .flatMap(transport.sendPublisher)
+            .tryMap {
+                try self.checkResponseForIssues($0.response)
+                return Response(content: (), response: $0.response)
+            }
+            .eraseToAnyPublisher()
     }
 
     /// Performs the given GraphQL query or mutation and publishes the content asynchronously.
     /// - Parameter resource: A resource.
     /// - Returns: The publisher publishes the content when the operation completes, or terminates if the operation fails with an error.
-    func sendQueryPublisher<T>(_ resource: GraphQL<T>) -> AnyPublisher<T, Error> {
+    public func sendQueryPublisher<T>(_ resource: GraphQL<T>) -> AnyPublisher<T, Error> {
         sendPublisher(resource)
             .map(\.content)
             .tryMap { try $0.get() }
@@ -323,11 +359,11 @@ public extension BuildkiteClient {
 // MARK: - Async/Await API
 
 @available(iOS 13, macOS 10.15, tvOS 13, watchOS 6, *)
-public extension BuildkiteClient {
+extension BuildkiteClient {
     /// Performs the given resource asynchronously.
     /// - Parameter resource: A resource.
     /// - Returns: A response containing the content of the response body, as well as other information about the HTTP operation.
-    func send<R>(_ resource: R) async throws -> Response<R.Content> where R: Resource, R.Content: Decodable {
+    public func send<R>(_ resource: R) async throws -> Response<R.Content> where R: Resource, R.Content: Decodable {
         let request = try URLRequest(resource, configuration: configuration)
         let (data, response) = try await transport.send(request: request)
         try checkResponseForIssues(response, data: data)
@@ -340,7 +376,8 @@ public extension BuildkiteClient {
     ///    - resource: A resource.
     ///    - pageOptions: Page options to perform pagination.
     /// - Returns: A response containing the content of the response body, as well as other information about the HTTP operation.
-    func send<R>(_ resource: R, pageOptions: PageOptions? = nil) async throws -> Response<R.Content> where R: PaginatedResource {
+    public func send<R>(_ resource: R, pageOptions: PageOptions? = nil) async throws -> Response<R.Content>
+    where R: PaginatedResource {
         let request = try URLRequest(resource, configuration: configuration, pageOptions: pageOptions)
         let (data, response) = try await transport.send(request: request)
         try checkResponseForIssues(response, data: data)
@@ -351,7 +388,8 @@ public extension BuildkiteClient {
     /// Performs the given resource asynchronously.
     /// - Parameter resource: A resource.
     /// - Returns: A response containing the content of the response body, as well as other information about the HTTP operation.
-    func send<R>(_ resource: R) async throws -> Response<R.Content> where R: Resource, R.Body: Encodable, R.Content: Decodable {
+    public func send<R>(_ resource: R) async throws -> Response<R.Content>
+    where R: Resource, R.Body: Encodable, R.Content: Decodable {
         let request = try URLRequest(resource, configuration: configuration, encoder: encoder)
         let (data, response) = try await transport.send(request: request)
         try checkResponseForIssues(response, data: data)
@@ -364,7 +402,8 @@ public extension BuildkiteClient {
     ///    - resource: A resource.
     ///    - pageOptions: Page options to perform pagination.
     /// - Returns: A response containing the content of the response body, as well as other information about the HTTP operation.
-    func send<R>(_ resource: R, pageOptions: PageOptions? = nil) async throws -> Response<R.Content> where R: PaginatedResource, R.Body: Encodable {
+    public func send<R>(_ resource: R, pageOptions: PageOptions? = nil) async throws -> Response<R.Content>
+    where R: PaginatedResource, R.Body: Encodable {
         let request = try URLRequest(resource, configuration: configuration, encoder: encoder, pageOptions: pageOptions)
 
         let (data, response) = try await transport.send(request: request)
@@ -376,7 +415,7 @@ public extension BuildkiteClient {
     /// Performs the given resource asynchronously.
     /// - Parameter resource: A resource.
     /// - Returns: A response containing the content of the response body, as well as other information about the HTTP operation.
-    func send<R>(_ resource: R) async throws -> Response<R.Content> where R: Resource, R.Content == Void {
+    public func send<R>(_ resource: R) async throws -> Response<R.Content> where R: Resource, R.Content == Void {
         let request = try URLRequest(resource, configuration: configuration)
         let (data, response) = try await transport.send(request: request)
         try checkResponseForIssues(response, data: data)
@@ -386,7 +425,8 @@ public extension BuildkiteClient {
     /// Performs the given resource asynchronously.
     /// - Parameter resource: A resource.
     /// - Returns: A response containing information about the HTTP operation, and no content.
-    func send<R>(_ resource: R) async throws -> Response<R.Content> where R: Resource, R.Body: Encodable, R.Content == Void {
+    public func send<R>(_ resource: R) async throws -> Response<R.Content>
+    where R: Resource, R.Body: Encodable, R.Content == Void {
         let request = try URLRequest(resource, configuration: configuration, encoder: encoder)
         let (data, response) = try await transport.send(request: request)
         try checkResponseForIssues(response, data: data)
@@ -397,7 +437,7 @@ public extension BuildkiteClient {
     /// - Parameter resource: A resource.
     /// - Returns: Content of the resolved GraphQL operation.
     /// - Throws: An error either of type ``BuildkiteError`` or ``GraphQL/Errors``.
-    func sendQuery<T>(_ resource: GraphQL<T>) async throws -> T {
+    public func sendQuery<T>(_ resource: GraphQL<T>) async throws -> T {
         let response = try await send(resource)
         return try response.content.get()
     }

@@ -8,6 +8,7 @@
 
 import Foundation
 import XCTest
+
 @testable import Buildkite
 
 #if canImport(FoundationNetworking)
@@ -16,30 +17,23 @@ import FoundationNetworking
 
 extension User {
     init() {
-        self.init(id: UUID(),
-                  name: "Jeff",
-                  email: "jeff@buildkite.com",
-                  avatarUrl: URL(),
-                  createdAt: Date(timeIntervalSince1970: 1000))
+        self.init(
+            id: UUID(),
+            name: "Jeff",
+            email: "jeff@buildkite.com",
+            avatarUrl: URL(),
+            createdAt: Date(timeIntervalSince1970: 1000)
+        )
     }
 }
 
 class UsersTests: XCTestCase {
-    func testUserMe() throws {
+    func testUserMe() async throws {
         let expected = User()
         let context = try MockContext(content: expected)
 
-        let expectation = XCTestExpectation()
+        let response = try await context.client.send(.me)
 
-        context.client.send(.me) { result in
-            do {
-                let response = try result.get()
-                XCTAssertEqual(expected, response.content)
-            } catch {
-                XCTFail(error.localizedDescription)
-            }
-            expectation.fulfill()
-        }
-        wait(for: [expectation])
+        XCTAssertEqual(expected, response.content)
     }
 }

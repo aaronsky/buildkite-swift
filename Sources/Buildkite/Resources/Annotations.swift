@@ -33,7 +33,11 @@ extension Annotation.Resources {
             "organizations/\(organization)/pipelines/\(pipeline)/builds/\(build)/annotations"
         }
 
-        public init(organization: String, pipeline: String, build: Int) {
+        public init(
+            organization: String,
+            pipeline: String,
+            build: Int
+        ) {
             self.organization = organization
             self.pipeline = pipeline
             self.build = build

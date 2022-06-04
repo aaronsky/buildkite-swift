@@ -30,7 +30,9 @@ extension Pipeline.Resources {
             "organizations/\(organization)/pipelines"
         }
 
-        public init(organization: String) {
+        public init(
+            organization: String
+        ) {
             self.organization = organization
         }
     }
@@ -47,7 +49,10 @@ extension Pipeline.Resources {
             "organizations/\(organization)/pipelines/\(pipeline)"
         }
 
-        public init(organization: String, pipeline: String) {
+        public init(
+            organization: String,
+            pipeline: String
+        ) {
             self.organization = organization
             self.pipeline = pipeline
         }
@@ -88,7 +93,20 @@ extension Pipeline.Resources {
             /// An array of team UUIDs to add this pipeline to. You can find your team’s UUID either via the GraphQL API, or on the settings page for a team. This property is only available if your organization has enabled Teams.
             public var teamUUIDs: [UUID]?
 
-            public init(name: String, repository: URL, configuration: String, branchConfiguration: String? = nil, cancelRunningBranchBuilds: Bool? = nil, cancelRunningBranchBuildsFilter: String? = nil, defaultBranch: String? = nil, description: String? = nil, providerSettings: Pipeline.Provider.Settings? = nil, skipQueuedBranchBuilds: Bool? = nil, skipQueuedBranchBuildsFilter: String? = nil, teamUUIDs: [UUID]? = nil) {
+            public init(
+                name: String,
+                repository: URL,
+                configuration: String,
+                branchConfiguration: String? = nil,
+                cancelRunningBranchBuilds: Bool? = nil,
+                cancelRunningBranchBuildsFilter: String? = nil,
+                defaultBranch: String? = nil,
+                description: String? = nil,
+                providerSettings: Pipeline.Provider.Settings? = nil,
+                skipQueuedBranchBuilds: Bool? = nil,
+                skipQueuedBranchBuildsFilter: String? = nil,
+                teamUUIDs: [UUID]? = nil
+            ) {
                 self.name = name
                 self.repository = repository
                 self.configuration = configuration
@@ -108,7 +126,10 @@ extension Pipeline.Resources {
             "organizations/\(organization)/pipelines"
         }
 
-        public init(organization: String, body: Body) {
+        public init(
+            organization: String,
+            body: Body
+        ) {
             self.organization = organization
             self.body = body
         }
@@ -155,7 +176,21 @@ extension Pipeline.Resources {
             /// An array of team UUIDs to add this pipeline to. You can find your team’s UUID either via the GraphQL API, or on the settings page for a team. This property is only available if your organization has enabled Teams.
             public var teamUUIDs: [UUID]?
 
-            public init(name: String, repository: URL, steps: [Pipeline.Step], branchConfiguration: String? = nil, cancelRunningBranchBuilds: Bool? = nil, cancelRunningBranchBuildsFilter: String? = nil, defaultBranch: String? = nil, description: String? = nil, env: [String: String]? = nil, providerSettings: Pipeline.Provider.Settings? = nil, skipQueuedBranchBuilds: Bool? = nil, skipQueuedBranchBuildsFilter: String? = nil, teamUUIDs: [UUID]? = nil) {
+            public init(
+                name: String,
+                repository: URL,
+                steps: [Pipeline.Step],
+                branchConfiguration: String? = nil,
+                cancelRunningBranchBuilds: Bool? = nil,
+                cancelRunningBranchBuildsFilter: String? = nil,
+                defaultBranch: String? = nil,
+                description: String? = nil,
+                env: [String: String]? = nil,
+                providerSettings: Pipeline.Provider.Settings? = nil,
+                skipQueuedBranchBuilds: Bool? = nil,
+                skipQueuedBranchBuildsFilter: String? = nil,
+                teamUUIDs: [UUID]? = nil
+            ) {
                 self.name = name
                 self.repository = repository
                 self.steps = steps
@@ -176,7 +211,10 @@ extension Pipeline.Resources {
             "organizations/\(organization)/pipelines"
         }
 
-        public init(organization: String, body: Body) {
+        public init(
+            organization: String,
+            body: Body
+        ) {
             self.organization = organization
             self.body = body
         }
@@ -226,7 +264,21 @@ extension Pipeline.Resources {
             /// Whether the pipeline is visible to everyone, including users outside this organization.
             public var visibility: String?
 
-            public init(branchConfiguration: String? = nil, cancelRunningBranchBuilds: Bool? = nil, cancelRunningBranchBuildsFilter: String? = nil, defaultBranch: String? = nil, description: String? = nil, env: [String: String]? = nil, name: String? = nil, providerSettings: Pipeline.Provider.Settings? = nil, repository: URL? = nil, steps: [Pipeline.Step]? = nil, skipQueuedBranchBuilds: Bool? = nil, skipQueuedBranchBuildsFilter: String? = nil, visibility: String? = nil) {
+            public init(
+                branchConfiguration: String? = nil,
+                cancelRunningBranchBuilds: Bool? = nil,
+                cancelRunningBranchBuildsFilter: String? = nil,
+                defaultBranch: String? = nil,
+                description: String? = nil,
+                env: [String: String]? = nil,
+                name: String? = nil,
+                providerSettings: Pipeline.Provider.Settings? = nil,
+                repository: URL? = nil,
+                steps: [Pipeline.Step]? = nil,
+                skipQueuedBranchBuilds: Bool? = nil,
+                skipQueuedBranchBuildsFilter: String? = nil,
+                visibility: String? = nil
+            ) {
                 self.branchConfiguration = branchConfiguration
                 self.cancelRunningBranchBuilds = cancelRunningBranchBuilds
                 self.cancelRunningBranchBuildsFilter = cancelRunningBranchBuildsFilter
@@ -247,7 +299,11 @@ extension Pipeline.Resources {
             "organizations/\(organization)/pipelines/\(pipeline)"
         }
 
-        public init(organization: String, pipeline: String, body: Body) {
+        public init(
+            organization: String,
+            pipeline: String,
+            body: Body
+        ) {
             self.organization = organization
             self.pipeline = pipeline
             self.body = body
@@ -266,7 +322,10 @@ extension Pipeline.Resources {
             "organizations/\(organization)/pipelines/\(pipeline)/archive"
         }
 
-        public init(organization: String, pipeline: String) {
+        public init(
+            organization: String,
+            pipeline: String
+        ) {
             self.organization = organization
             self.pipeline = pipeline
         }
@@ -288,7 +347,10 @@ extension Pipeline.Resources {
             "organizations/\(organization)/pipelines/\(pipeline)/unarchive"
         }
 
-        public init(organization: String, pipeline: String) {
+        public init(
+            organization: String,
+            pipeline: String
+        ) {
             self.organization = organization
             self.pipeline = pipeline
         }
@@ -309,7 +371,10 @@ extension Pipeline.Resources {
             "organizations/\(organization)/pipelines/\(pipeline)"
         }
 
-        public init(organization: String, pipeline: String) {
+        public init(
+            organization: String,
+            pipeline: String
+        ) {
             self.organization = organization
             self.pipeline = pipeline
         }
@@ -326,7 +391,10 @@ extension Pipeline.Resources {
             "organizations/\(organization)/pipelines/\(pipeline)/webhook"
         }
 
-        public init(organization: String, pipeline: String) {
+        public init(
+            organization: String,
+            pipeline: String
+        ) {
             self.organization = organization
             self.pipeline = pipeline
         }

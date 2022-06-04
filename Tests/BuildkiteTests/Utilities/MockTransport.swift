@@ -6,8 +6,8 @@
 //  Copyright © 2020 Aaron Sky. All rights reserved.
 //
 
-import Foundation
 import Buildkite
+import Foundation
 
 #if canImport(FoundationNetworking)
 import FoundationNetworking
@@ -25,7 +25,9 @@ final class MockTransport {
     var history: [URLRequest] = []
     var responses: [Transport.Output]
 
-    init(responses: [Transport.Output]) {
+    init(
+        responses: [Transport.Output]
+    ) {
         self.responses = responses
     }
 }
@@ -40,7 +42,7 @@ extension MockTransport: Transport {
         completion(.success(responses.removeFirst()))
     }
 
-#if canImport(Combine)
+    #if canImport(Combine)
     @available(iOS 13, macOS 10.15, tvOS 13, watchOS 6, *)
     func sendPublisher(request: URLRequest) -> AnyPublisher<Output, Swift.Error> {
         history.append(request)
@@ -53,11 +55,12 @@ extension MockTransport: Transport {
                 return
             }
             promise(.success(self.responses.removeFirst()))
-        }.eraseToAnyPublisher()
+        }
+        .eraseToAnyPublisher()
     }
-#endif
+    #endif
 
-#if compiler(>=5.5.2) && canImport(_Concurrency)
+    #if compiler(>=5.5.2) && canImport(_Concurrency)
     @available(iOS 13, macOS 10.15, tvOS 13, watchOS 6, *)
     func send(request: URLRequest) async throws -> Output {
         history.append(request)
@@ -66,5 +69,5 @@ extension MockTransport: Transport {
         }
         return responses.removeFirst()
     }
-#endif
+    #endif
 }

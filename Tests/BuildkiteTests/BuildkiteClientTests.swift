@@ -8,6 +8,7 @@
 
 import Foundation
 import XCTest
+
 @testable import Buildkite
 
 #if canImport(FoundationNetworking)
@@ -33,24 +34,37 @@ class BuildkiteClientTests: XCTestCase {
         var client: BuildkiteClient
         var resources = MockResources()
 
-        init(testCase: Case = .success) throws {
+        init(
+            testCase: Case = .success
+        ) throws {
             let responses: [(Data, URLResponse)]
 
             switch testCase {
             case .success:
                 responses = [try MockData.mockingSuccess(with: resources.content, url: configuration.version.baseURL)]
             case .successPaginated:
-                responses = [try MockData.mockingSuccess(with: resources.paginatedContent, url: configuration.version.baseURL)]
+                responses = [
+                    try MockData.mockingSuccess(with: resources.paginatedContent, url: configuration.version.baseURL)
+                ]
             case .successNoContent:
                 responses = [MockData.mockingSuccessNoContent(url: configuration.version.baseURL)]
             case .successHasBody:
                 responses = [MockData.mockingSuccessNoContent(url: configuration.version.baseURL)]
             case .successHasBodyAndContent:
-                responses = [try MockData.mockingSuccess(with: resources.bodyAndContent, url: configuration.version.baseURL)]
+                responses = [
+                    try MockData.mockingSuccess(with: resources.bodyAndContent, url: configuration.version.baseURL)
+                ]
             case .successHasBodyPaginated:
-                responses = [try MockData.mockingSuccess(with: resources.bodyAndPaginatedContent, url: configuration.version.baseURL)]
+                responses = [
+                    try MockData.mockingSuccess(
+                        with: resources.bodyAndPaginatedContent,
+                        url: configuration.version.baseURL
+                    )
+                ]
             case .successGraphQL:
-                responses = [try MockData.mockingSuccess(with: resources.graphQLIntermediary, url: configuration.version.baseURL)]
+                responses = [
+                    try MockData.mockingSuccess(with: resources.graphQLIntermediary, url: configuration.version.baseURL)
+                ]
             case .badResponse:
                 responses = [MockData.mockingIncompatibleResponse(for: configuration.version.baseURL)]
             case .unsuccessfulResponse:
@@ -59,8 +73,10 @@ class BuildkiteClientTests: XCTestCase {
                 responses = []
             }
 
-            client = BuildkiteClient(configuration: configuration,
-                                     transport: MockTransport(responses: responses))
+            client = BuildkiteClient(
+                configuration: configuration,
+                transport: MockTransport(responses: responses)
+            )
             client.token = "a valid token, i guess"
             XCTAssertEqual(client.token, client.configuration.token)
         }
@@ -108,7 +124,10 @@ extension BuildkiteClientTests {
         let testData = try TestData(testCase: .success)
 
         let expectation = XCTestExpectation()
-        testData.client.send(testData.resources.paginatedContentResource, pageOptions: PageOptions(page: 1, perPage: 30)) { result in
+        testData.client.send(
+            testData.resources.paginatedContentResource,
+            pageOptions: PageOptions(page: 1, perPage: 30)
+        ) { result in
             do {
                 let response = try result.get()
                 XCTAssertEqual(testData.resources.paginatedContent, response.content)
@@ -161,7 +180,10 @@ extension BuildkiteClientTests {
         let testData = try TestData(testCase: .successHasBodyPaginated)
 
         let expectation = XCTestExpectation()
-        testData.client.send(testData.resources.bodyAndPaginatedResource, pageOptions: PageOptions(page: 1, perPage: 30)) { result in
+        testData.client.send(
+            testData.resources.bodyAndPaginatedResource,
+            pageOptions: PageOptions(page: 1, perPage: 30)
+        ) { result in
             do {
                 let response = try result.get()
                 XCTAssertEqual(testData.resources.bodyAndPaginatedContent, response.content)
@@ -246,13 +268,15 @@ extension BuildkiteClientTests {
         let expectation = XCTestExpectation()
         var cancellables: Set<AnyCancellable> = []
         testData.client.sendPublisher(testData.resources.contentResource)
-            .sink(receiveCompletion: {
-                if case let .failure(error) = $0 {
-                    XCTFail(error.localizedDescription)
-                }
-                expectation.fulfill()
-            },
-                  receiveValue: { XCTAssertEqual(testData.resources.content, $0.content) })
+            .sink(
+                receiveCompletion: {
+                    if case let .failure(error) = $0 {
+                        XCTFail(error.localizedDescription)
+                    }
+                    expectation.fulfill()
+                },
+                receiveValue: { XCTAssertEqual(testData.resources.content, $0.content) }
+            )
             .store(in: &cancellables)
         wait(for: [expectation])
     }
@@ -261,17 +285,20 @@ extension BuildkiteClientTests {
         let testData = try TestData(testCase: .success)
         let expectation = XCTestExpectation()
         var cancellables: Set<AnyCancellable> = []
-        testData.client.sendPublisher(testData.resources.paginatedContentResource, pageOptions: PageOptions(page: 1, perPage: 30))
-            .sink(receiveCompletion: {
-                if case let .failure(error) = $0 {
-                    XCTFail(error.localizedDescription)
+        testData.client
+            .sendPublisher(testData.resources.paginatedContentResource, pageOptions: PageOptions(page: 1, perPage: 30))
+            .sink(
+                receiveCompletion: {
+                    if case let .failure(error) = $0 {
+                        XCTFail(error.localizedDescription)
+                    }
+                    expectation.fulfill()
+                },
+                receiveValue: {
+                    XCTAssertEqual(testData.resources.paginatedContent, $0.content)
+                    XCTAssertNotNil($0.page)
                 }
-                expectation.fulfill()
-            },
-                  receiveValue: {
-                XCTAssertEqual(testData.resources.paginatedContent, $0.content)
-                XCTAssertNotNil($0.page)
-            })
+            )
             .store(in: &cancellables)
         wait(for: [expectation])
     }
@@ -281,12 +308,15 @@ extension BuildkiteClientTests {
         let expectation = XCTestExpectation()
         var cancellables: Set<AnyCancellable> = []
         testData.client.sendPublisher(testData.resources.noContentNoBodyResource)
-            .sink(receiveCompletion: {
-                if case let .failure(error) = $0 {
-                    XCTFail(error.localizedDescription)
-                }
-                expectation.fulfill()
-            }, receiveValue: { _ in })
+            .sink(
+                receiveCompletion: {
+                    if case let .failure(error) = $0 {
+                        XCTFail(error.localizedDescription)
+                    }
+                    expectation.fulfill()
+                },
+                receiveValue: { _ in }
+            )
             .store(in: &cancellables)
         wait(for: [expectation])
     }
@@ -296,12 +326,15 @@ extension BuildkiteClientTests {
         let expectation = XCTestExpectation()
         var cancellables: Set<AnyCancellable> = []
         testData.client.sendPublisher(testData.resources.bodyResource)
-            .sink(receiveCompletion: {
-                if case let .failure(error) = $0 {
-                    XCTFail(error.localizedDescription)
-                }
-                expectation.fulfill()
-            }, receiveValue: { _ in })
+            .sink(
+                receiveCompletion: {
+                    if case let .failure(error) = $0 {
+                        XCTFail(error.localizedDescription)
+                    }
+                    expectation.fulfill()
+                },
+                receiveValue: { _ in }
+            )
             .store(in: &cancellables)
         wait(for: [expectation])
     }
@@ -311,15 +344,17 @@ extension BuildkiteClientTests {
         let expectation = XCTestExpectation()
         var cancellables: Set<AnyCancellable> = []
         testData.client.sendPublisher(testData.resources.bodyAndContentResource)
-            .sink(receiveCompletion: {
-                if case let .failure(error) = $0 {
-                    XCTFail(error.localizedDescription)
+            .sink(
+                receiveCompletion: {
+                    if case let .failure(error) = $0 {
+                        XCTFail(error.localizedDescription)
+                    }
+                    expectation.fulfill()
+                },
+                receiveValue: {
+                    XCTAssertEqual(testData.resources.bodyAndContent, $0.content)
                 }
-                expectation.fulfill()
-            },
-                  receiveValue: {
-                XCTAssertEqual(testData.resources.bodyAndContent, $0.content)
-            })
+            )
             .store(in: &cancellables)
         wait(for: [expectation])
     }
@@ -328,17 +363,20 @@ extension BuildkiteClientTests {
         let testData = try TestData(testCase: .successHasBodyPaginated)
         let expectation = XCTestExpectation()
         var cancellables: Set<AnyCancellable> = []
-        testData.client.sendPublisher(testData.resources.bodyAndPaginatedResource, pageOptions: PageOptions(page: 1, perPage: 30))
-            .sink(receiveCompletion: {
-                if case let .failure(error) = $0 {
-                    XCTFail(error.localizedDescription)
+        testData.client
+            .sendPublisher(testData.resources.bodyAndPaginatedResource, pageOptions: PageOptions(page: 1, perPage: 30))
+            .sink(
+                receiveCompletion: {
+                    if case let .failure(error) = $0 {
+                        XCTFail(error.localizedDescription)
+                    }
+                    expectation.fulfill()
+                },
+                receiveValue: {
+                    XCTAssertEqual(testData.resources.bodyAndPaginatedContent, $0.content)
+                    XCTAssertNotNil($0.page)
                 }
-                expectation.fulfill()
-            },
-                  receiveValue: {
-                XCTAssertEqual(testData.resources.bodyAndPaginatedContent, $0.content)
-                XCTAssertNotNil($0.page)
-            })
+            )
             .store(in: &cancellables)
         wait(for: [expectation])
     }
@@ -348,14 +386,17 @@ extension BuildkiteClientTests {
         let expectation = XCTestExpectation()
         var cancellables: Set<AnyCancellable> = []
         testData.client.sendQueryPublisher(testData.resources.graphQLResource)
-            .sink(receiveCompletion: {
-                if case let .failure(error) = $0 {
-                    XCTFail(error.localizedDescription)
+            .sink(
+                receiveCompletion: {
+                    if case let .failure(error) = $0 {
+                        XCTFail(error.localizedDescription)
+                    }
+                    expectation.fulfill()
+                },
+                receiveValue: {
+                    XCTAssertEqual(testData.resources.graphQLContent, $0)
                 }
-                expectation.fulfill()
-            }, receiveValue: {
-                XCTAssertEqual(testData.resources.graphQLContent, $0)
-            })
+            )
             .store(in: &cancellables)
         wait(for: [expectation])
     }
@@ -365,12 +406,15 @@ extension BuildkiteClientTests {
         let expectation = XCTestExpectation()
         var cancellables: Set<AnyCancellable> = []
         testData.client.sendPublisher(testData.resources.contentResource)
-            .sink(receiveCompletion: {
-                if case .finished = $0 {
-                    XCTFail("Expected to have failed with an error, but publisher fulfilled normally")
-                }
-                expectation.fulfill()
-            }, receiveValue: { _ in })
+            .sink(
+                receiveCompletion: {
+                    if case .finished = $0 {
+                        XCTFail("Expected to have failed with an error, but publisher fulfilled normally")
+                    }
+                    expectation.fulfill()
+                },
+                receiveValue: { _ in }
+            )
             .store(in: &cancellables)
         wait(for: [expectation])
     }
@@ -380,12 +424,15 @@ extension BuildkiteClientTests {
         let expectation = XCTestExpectation()
         var cancellables: Set<AnyCancellable> = []
         testData.client.sendPublisher(testData.resources.contentResource)
-            .sink(receiveCompletion: {
-                if case .finished = $0 {
-                    XCTFail("Expected to have failed with an error, but publisher fulfilled normally")
-                }
-                expectation.fulfill()
-            }, receiveValue: { _ in })
+            .sink(
+                receiveCompletion: {
+                    if case .finished = $0 {
+                        XCTFail("Expected to have failed with an error, but publisher fulfilled normally")
+                    }
+                    expectation.fulfill()
+                },
+                receiveValue: { _ in }
+            )
             .store(in: &cancellables)
         wait(for: [expectation])
     }
@@ -405,8 +452,10 @@ extension BuildkiteClientTests {
 
     func testAsyncBasedRequestWithPagination() async throws {
         let testData = try TestData(testCase: .success)
-        let response = try await testData.client.send(testData.resources.paginatedContentResource,
-                                                      pageOptions: PageOptions(page: 1, perPage: 30))
+        let response = try await testData.client.send(
+            testData.resources.paginatedContentResource,
+            pageOptions: PageOptions(page: 1, perPage: 30)
+        )
         XCTAssertEqual(testData.resources.paginatedContent, response.content)
         XCTAssertNotNil(response.page)
     }
@@ -429,8 +478,10 @@ extension BuildkiteClientTests {
 
     func testAsyncBasedRequestHasBodyWithPagination() async throws {
         let testData = try TestData(testCase: .successHasBodyPaginated)
-        let response = try await testData.client.send(testData.resources.bodyAndPaginatedResource,
-                                                      pageOptions: PageOptions(page: 1, perPage: 30))
+        let response = try await testData.client.send(
+            testData.resources.bodyAndPaginatedResource,
+            pageOptions: PageOptions(page: 1, perPage: 30)
+        )
         XCTAssertEqual(testData.resources.bodyAndPaginatedContent, response.content)
         XCTAssertNotNil(response.page)
     }

@@ -8,6 +8,7 @@
 
 import Foundation
 import XCTest
+
 @testable import Buildkite
 
 #if canImport(FoundationNetworking)
@@ -15,172 +16,127 @@ import FoundationNetworking
 #endif
 
 class JobsTests: XCTestCase {
-    func testJobsRetryWaiter() throws {
+    func testJobsRetryWaiter() async throws {
         let expected: Job = .waiter(Job.Wait(id: UUID()))
         let context = try MockContext(content: expected)
 
-        let expectation = XCTestExpectation()
+        let response = try await context.client.send(
+            .retryJob(UUID(), in: "buildkite", pipeline: "my-pipeline", build: 1)
+        )
 
-        context.client.send(.retryJob(UUID(), in: "buildkite", pipeline: "my-pipeline", build: 1)) { result in
-            do {
-                let response = try result.get()
-                XCTAssertEqual(expected, response.content)
-            } catch {
-                XCTFail(error.localizedDescription)
-            }
-            expectation.fulfill()
-        }
-        wait(for: [expectation])
+        XCTAssertEqual(expected, response.content)
     }
 
-    func testJobsRetryTrigger() throws {
-        let expected: Job = .trigger(Job.Trigger(name: nil,
-                                                 state: nil,
-                                                 buildUrl: URL(),
-                                                 webUrl: URL(),
-                                                 createdAt: Date(timeIntervalSince1970: 1000),
-                                                 scheduledAt: nil,
-                                                 finishedAt: nil,
-                                                 runnableAt: nil,
-                                                 triggeredBuild: Job.Trigger.TriggeredBuild(id: UUID(),
-                                                                                            number: 0,
-                                                                                            url: URL(),
-                                                                                            webUrl: URL())))
+    func testJobsRetryTrigger() async throws {
+        let expected: Job = .trigger(
+            Job.Trigger(
+                name: nil,
+                state: nil,
+                buildUrl: URL(),
+                webUrl: URL(),
+                createdAt: Date(timeIntervalSince1970: 1000),
+                scheduledAt: nil,
+                finishedAt: nil,
+                runnableAt: nil,
+                triggeredBuild: Job.Trigger.TriggeredBuild(
+                    id: UUID(),
+                    number: 0,
+                    url: URL(),
+                    webUrl: URL()
+                )
+            )
+        )
         let context = try MockContext(content: expected)
 
-        let expectation = XCTestExpectation()
+        let response = try await context.client.send(
+            .retryJob(UUID(), in: "buildkite", pipeline: "my-pipeline", build: 1)
+        )
 
-        context.client.send(.retryJob(UUID(), in: "buildkite", pipeline: "my-pipeline", build: 1)) { result in
-            do {
-                let response = try result.get()
-                XCTAssertEqual(expected, response.content)
-            } catch {
-                XCTFail(error.localizedDescription)
-            }
-            expectation.fulfill()
-        }
-        wait(for: [expectation])
+        XCTAssertEqual(expected, response.content)
     }
 
-    func testJobsUnblock() throws {
-        let expected: Job = .manual(Job.Block(id: UUID(),
-                                              label: "",
-                                              state: "",
-                                              webUrl: nil,
-                                              unblockedBy: User(),
-                                              unblockedAt: Date(timeIntervalSince1970: 1000),
-                                              unblockable: true,
-                                              unblockUrl: URL()))
+    func testJobsUnblock() async throws {
+        let expected: Job = .manual(
+            Job.Block(
+                id: UUID(),
+                label: "",
+                state: "",
+                webUrl: nil,
+                unblockedBy: User(),
+                unblockedAt: Date(timeIntervalSince1970: 1000),
+                unblockable: true,
+                unblockUrl: URL()
+            )
+        )
         let context = try MockContext(content: expected)
 
-        let expectation = XCTestExpectation()
+        let response = try await context.client.send(
+            .unblockJob(UUID(), in: "buildkite", pipeline: "my-pipeline", build: 1, with: .init())
+        )
 
-        context.client.send(.unblockJob(UUID(), in: "buildkite", pipeline: "my-pipeline", build: 1, with: .init())) { result in
-            do {
-                let response = try result.get()
-                XCTAssertEqual(expected, response.content)
-            } catch {
-                XCTFail(error.localizedDescription)
-            }
-            expectation.fulfill()
-        }
-        wait(for: [expectation])
+        XCTAssertEqual(expected, response.content)
     }
 
-    func testJobsLogOutput() throws {
+    func testJobsLogOutput() async throws {
         let expected = Job.LogOutput()
         let context = try MockContext(content: expected)
 
-        let expectation = XCTestExpectation()
+        let response = try await context.client.send(
+            .logOutput(for: UUID(), in: "buildkite", pipeline: "my-pipeline", build: 1)
+        )
 
-        context.client.send(.logOutput(for: UUID(), in: "buildkite", pipeline: "my-pipeline", build: 1)) { result in
-            do {
-                let response = try result.get()
-                XCTAssertEqual(expected, response.content)
-            } catch {
-                XCTFail(error.localizedDescription)
-            }
-            expectation.fulfill()
-        }
-        wait(for: [expectation])
+        XCTAssertEqual(expected, response.content)
     }
 
-    func testJobsLogOutputAlternativePlainText() throws {
+    func testJobsLogOutputAlternativePlainText() async throws {
         let expected = "hello friends"
         let context = try MockContext(content: expected)
 
-        let expectation = XCTestExpectation()
+        let response = try await context.client.send(
+            .logOutput(.plainText, for: UUID(), in: "buildkite", pipeline: "my-pipeline", build: 1)
+        )
 
-        context.client.send(.logOutput(.plainText, for: UUID(), in: "buildkite", pipeline: "my-pipeline", build: 1)) { result in
-            do {
-                let response = try result.get()
-                XCTAssertEqual(expected, response.content)
-            } catch {
-                XCTFail(error.localizedDescription)
-            }
-            expectation.fulfill()
-        }
-        wait(for: [expectation])
+        XCTAssertEqual(expected, response.content)
     }
 
-    func testJobsLogOutputAlternativeHTML() throws {
+    func testJobsLogOutputAlternativeHTML() async throws {
         let expected = "hello friends"
         let context = try MockContext(content: expected)
 
-        let expectation = XCTestExpectation()
+        let response = try await context.client.send(
+            .logOutput(.html, for: UUID(), in: "buildkite", pipeline: "my-pipeline", build: 1)
+        )
 
-        context.client.send(.logOutput(.html, for: UUID(), in: "buildkite", pipeline: "my-pipeline", build: 1)) { result in
-            do {
-                let response = try result.get()
-                XCTAssertEqual(expected, response.content)
-            } catch {
-                XCTFail(error.localizedDescription)
-            }
-            expectation.fulfill()
-        }
-        wait(for: [expectation])
+        XCTAssertEqual(expected, response.content)
     }
 
-    func testJobsDeleteLogOutput() throws {
+    func testJobsDeleteLogOutput() async throws {
         let context = MockContext()
 
-        let expectation = XCTestExpectation()
-
-        context.client.send(.deleteLogOutput(for: UUID(), in: "buildkite", pipeline: "my-pipeline", build: 1)) { result in
-            do {
-                _ = try result.get()
-            } catch {
-                XCTFail(error.localizedDescription)
-            }
-            expectation.fulfill()
-        }
-        wait(for: [expectation])
+        _ = try await context.client.send(
+            .deleteLogOutput(for: UUID(), in: "buildkite", pipeline: "my-pipeline", build: 1)
+        )
     }
 
-    func testJobsEnvironmentVariables() throws {
+    func testJobsEnvironmentVariables() async throws {
         let expected = Job.EnvironmentVariables(env: [:])
         let context = try MockContext(content: expected)
 
-        let expectation = XCTestExpectation()
+        let response = try await context.client.send(
+            .environmentVariables(for: UUID(), in: "buildkite", pipeline: "my-pipeline", build: 1)
+        )
 
-        context.client.send(.environmentVariables(for: UUID(), in: "buildkite", pipeline: "my-pipeline", build: 1)) { result in
-            do {
-                let response = try result.get()
-                XCTAssertEqual(expected, response.content)
-            } catch {
-                XCTFail(error.localizedDescription)
-            }
-            expectation.fulfill()
-        }
-        wait(for: [expectation])
+        XCTAssertEqual(expected, response.content)
     }
 }
 
 extension Job.LogOutput {
     init() {
-        self.init(url: Followable(),
-                  content: "hello friends",
-                  size: 13,
-                  headerTimes: [])
+        self.init(
+            url: Followable(),
+            content: "hello friends",
+            size: 13,
+            headerTimes: []
+        )
     }
 }

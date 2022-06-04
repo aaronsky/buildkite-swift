@@ -33,7 +33,11 @@ extension Artifact.Resources {
             "organizations/\(organization)/pipelines/\(pipeline)/builds/\(build)/artifacts"
         }
 
-        public init(organization: String, pipeline: String, build: Int) {
+        public init(
+            organization: String,
+            pipeline: String,
+            build: Int
+        ) {
             self.organization = organization
             self.pipeline = pipeline
             self.build = build
@@ -58,7 +62,12 @@ extension Artifact.Resources {
             "organizations/\(organization)/pipelines/\(pipeline)/builds/\(build)/jobs/\(jobId)/artifacts"
         }
 
-        public init(organization: String, pipeline: String, build: Int, jobId: UUID) {
+        public init(
+            organization: String,
+            pipeline: String,
+            build: Int,
+            jobId: UUID
+        ) {
             self.organization = organization
             self.pipeline = pipeline
             self.build = build
@@ -84,7 +93,13 @@ extension Artifact.Resources {
             "organizations/\(organization)/pipelines/\(pipeline)/builds/\(build)/jobs/\(jobId)/artifacts/\(artifactId)"
         }
 
-        public init(organization: String, pipeline: String, build: Int, jobId: UUID, artifactId: UUID) {
+        public init(
+            organization: String,
+            pipeline: String,
+            build: Int,
+            jobId: UUID,
+            artifactId: UUID
+        ) {
             self.organization = organization
             self.pipeline = pipeline
             self.build = build
@@ -113,7 +128,13 @@ extension Artifact.Resources {
             "organizations/\(organization)/pipelines/\(pipeline)/builds/\(build)/jobs/\(jobId)/artifacts/\(artifactId)/download"
         }
 
-        public init(organization: String, pipeline: String, build: Int, jobId: UUID, artifactId: UUID) {
+        public init(
+            organization: String,
+            pipeline: String,
+            build: Int,
+            jobId: UUID,
+            artifactId: UUID
+        ) {
             self.organization = organization
             self.pipeline = pipeline
             self.build = build
@@ -141,7 +162,13 @@ extension Artifact.Resources {
             "organizations/\(organization)/pipelines/\(pipeline)/builds/\(build)/jobs/\(jobId)/artifacts/\(artifactId)"
         }
 
-        public init(organization: String, pipeline: String, build: Int, jobId: UUID, artifactId: UUID) {
+        public init(
+            organization: String,
+            pipeline: String,
+            build: Int,
+            jobId: UUID,
+            artifactId: UUID
+        ) {
             self.organization = organization
             self.pipeline = pipeline
             self.build = build
@@ -174,13 +201,25 @@ extension Resource where Self == Artifact.Resources.Get {
 }
 
 extension Resource where Self == Artifact.Resources.Download {
-    public static func downloadArtifact(_ id: UUID, in organization: String, pipeline: String, build: Int, job: UUID) -> Self {
+    public static func downloadArtifact(
+        _ id: UUID,
+        in organization: String,
+        pipeline: String,
+        build: Int,
+        job: UUID
+    ) -> Self {
         Self(organization: organization, pipeline: pipeline, build: build, jobId: job, artifactId: id)
     }
 }
 
 extension Resource where Self == Artifact.Resources.Delete {
-    public static func deleteArtifact(_ id: UUID, in organization: String, pipeline: String, build: Int, job: UUID) -> Self {
+    public static func deleteArtifact(
+        _ id: UUID,
+        in organization: String,
+        pipeline: String,
+        build: Int,
+        job: UUID
+    ) -> Self {
         Self(organization: organization, pipeline: pipeline, build: build, jobId: job, artifactId: id)
     }
 }

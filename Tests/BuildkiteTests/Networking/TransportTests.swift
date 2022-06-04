@@ -6,9 +6,10 @@
 //  Copyright © 2020 Aaron Sky. All rights reserved.
 //
 
-@testable import Buildkite
 import Foundation
 import XCTest
+
+@testable import Buildkite
 
 #if canImport(FoundationNetworking)
 import FoundationNetworking
@@ -68,24 +69,26 @@ extension TransportTests {
     func testURLSessionSendClosureBasedRequest() {
         let request = URLRequest(url: URL())
         let expectation = XCTestExpectation()
-        createSession().send(request: request) {
-            if case let .failure(error) = $0 {
-                XCTFail(error.localizedDescription)
+        createSession()
+            .send(request: request) {
+                if case let .failure(error) = $0 {
+                    XCTFail(error.localizedDescription)
+                }
+                expectation.fulfill()
             }
-            expectation.fulfill()
-        }
         wait(for: [expectation])
     }
 
     func testURLSessionSendClosureBasedRequestFailure() {
         let request = URLRequest(url: URL())
         let expectation = XCTestExpectation()
-        createSession(testCase: .error).send(request: request) {
-            if case .success(_) = $0 {
-                XCTFail("Expected to have failed with an error, but closure fulfilled normally")
+        createSession(testCase: .error)
+            .send(request: request) {
+                if case .success(_) = $0 {
+                    XCTFail("Expected to have failed with an error, but closure fulfilled normally")
+                }
+                expectation.fulfill()
             }
-            expectation.fulfill()
-        }
         wait(for: [expectation])
     }
 }
@@ -103,14 +106,17 @@ extension TransportTests {
         var cancellables: Set<AnyCancellable> = []
         createSession()
             .sendPublisher(request: request)
-            .sink(receiveCompletion: {
-                if case let .failure(error) = $0 {
-                    XCTFail(error.localizedDescription)
-                }
-                expectation.fulfill()
-            }, receiveValue: { _ in })
+            .sink(
+                receiveCompletion: {
+                    if case let .failure(error) = $0 {
+                        XCTFail(error.localizedDescription)
+                    }
+                    expectation.fulfill()
+                },
+                receiveValue: { _ in }
+            )
             .store(in: &cancellables)
-            wait(for: [expectation])
+        wait(for: [expectation])
     }
 
     func testURLSessionSendPublisherBasedRequestFailure() {
@@ -119,14 +125,17 @@ extension TransportTests {
         var cancellables: Set<AnyCancellable> = []
         createSession(testCase: .error)
             .sendPublisher(request: request)
-            .sink(receiveCompletion: {
-                if case .finished = $0 {
-                    XCTFail("Expected to have failed with an error, but publisher fulfilled normally")
-                }
-                expectation.fulfill()
-            }, receiveValue: { _ in })
+            .sink(
+                receiveCompletion: {
+                    if case .finished = $0 {
+                        XCTFail("Expected to have failed with an error, but publisher fulfilled normally")
+                    }
+                    expectation.fulfill()
+                },
+                receiveValue: { _ in }
+            )
             .store(in: &cancellables)
-            wait(for: [expectation])
+        wait(for: [expectation])
     }
 }
 #endif

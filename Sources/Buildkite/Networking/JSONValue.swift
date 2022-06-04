@@ -24,12 +24,12 @@ public enum JSONValue {
     indirect case object([String: JSONValue])
 }
 
-public extension JSONValue {
-    subscript(dynamicMember key: JSONValue) -> JSONValue? {
+extension JSONValue {
+    public subscript(dynamicMember key: JSONValue) -> JSONValue? {
         self[key]
     }
 
-    subscript(_ key: JSONValue) -> JSONValue? {
+    public subscript(_ key: JSONValue) -> JSONValue? {
         if case let .number(key) = key {
             return self[Int(key)]
         } else if case let .string(key) = key {
@@ -38,14 +38,14 @@ public extension JSONValue {
         return nil
     }
 
-    subscript(_ index: Int) -> JSONValue? {
+    public subscript(_ index: Int) -> JSONValue? {
         guard case let .array(array) = self else {
             return nil
         }
         return array[index]
     }
 
-    subscript(_ key: String) -> JSONValue? {
+    public subscript(_ key: String) -> JSONValue? {
         guard case let .object(object) = self else {
             return nil
         }
@@ -76,7 +76,9 @@ extension JSONValue: Encodable {
 }
 
 extension JSONValue: Decodable {
-    public init(from decoder: Decoder) throws {
+    public init(
+        from decoder: Decoder
+    ) throws {
         let singleValueContainer = try decoder.singleValueContainer()
 
         if singleValueContainer.decodeNil() {
@@ -94,49 +96,64 @@ extension JSONValue: Decodable {
         } else {
             throw DecodingError.dataCorruptedError(
                 in: singleValueContainer,
-                debugDescription: "invalid JSON structure or the input was not JSON")
+                debugDescription: "invalid JSON structure or the input was not JSON"
+            )
         }
     }
 }
 
 extension JSONValue: ExpressibleByNilLiteral {
-    public init(nilLiteral: Void) {
+    public init(
+        nilLiteral: Void
+    ) {
         self = .null
     }
 }
 
 extension JSONValue: ExpressibleByBooleanLiteral {
-    public init(booleanLiteral value: BooleanLiteralType) {
+    public init(
+        booleanLiteral value: BooleanLiteralType
+    ) {
         self = .bool(value)
     }
 }
 
 extension JSONValue: ExpressibleByIntegerLiteral {
-    public init(integerLiteral value: IntegerLiteralType) {
+    public init(
+        integerLiteral value: IntegerLiteralType
+    ) {
         self = .number(Double(value))
     }
 }
 
 extension JSONValue: ExpressibleByFloatLiteral {
-    public init(floatLiteral value: FloatLiteralType) {
+    public init(
+        floatLiteral value: FloatLiteralType
+    ) {
         self = .number(value)
     }
 }
 
 extension JSONValue: ExpressibleByStringLiteral {
-    public init(stringLiteral value: StringLiteralType) {
+    public init(
+        stringLiteral value: StringLiteralType
+    ) {
         self = .string(value)
     }
 }
 
 extension JSONValue: ExpressibleByArrayLiteral {
-    public init(arrayLiteral elements: JSONValue...) {
+    public init(
+        arrayLiteral elements: JSONValue...
+    ) {
         self = .array(elements)
     }
 }
 
 extension JSONValue: ExpressibleByDictionaryLiteral {
-    public init(dictionaryLiteral elements: (String, JSONValue)...) {
+    public init(
+        dictionaryLiteral elements: (String, JSONValue)...
+    ) {
         self = .object(Dictionary(uniqueKeysWithValues: elements))
     }
 }

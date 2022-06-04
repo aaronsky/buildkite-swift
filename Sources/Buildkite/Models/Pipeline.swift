@@ -93,7 +93,9 @@ extension Pipeline {
             case trigger
         }
 
-        public init(from decoder: Decoder) throws {
+        public init(
+            from decoder: Decoder
+        ) throws {
             let container = try decoder.container(keyedBy: CodingKeys.self)
             let type = try container.decode(Unassociated.self, forKey: .type)
             switch type {

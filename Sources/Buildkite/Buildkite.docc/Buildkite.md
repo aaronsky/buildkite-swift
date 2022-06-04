@@ -22,6 +22,7 @@ The entire publicly documented REST API surface is supported by this package.
 - ``Build/Resources``
 - ``Emoji/Resources``
 - ``Job/Resources``
+- ``Meta/Resources``
 - ``Organization/Resources``
 - ``Pipeline/Resources``
 - ``Team/Resources``
@@ -50,6 +51,7 @@ The entire publicly documented REST API surface is supported by this package.
 - ``Build``
 - ``Emoji``
 - ``Job``
+- ``Meta``
 - ``Organization``
 - ``Pipeline``
 - ``Team``

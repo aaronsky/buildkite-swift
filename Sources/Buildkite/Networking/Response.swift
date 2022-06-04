@@ -17,7 +17,10 @@ public struct Response<T> {
     public let response: URLResponse
     public let page: Page?
 
-    init(content: T, response: URLResponse) {
+    init(
+        content: T,
+        response: URLResponse
+    ) {
         self.content = content
         self.response = response
         if let response = response as? HTTPURLResponse, let link = response.allHeaderFields["Link"] as? String {
@@ -37,7 +40,10 @@ public struct BuildkiteError: Error {
     public var message: String
     public var errors: [String]
 
-    init(statusCode: StatusCode, intermediary: Intermediary) {
+    init(
+        statusCode: StatusCode,
+        intermediary: Intermediary
+    ) {
         self.statusCode = statusCode
         self.message = intermediary.message ?? ""
         self.errors = intermediary.errors ?? []

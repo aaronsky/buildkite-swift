@@ -38,7 +38,9 @@ extension Organization.Resources {
             "organizations/\(organization)"
         }
 
-        public init(organization: String) {
+        public init(
+            organization: String
+        ) {
             self.organization = organization
         }
     }

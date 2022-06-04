@@ -6,8 +6,8 @@
 //  Copyright © 2020 Aaron Sky. All rights reserved.
 //
 
-import Foundation
 import Buildkite
+import Foundation
 
 #if canImport(FoundationNetworking)
 import FoundationNetworking
@@ -19,21 +19,34 @@ struct MockContext {
 
     init() {
         let configuration = Configuration.default
-        self.init(configuration: configuration, responses: [
-            MockData.mockingSuccessNoContent(url: configuration.version.baseURL)
-        ])
+        self.init(
+            configuration: configuration,
+            responses: [
+                MockData.mockingSuccessNoContent(url: configuration.version.baseURL)
+            ]
+        )
     }
 
-    init<Content: Codable>(content: Content...) throws {
+    init<Content: Codable>(
+        content: Content...
+    ) throws {
         let configuration = Configuration.default
-        try self.init(configuration: configuration, responses: content.map {
-            try MockData.mockingSuccess(with: $0, url: configuration.version.baseURL)
-        })
+        try self.init(
+            configuration: configuration,
+            responses: content.map {
+                try MockData.mockingSuccess(with: $0, url: configuration.version.baseURL)
+            }
+        )
     }
 
-    private init(configuration: Configuration, responses: [(Data, URLResponse)]) {
+    private init(
+        configuration: Configuration,
+        responses: [(Data, URLResponse)]
+    ) {
         let transport = MockTransport(responses: responses)
-        client = BuildkiteClient(configuration: configuration,
-                                 transport: transport)
+        client = BuildkiteClient(
+            configuration: configuration,
+            transport: transport
+        )
     }
 }

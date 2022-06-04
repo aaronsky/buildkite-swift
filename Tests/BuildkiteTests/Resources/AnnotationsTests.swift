@@ -8,6 +8,7 @@
 
 import Foundation
 import XCTest
+
 @testable import Buildkite
 
 #if canImport(FoundationNetworking)
@@ -16,31 +17,24 @@ import FoundationNetworking
 
 extension Annotation {
     init() {
-        self.init(id: UUID(),
-                  context: "message",
-                  style: .info,
-                  bodyHtml: "<div></div>",
-                  createdAt: Date(timeIntervalSince1970: 1000),
-                  updatedAt: Date(timeIntervalSince1970: 1001))
+        self.init(
+            id: UUID(),
+            context: "message",
+            style: .info,
+            bodyHtml: "<div></div>",
+            createdAt: Date(timeIntervalSince1970: 1000),
+            updatedAt: Date(timeIntervalSince1970: 1001)
+        )
     }
 }
 
 class AnnotationsTests: XCTestCase {
-    func testAnnotationsList() throws {
+    func testAnnotationsList() async throws {
         let expected = [Annotation(), Annotation()]
         let context = try MockContext(content: expected)
 
-        let expectation = XCTestExpectation()
+        let response = try await context.client.send(.annotations(in: "buildkite", pipeline: "my-pipeline", build: 1))
 
-        context.client.send(.annotations(in: "buildkite", pipeline: "my-pipeline", build: 1)) { result in
-            do {
-                let response = try result.get()
-                XCTAssertEqual(expected, response.content)
-            } catch {
-                XCTFail(error.localizedDescription)
-            }
-            expectation.fulfill()
-        }
-        wait(for: [expectation])
+        XCTAssertEqual(expected, response.content)
     }
 }

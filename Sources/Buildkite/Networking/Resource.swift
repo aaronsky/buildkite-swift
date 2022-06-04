@@ -43,11 +43,16 @@ extension Resource where Body == Void {
 public protocol PaginatedResource: Resource where Content: Decodable {}
 
 extension URLRequest {
-    init<R: Resource>(_ resource: R, configuration: Configuration) throws {
+    init<R: Resource>(
+        _ resource: R,
+        configuration: Configuration
+    ) throws {
         let version = resource.version
-        guard version == configuration.version
-            || version == configuration.graphQLVersion else {
-                throw ResourceError.incompatibleVersion(version)
+        guard
+            version == configuration.version
+                || version == configuration.graphQLVersion
+        else {
+            throw ResourceError.incompatibleVersion(version)
         }
 
         let url = version.url(for: resource.path)
@@ -58,19 +63,32 @@ extension URLRequest {
         self = request
     }
 
-    init<R: Resource>(_ resource: R, configuration: Configuration, encoder: JSONEncoder) throws where R.Body: Encodable {
+    init<R: Resource>(
+        _ resource: R,
+        configuration: Configuration,
+        encoder: JSONEncoder
+    ) throws where R.Body: Encodable {
         try self.init(resource, configuration: configuration)
         httpBody = try encoder.encode(resource.body)
     }
 
-    init<R: Resource & PaginatedResource>(_ resource: R, configuration: Configuration, pageOptions: PageOptions? = nil) throws {
+    init<R: Resource & PaginatedResource>(
+        _ resource: R,
+        configuration: Configuration,
+        pageOptions: PageOptions? = nil
+    ) throws {
         try self.init(resource, configuration: configuration)
         if let options = pageOptions {
             appendPageOptions(options)
         }
     }
 
-    init<R: Resource & PaginatedResource>(_ resource: R, configuration: Configuration, encoder: JSONEncoder, pageOptions: PageOptions? = nil) throws where R.Body: Encodable {
+    init<R: Resource & PaginatedResource>(
+        _ resource: R,
+        configuration: Configuration,
+        encoder: JSONEncoder,
+        pageOptions: PageOptions? = nil
+    ) throws where R.Body: Encodable {
         try self.init(resource, configuration: configuration, encoder: encoder)
         if let options = pageOptions {
             appendPageOptions(options)

@@ -27,7 +27,9 @@ public struct GraphQL<T: Decodable>: Resource {
         case data(T)
         case errors(Errors)
 
-        public init(from decoder: Decoder) throws {
+        public init(
+            from decoder: Decoder
+        ) throws {
             let container = try decoder.container(keyedBy: CodingKeys.self)
             if let errors = try container.decodeIfPresent([Error].self, forKey: .errors) {
                 let type = try container.decodeIfPresent(String.self, forKey: .type)
@@ -38,7 +40,8 @@ public struct GraphQL<T: Decodable>: Resource {
                 throw DecodingError.dataCorrupted(
                     DecodingError.Context(
                         codingPath: decoder.codingPath,
-                        debugDescription: "The GraphQL response does not contain either errors or data. One is required. If errors are present, they will be considered instead of any data that may have also been sent."
+                        debugDescription:
+                            "The GraphQL response does not contain either errors or data. One is required. If errors are present, they will be considered instead of any data that may have also been sent."
                     )
                 )
             }
@@ -68,7 +71,10 @@ public struct GraphQL<T: Decodable>: Resource {
 
     public let path = ""
 
-    public init(rawQuery query: String, variables: [String: JSONValue] = [:]) {
+    public init(
+        rawQuery query: String,
+        variables: [String: JSONValue] = [:]
+    ) {
         self.body = Body(query: query, variables: .object(variables))
     }
 

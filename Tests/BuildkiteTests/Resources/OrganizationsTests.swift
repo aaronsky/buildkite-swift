@@ -8,6 +8,7 @@
 
 import Foundation
 import XCTest
+
 @testable import Buildkite
 
 #if canImport(FoundationNetworking)
@@ -16,52 +17,36 @@ import FoundationNetworking
 
 extension Organization {
     init() {
-        self.init(id: UUID(),
-                  url: Followable(),
-                  webUrl: URL(),
-                  name: "Buildkite",
-                  slug: "buildkite",
-                  pipelinesUrl: Followable(),
-                  agentsUrl: Followable(),
-                  emojisUrl: Followable(),
-                  createdAt: Date(timeIntervalSince1970: 1000))
+        self.init(
+            id: UUID(),
+            url: Followable(),
+            webUrl: URL(),
+            name: "Buildkite",
+            slug: "buildkite",
+            pipelinesUrl: Followable(),
+            agentsUrl: Followable(),
+            emojisUrl: Followable(),
+            createdAt: Date(timeIntervalSince1970: 1000)
+        )
     }
 }
 
 class OrganizationsTests: XCTestCase {
-    func testOrganizationsList() throws {
+    func testOrganizationsList() async throws {
         let expected = [Organization()]
         let context = try MockContext(content: expected)
 
-        let expectation = XCTestExpectation()
+        let response = try await context.client.send(.organizations)
 
-        context.client.send(.organizations) { result in
-            do {
-                let response = try result.get()
-                XCTAssertEqual(expected, response.content)
-            } catch {
-                XCTFail(error.localizedDescription)
-            }
-            expectation.fulfill()
-        }
-        wait(for: [expectation])
+        XCTAssertEqual(expected, response.content)
     }
 
-    func testOrganizationsGet() throws {
+    func testOrganizationsGet() async throws {
         let expected = Organization()
         let context = try MockContext(content: expected)
 
-        let expectation = XCTestExpectation()
+        let response = try await context.client.send(.organization("buildkite"))
 
-        context.client.send(.organization("buildkite")) { result in
-            do {
-                let response = try result.get()
-                XCTAssertEqual(expected, response.content)
-            } catch {
-                XCTFail(error.localizedDescription)
-            }
-            expectation.fulfill()
-        }
-        wait(for: [expectation])
+        XCTAssertEqual(expected, response.content)
     }
 }

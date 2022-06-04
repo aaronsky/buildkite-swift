@@ -10,6 +10,7 @@
 
 import Foundation
 import XCTest
+
 @testable import Buildkite
 
 #if canImport(FoundationNetworking)
@@ -19,40 +20,40 @@ import FoundationNetworking
 final class JSONValueTests: XCTestCase {
     func testDecodeArray() throws {
         let json = """
-{ "fooKey": [true, 1] }
-"""
+            { "fooKey": [true, 1] }
+            """
         let expected = JSONValue.object(["fooKey": .array([.bool(true), .number(1)])])
         try decodingTest(json, expected)
     }
 
     func testDecodeBool() throws {
         let json = """
-{ "fooKey": true }
-"""
+            { "fooKey": true }
+            """
         let expected = JSONValue.object(["fooKey": .bool(true)])
         try decodingTest(json, expected)
     }
 
     func testDecodeDouble() throws {
         let json = """
-{ "fooKey": 1.2345 }
-"""
+            { "fooKey": 1.2345 }
+            """
         let expected = JSONValue.object(["fooKey": .number(1.2345)])
         try decodingTest(json, expected)
     }
 
     func testDecodeNull() throws {
         let json = """
-{ "fooKey": null }
-"""
+            { "fooKey": null }
+            """
         let expected = JSONValue.object(["fooKey": .null])
         try decodingTest(json, expected)
     }
 
     func testDecodeString() throws {
         let json = """
-{ "fooKey": "fooVal" }
-"""
+            { "fooKey": "fooVal" }
+            """
         let expected = JSONValue.object(["fooKey": .string("fooVal")])
         let data = try XCTUnwrap(json.data(using: .utf8))
         let actual = try JSONDecoder().decode(JSONValue.self, from: data)
@@ -94,16 +95,15 @@ final class JSONValueTests: XCTestCase {
                 123,
                 [
                     "abc": false,
-                    "qqq": [:]
-                ]
+                    "qqq": [:],
+                ],
 
-            ]
-            ,
+            ],
             "qux": [
                 "1": nil,
                 "2": "2",
-                "3": 33333333.0
-            ]
+                "3": 33333333.0,
+            ],
         ])
     }
 

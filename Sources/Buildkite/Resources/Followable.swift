@@ -21,11 +21,15 @@ public struct Followable<R: Resource>: Codable, Equatable, Resource {
 
     private var url: URL
 
-    init(url: URL) {
+    init(
+        url: URL
+    ) {
         self.url = url
     }
 
-    public init(from decoder: Decoder) throws {
+    public init(
+        from decoder: Decoder
+    ) throws {
         let container = try decoder.singleValueContainer()
         let url = try container.decode(URL.self)
         self.init(url: url)

@@ -26,7 +26,10 @@ public struct APIVersion: Equatable {
     public let baseURL: URL
     public let version: String
 
-    init(baseURL: URL, version: String) {
+    init(
+        baseURL: URL,
+        version: String
+    ) {
         self.baseURL = baseURL
         self.version = version
     }

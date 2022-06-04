@@ -8,6 +8,7 @@
 
 import Foundation
 import XCTest
+
 @testable import Buildkite
 
 #if canImport(FoundationNetworking)
@@ -16,27 +17,20 @@ import FoundationNetworking
 
 extension Emoji {
     init() {
-        self.init(name: "jeff",
-                  url: URL())
+        self.init(
+            name: "jeff",
+            url: URL()
+        )
     }
 }
 
 class EmojisTests: XCTestCase {
-    func testEmojisList() throws {
+    func testEmojisList() async throws {
         let expected = [Emoji(), Emoji()]
         let context = try MockContext(content: expected)
 
-        let expectation = XCTestExpectation()
+        let response = try await context.client.send(.emojis(in: "buildkite"))
 
-        context.client.send(.emojis(in: "buildkite")) { result in
-            do {
-                let response = try result.get()
-                XCTAssertEqual(expected, response.content)
-            } catch {
-                XCTFail(error.localizedDescription)
-            }
-            expectation.fulfill()
-        }
-        wait(for: [expectation])
+        XCTAssertEqual(expected, response.content)
     }
 }

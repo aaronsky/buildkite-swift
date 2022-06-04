@@ -8,6 +8,7 @@
 
 import Foundation
 import XCTest
+
 @testable import Buildkite
 
 #if canImport(FoundationNetworking)
@@ -15,37 +16,17 @@ import FoundationNetworking
 #endif
 
 class AccessTokensTests: XCTestCase {
-    func testAccessTokenGet() throws {
+    func testAccessTokenGet() async throws {
         let expected = AccessToken(uuid: UUID(), scopes: [])
         let context = try MockContext(content: expected)
 
-        let expectation = XCTestExpectation()
+        let response = try await context.client.send(.getAccessToken)
 
-        context.client.send(.getAccessToken) { result in
-            do {
-                let response = try result.get()
-                XCTAssertEqual(expected, response.content)
-            } catch {
-                XCTFail(error.localizedDescription)
-            }
-            expectation.fulfill()
-        }
-        wait(for: [expectation])
+        XCTAssertEqual(expected, response.content)
     }
 
-    func testAccessTokenDelete() throws {
+    func testAccessTokenDelete() async throws {
         let context = MockContext()
-
-        let expectation = XCTestExpectation()
-
-        context.client.send(.revokeAccessToken) { result in
-            do {
-                _ = try result.get()
-            } catch {
-                XCTFail(error.localizedDescription)
-            }
-            expectation.fulfill()
-        }
-        wait(for: [expectation])
+        _ = try await context.client.send(.revokeAccessToken)
     }
 }

@@ -27,14 +27,17 @@ extension Build.Resources {
 
         public var queryOptions: QueryOptions?
 
-        public init(queryOptions: Build.Resources.QueryOptions? = nil) {
+        public init(
+            queryOptions: Build.Resources.QueryOptions? = nil
+        ) {
             self.queryOptions = queryOptions
         }
 
         public func transformRequest(_ request: inout URLRequest) {
             guard let url = request.url,
-                var components = URLComponents(url: url, resolvingAgainstBaseURL: true) else {
-                    return
+                var components = URLComponents(url: url, resolvingAgainstBaseURL: true)
+            else {
+                return
             }
             var queryItems: [URLQueryItem] = []
             if let options = queryOptions {
@@ -60,15 +63,19 @@ extension Build.Resources {
             "organizations/\(organization)/builds"
         }
 
-        public init(organization: String, queryOptions: Build.Resources.QueryOptions? = nil) {
+        public init(
+            organization: String,
+            queryOptions: Build.Resources.QueryOptions? = nil
+        ) {
             self.organization = organization
             self.queryOptions = queryOptions
         }
 
         public func transformRequest(_ request: inout URLRequest) {
             guard let url = request.url,
-                var components = URLComponents(url: url, resolvingAgainstBaseURL: true) else {
-                    return
+                var components = URLComponents(url: url, resolvingAgainstBaseURL: true)
+            else {
+                return
             }
             var queryItems: [URLQueryItem] = []
             if let options = queryOptions {
@@ -95,7 +102,11 @@ extension Build.Resources {
             "organizations/\(organization)/pipelines/\(pipeline)/builds"
         }
 
-        public init(organization: String, pipeline: String, queryOptions: Build.Resources.QueryOptions? = nil) {
+        public init(
+            organization: String,
+            pipeline: String,
+            queryOptions: Build.Resources.QueryOptions? = nil
+        ) {
             self.organization = organization
             self.pipeline = pipeline
             self.queryOptions = queryOptions
@@ -103,8 +114,9 @@ extension Build.Resources {
 
         public func transformRequest(_ request: inout URLRequest) {
             guard let url = request.url,
-                var components = URLComponents(url: url, resolvingAgainstBaseURL: true) else {
-                    return
+                var components = URLComponents(url: url, resolvingAgainstBaseURL: true)
+            else {
+                return
             }
             var queryItems: [URLQueryItem] = []
             if let options = queryOptions {
@@ -129,7 +141,11 @@ extension Build.Resources {
             "organizations/\(organization)/pipelines/\(pipeline)/builds/\(build)"
         }
 
-        public init(organization: String, pipeline: String, build: Int) {
+        public init(
+            organization: String,
+            pipeline: String,
+            build: Int
+        ) {
             self.organization = organization
             self.pipeline = pipeline
             self.build = build
@@ -151,7 +167,10 @@ extension Build.Resources {
                 public var name: String
                 public var email: String
 
-                public init(name: String, email: String) {
+                public init(
+                    name: String,
+                    email: String
+                ) {
                     self.name = name
                     self.email = email
                 }
@@ -181,7 +200,19 @@ extension Build.Resources {
             /// For a pull request build, the git repository of the pull request.
             public var pullRequestRepository: String?
 
-            public init(commit: String, branch: String, author: Author? = nil, cleanCheckout: Bool? = nil, env: [String: String]? = nil, ignorePipelineBranchFilters: Bool? = nil, message: String? = nil, metaData: [String: String]? = nil, pullRequestBaseBranch: String? = nil, pullRequestId: Int? = nil, pullRequestRepository: String? = nil) {
+            public init(
+                commit: String,
+                branch: String,
+                author: Author? = nil,
+                cleanCheckout: Bool? = nil,
+                env: [String: String]? = nil,
+                ignorePipelineBranchFilters: Bool? = nil,
+                message: String? = nil,
+                metaData: [String: String]? = nil,
+                pullRequestBaseBranch: String? = nil,
+                pullRequestId: Int? = nil,
+                pullRequestRepository: String? = nil
+            ) {
                 self.commit = commit
                 self.branch = branch
                 self.author = author
@@ -201,7 +232,11 @@ extension Build.Resources {
             "organizations/\(organization)/pipelines/\(pipeline)/builds"
         }
 
-        public init(organization: String, pipeline: String, body: Body) {
+        public init(
+            organization: String,
+            pipeline: String,
+            body: Body
+        ) {
             self.organization = organization
             self.pipeline = pipeline
             self.body = body
@@ -228,7 +263,11 @@ extension Build.Resources {
             "organizations/\(organization)/pipelines/\(pipeline)/builds/\(build)/cancel"
         }
 
-        public init(organization: String, pipeline: String, build: Int) {
+        public init(
+            organization: String,
+            pipeline: String,
+            build: Int
+        ) {
             self.organization = organization
             self.pipeline = pipeline
             self.build = build
@@ -255,7 +294,11 @@ extension Build.Resources {
             "organizations/\(organization)/pipelines/\(pipeline)/builds/\(build)/rebuild"
         }
 
-        public init(organization: String, pipeline: String, build: Int) {
+        public init(
+            organization: String,
+            pipeline: String,
+            build: Int
+        ) {
             self.organization = organization
             self.pipeline = pipeline
             self.build = build
@@ -286,7 +329,17 @@ extension Build.Resources {
         /// Filters the results by the given build state. The finished state is a shortcut to automatically search for builds with passed, failed, blocked, canceled states.
         public var state: [Build.State]
 
-        public init(branches: [String] = [], commit: String? = nil, createdFrom: Date? = nil, createdTo: Date? = nil, creator: UUID? = nil, finishedFrom: Date? = nil, includeRetriedJobs: Bool? = nil, metadata: [String: String] = [:], state: [Build.State] = []) {
+        public init(
+            branches: [String] = [],
+            commit: String? = nil,
+            createdFrom: Date? = nil,
+            createdTo: Date? = nil,
+            creator: UUID? = nil,
+            finishedFrom: Date? = nil,
+            includeRetriedJobs: Bool? = nil,
+            metadata: [String: String] = [:],
+            state: [Build.State] = []
+        ) {
             self.branches = branches
             self.commit = commit
             self.createdFrom = createdFrom
@@ -300,8 +353,10 @@ extension Build.Resources {
     }
 }
 
-private extension Array where Element == URLQueryItem {
-    init(queryOptions: Build.Resources.QueryOptions) {
+extension Array where Element == URLQueryItem {
+    fileprivate init(
+        queryOptions: Build.Resources.QueryOptions
+    ) {
         self.init()
         append(queryOptions.branches, forKey: "branch")
         appendIfNeeded(queryOptions.commit, forKey: "commit")
@@ -322,13 +377,18 @@ extension Resource where Self == Build.Resources.ListAll {
 }
 
 extension Resource where Self == Build.Resources.ListForOrganization {
-    public static func builds(inOrganization organization: String, options: Build.Resources.QueryOptions? = nil) -> Self {
+    public static func builds(inOrganization organization: String, options: Build.Resources.QueryOptions? = nil) -> Self
+    {
         Self(organization: organization, queryOptions: options)
     }
 }
 
 extension Resource where Self == Build.Resources.ListForPipeline {
-    public static func builds(forPipeline pipeline: String, in organization: String, options: Build.Resources.QueryOptions? = nil) -> Self {
+    public static func builds(
+        forPipeline pipeline: String,
+        in organization: String,
+        options: Build.Resources.QueryOptions? = nil
+    ) -> Self {
         Self(organization: organization, pipeline: pipeline, queryOptions: options)
     }
 }

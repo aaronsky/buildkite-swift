@@ -8,41 +8,35 @@
 
 import Foundation
 import XCTest
+
 @testable import Buildkite
 
 #if canImport(FoundationNetworking)
 import FoundationNetworking
 #endif
 
-private extension Team {
-    init() {
-        self.init(id: UUID(),
-                  name: "",
-                  slug: "",
-                  description: "",
-                  privacy: .visible,
-                  default: true,
-                  createdAt: Date(timeIntervalSince1970: 1000),
-                  createdBy: User())
+extension Team {
+    fileprivate init() {
+        self.init(
+            id: UUID(),
+            name: "",
+            slug: "",
+            description: "",
+            privacy: .visible,
+            default: true,
+            createdAt: Date(timeIntervalSince1970: 1000),
+            createdBy: User()
+        )
     }
 }
 
 class TeamsTests: XCTestCase {
-    func testTeamsList() throws {
+    func testTeamsList() async throws {
         let expected = [Team(), Team()]
         let context = try MockContext(content: expected)
 
-        let expectation = XCTestExpectation()
+        let response = try await context.client.send(.teams(in: "buildkite", byUser: UUID()))
 
-        context.client.send(.teams(in: "buildkite", byUser: UUID())) { result in
-            do {
-                let response = try result.get()
-                XCTAssertEqual(expected, response.content)
-            } catch {
-                XCTFail(error.localizedDescription)
-            }
-            expectation.fulfill()
-        }
-        wait(for: [expectation])
+        XCTAssertEqual(expected, response.content)
     }
 }
