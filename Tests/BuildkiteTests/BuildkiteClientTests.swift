@@ -77,9 +77,9 @@ class BuildkiteClientTests: XCTestCase {
             client = BuildkiteClient(
                 configuration: configuration,
                 transport: MockTransport(responses: responses),
-                tokens: token
+                token: token
             )
-            XCTAssertEqual(token, token.token(for: .REST.v2))
+            XCTAssertEqual(token, RawTokenProvider(rawValue: token).token(for: .REST.v2))
         }
     }
 

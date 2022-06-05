@@ -36,10 +36,11 @@ public final class BuildkiteClient {
     /// Convenience property for setting the access token used by the client.
     var tokens: TokenProvider?
 
-    /// Creates a session with the specified configuration and transport layer.
+    /// Creates a session with the specified configuration, transport layer, and token provider.
     /// - Parameters:
-    ///   - configuration: Configures supported API versions and the access token. Uses the latest supported API versions by default. See ``token`` for setting the client access token if using the default configuration.
+    ///   - configuration: Configures supported API versions and the access token. Uses the latest supported API versions by default.
     ///   - transport: Transport layer used for API communication. Uses the shared URLSession by default.
+    ///   - tokens: Token provider used for authorization. Unauthenticated by default.
     public init(
         configuration: Configuration = .default,
         transport: Transport = URLSession.shared,
@@ -48,6 +49,19 @@ public final class BuildkiteClient {
         self.configuration = configuration
         self.transport = transport
         self.tokens = tokens
+    }
+
+    /// Creates a session with the specified configuration, transport layer, and fixed token string.
+    /// - Parameters:
+    ///   - configuration: Configures supported API versions and the access token. Uses the latest supported API versions by default.
+    ///   - transport: Transport layer used for API communication. Uses the shared URLSession by default.
+    ///   - token: Raw token used for authorization.
+    public convenience init(
+        configuration: Configuration = .default,
+        transport: Transport = URLSession.shared,
+        token: String
+    ) {
+        self.init(configuration: configuration, transport: transport, tokens: RawTokenProvider(rawValue: token))
     }
 
     private func handleContentfulResponse<Content: Decodable>(
