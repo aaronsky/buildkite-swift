@@ -238,7 +238,6 @@ extension BuildkiteClient {
 #if canImport(Combine)
 import Combine
 
-@available(iOS 13, macOS 10.15, tvOS 13, watchOS 6, *)
 extension BuildkiteClient {
     /// Performs the given resource and publishes the response asynchronously.
     /// - Parameter resource: A resource.
@@ -354,11 +353,8 @@ extension BuildkiteClient {
 }
 #endif
 
-#if compiler(>=5.5.2) && canImport(_Concurrency)
-
 // MARK: - Async/Await API
 
-@available(iOS 13, macOS 10.15, tvOS 13, watchOS 6, *)
 extension BuildkiteClient {
     /// Performs the given resource asynchronously.
     /// - Parameter resource: A resource.
@@ -442,4 +438,3 @@ extension BuildkiteClient {
         return try response.content.get()
     }
 }
-#endif

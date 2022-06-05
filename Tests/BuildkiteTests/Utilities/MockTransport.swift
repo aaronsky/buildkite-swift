@@ -60,8 +60,6 @@ extension MockTransport: Transport {
     }
     #endif
 
-    #if compiler(>=5.5.2) && canImport(_Concurrency)
-    @available(iOS 13, macOS 10.15, tvOS 13, watchOS 6, *)
     func send(request: URLRequest) async throws -> Output {
         history.append(request)
         guard !responses.isEmpty else {
@@ -69,5 +67,4 @@ extension MockTransport: Transport {
         }
         return responses.removeFirst()
     }
-    #endif
 }

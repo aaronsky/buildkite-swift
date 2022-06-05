@@ -441,8 +441,6 @@ extension BuildkiteClientTests {
 
 // MARK: - Async/Await-based Requests
 
-#if compiler(>=5.5.2) && canImport(_Concurrency)
-@available(iOS 13, macOS 10.15, tvOS 13, watchOS 6, *)
 extension BuildkiteClientTests {
     func testAsyncBasedRequest() async throws {
         let testData = try TestData(testCase: .success)
@@ -508,4 +506,3 @@ extension BuildkiteClientTests {
         } catch {}
     }
 }
-#endif

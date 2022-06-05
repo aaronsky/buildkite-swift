@@ -31,10 +31,7 @@ public protocol Transport {
     func sendPublisher(request: URLRequest) -> AnyPublisher<Output, Error>
     #endif
 
-    #if compiler(>=5.5.2) && canImport(_Concurrency)
-    @available(iOS 13, macOS 10.15, tvOS 13, watchOS 6, *)
     func send(request: URLRequest) async throws -> Output
-    #endif
 }
 
 extension URLSession: Transport {
@@ -62,30 +59,19 @@ extension URLSession: Transport {
     }
     #endif
 
-    #if compiler(>=5.5.2) && canImport(_Concurrency)
-    @available(iOS 13, macOS 10.15, tvOS 13, watchOS 6, *)
     public func send(request: URLRequest) async throws -> Output {
+        #if os(Linux)
+        return try await withCheckedThrowingContinuation { continuation in
+            send(request: request, completion: continuation.resume)
+        }
+        #else
         guard #available(iOS 15, macOS 12, tvOS 15, watchOS 8, *) else {
             return try await withCheckedThrowingContinuation { continuation in
-                let task = dataTask(with: request) { data, response, error in
-                    if let error = error {
-                        continuation.resume(throwing: error)
-                        return
-                    }
-
-                    guard let data = data,
-                        let response = response
-                    else {
-                        continuation.resume(throwing: TransportError.noResponse)
-                        return
-                    }
-
-                    continuation.resume(returning: (data, response))
-                }
-                task.resume()
+                send(request: request, completion: continuation.resume)
             }
         }
+
         return try await data(for: request)
+        #endif
     }
-    #endif
 }

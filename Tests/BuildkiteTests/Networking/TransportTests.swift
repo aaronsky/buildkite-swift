@@ -142,8 +142,6 @@ extension TransportTests {
 
 // MARK: - Async/Await-based Requests
 
-#if compiler(>=5.5.2) && canImport(_Concurrency)
-@available(iOS 13, macOS 10.15, tvOS 13, watchOS 6, *)
 extension TransportTests {
     func testURLSessionSendAsyncRequest() async throws {
         let request = URLRequest(url: URL())
@@ -158,4 +156,3 @@ extension TransportTests {
         } catch {}
     }
 }
-#endif

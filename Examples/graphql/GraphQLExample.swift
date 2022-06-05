@@ -5,8 +5,6 @@
 //  Created by Aaron Sky on 5/5/20.
 //
 
-#if compiler(>=5.5.2) && canImport(_Concurrency)
-
 import Foundation
 import Combine
 import Buildkite
@@ -32,7 +30,6 @@ struct MyPipeline: Codable {
     }
 }
 
-@available(iOS 13, macOS 10.15, tvOS 13, watchOS 6, *)
 @main struct GraphQLExample {
     static func main() async {
         let client = BuildkiteClient()
@@ -65,5 +62,3 @@ struct MyPipeline: Codable {
         }
     }
 }
-
-#endif
