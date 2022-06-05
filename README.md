@@ -1,6 +1,6 @@
 # Buildkite
 
-![Build Status](https://github.com/aaronsky/buildkite-swift/workflows/CI/badge.svg)
+[![CI](https://github.com/aaronsky/buildkite-swift/actions/workflows/main.yml/badge.svg)](https://github.com/aaronsky/buildkite-swift/actions/workflows/main.yml)
 
 A Swift library and client for the Buildkite REST and GraphQL APIs.
 
