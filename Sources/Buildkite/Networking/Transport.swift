@@ -60,7 +60,9 @@ extension URLSession: Transport {
     #endif
 
     public func send(request: URLRequest) async throws -> Output {
-        #if os(Linux)
+        // These depend on swift-corelibs-foundation, which have not implemented the
+        // Task-based API for URLSession.
+        #if os(Linux) || os(Windows)
         return try await withCheckedThrowingContinuation { continuation in
             send(request: request, completion: continuation.resume)
         }
