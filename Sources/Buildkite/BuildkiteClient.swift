@@ -31,17 +31,10 @@ public final class BuildkiteClient {
     var configuration: Configuration
 
     /// The network (or whatever) transport layer. Implemented by URLSession by default.
-    private var transport: Transport
+    var transport: Transport
 
     /// Convenience property for setting the access token used by the client.
-    public var token: String? {
-        get {
-            configuration.token
-        }
-        set {
-            configuration.token = newValue
-        }
-    }
+    var tokens: TokenProvider?
 
     /// Creates a session with the specified configuration and transport layer.
     /// - Parameters:
@@ -49,10 +42,12 @@ public final class BuildkiteClient {
     ///   - transport: Transport layer used for API communication. Uses the shared URLSession by default.
     public init(
         configuration: Configuration = .default,
-        transport: Transport = URLSession.shared
+        transport: Transport = URLSession.shared,
+        tokens: TokenProvider? = nil
     ) {
         self.configuration = configuration
         self.transport = transport
+        self.tokens = tokens
     }
 
     private func handleContentfulResponse<Content: Decodable>(
@@ -123,7 +118,7 @@ extension BuildkiteClient {
     public func send<R>(_ resource: R, completion: @escaping (Result<Response<R.Content>, Error>) -> Void)
     where R: Resource, R.Content: Decodable {
         do {
-            let request = try URLRequest(resource, configuration: configuration)
+            let request = try URLRequest(resource, configuration: configuration, tokens: tokens)
             transport.send(request: request, completion: handleContentfulResponse(completion: completion))
         } catch {
             completion(.failure(error))
@@ -141,7 +136,12 @@ extension BuildkiteClient {
         completion: @escaping (Result<Response<R.Content>, Error>) -> Void
     ) where R: PaginatedResource {
         do {
-            let request = try URLRequest(resource, configuration: configuration, pageOptions: pageOptions)
+            let request = try URLRequest(
+                resource,
+                configuration: configuration,
+                tokens: tokens,
+                pageOptions: pageOptions
+            )
             transport.send(request: request, completion: handleContentfulResponse(completion: completion))
         } catch {
             completion(.failure(error))
@@ -155,7 +155,7 @@ extension BuildkiteClient {
     public func send<R>(_ resource: R, completion: @escaping (Result<Response<R.Content>, Error>) -> Void)
     where R: Resource, R.Body: Encodable, R.Content: Decodable {
         do {
-            let request = try URLRequest(resource, configuration: configuration, encoder: encoder)
+            let request = try URLRequest(resource, configuration: configuration, tokens: tokens, encoder: encoder)
             transport.send(request: request, completion: handleContentfulResponse(completion: completion))
         } catch {
             completion(.failure(error))
@@ -176,6 +176,7 @@ extension BuildkiteClient {
             let request = try URLRequest(
                 resource,
                 configuration: configuration,
+                tokens: tokens,
                 encoder: encoder,
                 pageOptions: pageOptions
             )
@@ -192,7 +193,7 @@ extension BuildkiteClient {
     public func send<R>(_ resource: R, completion: @escaping (Result<Response<R.Content>, Error>) -> Void)
     where R: Resource, R.Content == Void {
         do {
-            let request = try URLRequest(resource, configuration: configuration)
+            let request = try URLRequest(resource, configuration: configuration, tokens: tokens)
             transport.send(request: request, completion: handleEmptyResponse(completion: completion))
         } catch {
             completion(.failure(error))
@@ -206,7 +207,7 @@ extension BuildkiteClient {
     public func send<R>(_ resource: R, completion: @escaping (Result<Response<R.Content>, Error>) -> Void)
     where R: Resource, R.Body: Encodable, R.Content == Void {
         do {
-            let request = try URLRequest(resource, configuration: configuration, encoder: encoder)
+            let request = try URLRequest(resource, configuration: configuration, tokens: tokens, encoder: encoder)
             transport.send(request: request, completion: handleEmptyResponse(completion: completion))
         } catch {
             completion(.failure(error))
@@ -244,7 +245,7 @@ extension BuildkiteClient {
     /// - Returns: The publisher publishes the response when the operation completes, or terminates if the operation fails with an error.
     public func sendPublisher<R>(_ resource: R) -> AnyPublisher<Response<R.Content>, Error>
     where R: Resource, R.Content: Decodable {
-        Result { try URLRequest(resource, configuration: configuration) }
+        Result { try URLRequest(resource, configuration: configuration, tokens: tokens) }
             .publisher
             .flatMap(transport.sendPublisher)
             .tryMap {
@@ -264,7 +265,7 @@ extension BuildkiteClient {
         _ resource: R,
         pageOptions: PageOptions? = nil
     ) -> AnyPublisher<Response<R.Content>, Error> where R: PaginatedResource {
-        Result { try URLRequest(resource, configuration: configuration, pageOptions: pageOptions) }
+        Result { try URLRequest(resource, configuration: configuration, tokens: tokens, pageOptions: pageOptions) }
             .publisher
             .flatMap(transport.sendPublisher)
             .tryMap {
@@ -280,7 +281,7 @@ extension BuildkiteClient {
     /// - Returns: The publisher publishes the response when the operation completes, or terminates if the operation fails with an error.
     public func sendPublisher<R>(_ resource: R) -> AnyPublisher<Response<R.Content>, Error>
     where R: Resource, R.Body: Encodable, R.Content: Decodable {
-        Result { try URLRequest(resource, configuration: configuration, encoder: encoder) }
+        Result { try URLRequest(resource, configuration: configuration, tokens: tokens, encoder: encoder) }
             .publisher
             .flatMap(transport.sendPublisher)
             .tryMap {
@@ -300,15 +301,23 @@ extension BuildkiteClient {
         _ resource: R,
         pageOptions: PageOptions? = nil
     ) -> AnyPublisher<Response<R.Content>, Error> where R: PaginatedResource, R.Body: Encodable {
-        Result { try URLRequest(resource, configuration: configuration, encoder: encoder, pageOptions: pageOptions) }
-            .publisher
-            .flatMap(transport.sendPublisher)
-            .tryMap {
-                try self.checkResponseForIssues($0.response, data: $0.data)
-                let content = try self.decoder.decode(R.Content.self, from: $0.data)
-                return Response(content: content, response: $0.response)
-            }
-            .eraseToAnyPublisher()
+        Result {
+            try URLRequest(
+                resource,
+                configuration: configuration,
+                tokens: tokens,
+                encoder: encoder,
+                pageOptions: pageOptions
+            )
+        }
+        .publisher
+        .flatMap(transport.sendPublisher)
+        .tryMap {
+            try self.checkResponseForIssues($0.response, data: $0.data)
+            let content = try self.decoder.decode(R.Content.self, from: $0.data)
+            return Response(content: content, response: $0.response)
+        }
+        .eraseToAnyPublisher()
     }
 
     /// Performs the given resource and publishes the response asynchronously.
@@ -316,7 +325,7 @@ extension BuildkiteClient {
     /// - Returns: The publisher publishes the response when the operation completes, or terminates if the operation fails with an error.
     public func sendPublisher<R>(_ resource: R) -> AnyPublisher<Response<R.Content>, Error>
     where R: Resource, R.Content == Void {
-        Result { try URLRequest(resource, configuration: configuration) }
+        Result { try URLRequest(resource, configuration: configuration, tokens: tokens) }
             .publisher
             .flatMap(transport.sendPublisher)
             .tryMap {
@@ -331,7 +340,7 @@ extension BuildkiteClient {
     /// - Returns: The publisher publishes the response when the operation completes, or terminates if the operation fails with an error.
     public func sendPublisher<R>(_ resource: R) -> AnyPublisher<Response<R.Content>, Error>
     where R: Resource, R.Body: Encodable, R.Content == Void {
-        Result { try URLRequest(resource, configuration: configuration, encoder: encoder) }
+        Result { try URLRequest(resource, configuration: configuration, tokens: tokens, encoder: encoder) }
             .publisher
             .flatMap(transport.sendPublisher)
             .tryMap {
@@ -360,7 +369,7 @@ extension BuildkiteClient {
     /// - Parameter resource: A resource.
     /// - Returns: A response containing the content of the response body, as well as other information about the HTTP operation.
     public func send<R>(_ resource: R) async throws -> Response<R.Content> where R: Resource, R.Content: Decodable {
-        let request = try URLRequest(resource, configuration: configuration)
+        let request = try URLRequest(resource, configuration: configuration, tokens: tokens)
         let (data, response) = try await transport.send(request: request)
         try checkResponseForIssues(response, data: data)
         let content = try self.decoder.decode(R.Content.self, from: data)
@@ -374,7 +383,7 @@ extension BuildkiteClient {
     /// - Returns: A response containing the content of the response body, as well as other information about the HTTP operation.
     public func send<R>(_ resource: R, pageOptions: PageOptions? = nil) async throws -> Response<R.Content>
     where R: PaginatedResource {
-        let request = try URLRequest(resource, configuration: configuration, pageOptions: pageOptions)
+        let request = try URLRequest(resource, configuration: configuration, tokens: tokens, pageOptions: pageOptions)
         let (data, response) = try await transport.send(request: request)
         try checkResponseForIssues(response, data: data)
         let content = try self.decoder.decode(R.Content.self, from: data)
@@ -386,7 +395,7 @@ extension BuildkiteClient {
     /// - Returns: A response containing the content of the response body, as well as other information about the HTTP operation.
     public func send<R>(_ resource: R) async throws -> Response<R.Content>
     where R: Resource, R.Body: Encodable, R.Content: Decodable {
-        let request = try URLRequest(resource, configuration: configuration, encoder: encoder)
+        let request = try URLRequest(resource, configuration: configuration, tokens: tokens, encoder: encoder)
         let (data, response) = try await transport.send(request: request)
         try checkResponseForIssues(response, data: data)
         let content = try self.decoder.decode(R.Content.self, from: data)
@@ -400,7 +409,13 @@ extension BuildkiteClient {
     /// - Returns: A response containing the content of the response body, as well as other information about the HTTP operation.
     public func send<R>(_ resource: R, pageOptions: PageOptions? = nil) async throws -> Response<R.Content>
     where R: PaginatedResource, R.Body: Encodable {
-        let request = try URLRequest(resource, configuration: configuration, encoder: encoder, pageOptions: pageOptions)
+        let request = try URLRequest(
+            resource,
+            configuration: configuration,
+            tokens: tokens,
+            encoder: encoder,
+            pageOptions: pageOptions
+        )
 
         let (data, response) = try await transport.send(request: request)
         try checkResponseForIssues(response, data: data)
@@ -412,7 +427,7 @@ extension BuildkiteClient {
     /// - Parameter resource: A resource.
     /// - Returns: A response containing the content of the response body, as well as other information about the HTTP operation.
     public func send<R>(_ resource: R) async throws -> Response<R.Content> where R: Resource, R.Content == Void {
-        let request = try URLRequest(resource, configuration: configuration)
+        let request = try URLRequest(resource, configuration: configuration, tokens: tokens)
         let (data, response) = try await transport.send(request: request)
         try checkResponseForIssues(response, data: data)
         return Response(content: (), response: response)
@@ -423,7 +438,7 @@ extension BuildkiteClient {
     /// - Returns: A response containing information about the HTTP operation, and no content.
     public func send<R>(_ resource: R) async throws -> Response<R.Content>
     where R: Resource, R.Body: Encodable, R.Content == Void {
-        let request = try URLRequest(resource, configuration: configuration, encoder: encoder)
+        let request = try URLRequest(resource, configuration: configuration, tokens: tokens, encoder: encoder)
         let (data, response) = try await transport.send(request: request)
         try checkResponseForIssues(response, data: data)
         return Response(content: (), response: response)

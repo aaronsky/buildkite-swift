@@ -73,12 +73,13 @@ class BuildkiteClientTests: XCTestCase {
                 responses = []
             }
 
+            let token = "a valid token, i guess"
             client = BuildkiteClient(
                 configuration: configuration,
-                transport: MockTransport(responses: responses)
+                transport: MockTransport(responses: responses),
+                tokens: token
             )
-            client.token = "a valid token, i guess"
-            XCTAssertEqual(client.token, client.configuration.token)
+            XCTAssertEqual(token, token.token(for: .REST.v2))
         }
     }
 
