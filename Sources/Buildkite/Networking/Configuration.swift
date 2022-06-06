@@ -32,12 +32,14 @@ public struct Configuration {
         self.graphQLVersion = graphQLVersion
     }
 
-    var token: String?
-
-    func transformRequest(_ request: inout URLRequest) {
+    func transformRequest(
+        _ request: inout URLRequest,
+        tokens: TokenProvider?,
+        version: APIVersion
+    ) {
         request.addValue(userAgent, forHTTPHeaderField: "User-Agent")
-        if let token = token {
-            request.addValue("Bearer \(token)", forHTTPHeaderField: "Authorization")
+        if let header = tokens?.authorizationHeader(for: version) {
+            request.addValue(header, forHTTPHeaderField: "Authorization")
         }
     }
 

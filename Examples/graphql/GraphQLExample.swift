@@ -31,8 +31,7 @@ struct MyPipeline: Codable {
 
 @main struct GraphQLExample {
     static func main() async {
-        let client = BuildkiteClient()
-        client.token = "..."
+        let client = BuildkiteClient(token: "...")
 
         let query = """
         query MyPipelines($first: Int!) {

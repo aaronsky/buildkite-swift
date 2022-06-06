@@ -12,12 +12,13 @@ In order to access the Buildkite API you must first create an API access token. 
 
 ### Create a Buildkite Client
 
-Creating a client object is as simple as calling the default initializer, and then assigning your token. 
+Creating a client object is as simple as calling the default initializer with an authorization token. 
 
 ```swift
-let client = BuildkiteClient()
-client.token = "..." // Your scoped Buildkite API access token
+let client = BuildkiteClient(token: "...") // Using your scoped Buildkite API access token
 ```
+
+For more advanced authorization features, see <doc:Authorization>.
 
 ### Send a Resource
 
@@ -53,8 +54,3 @@ client.sendPublisher(.pipelines(in: "buildkite"))
         print(pipelines)
     }.store(in: &cancellables)
 ```
-
-## Topics
-
-- ``BuildkiteClient``
-- ``Pipeline/Resources/List``

@@ -14,6 +14,15 @@ import FoundationNetworking
 
 /// Followable is a container resource that allows URLs returned by Buildkite's API to be easily consumed
 /// by the client.
+///
+/// Here's an example of using a ``Followable`` resource:
+///
+/// ```swift
+/// let client = BuildkiteClient(token: "...")
+/// let organizationResponse = await client.send(.organization("buildkite")
+/// let agentsResponse = await client.send(organizationResponse.content.agentsUrl)
+/// print(agentsResponse.content) // Array<Agent>(...)
+/// ```
 public struct Followable<R: Resource>: Codable, Equatable, Resource {
     public typealias Content = R.Content
 

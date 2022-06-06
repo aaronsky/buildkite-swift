@@ -29,7 +29,3 @@ let pipeline: Pipelines = try await client.sendQuery(resource)
 ```
 
 The helper method `sendQuery` can be used to automatically extract the data from a GraphQL response, without having to juggle HTTP, decoding and schema errors in separate calls. You can still use any of the `send` or `sendPublisher` methods to process a GraphQL query, if you require the response data as well. 
-
-## Topics
-
-- ``GraphQL``

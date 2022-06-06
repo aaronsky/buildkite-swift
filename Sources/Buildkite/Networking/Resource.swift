@@ -45,7 +45,8 @@ public protocol PaginatedResource: Resource where Content: Decodable {}
 extension URLRequest {
     init<R: Resource>(
         _ resource: R,
-        configuration: Configuration
+        configuration: Configuration,
+        tokens: TokenProvider?
     ) throws {
         let version = resource.version
         guard
@@ -57,7 +58,7 @@ extension URLRequest {
 
         let url = version.url(for: resource.path)
         var request = URLRequest(url: url)
-        configuration.transformRequest(&request)
+        configuration.transformRequest(&request, tokens: tokens, version: version)
         resource.transformRequest(&request)
 
         self = request
@@ -66,18 +67,20 @@ extension URLRequest {
     init<R: Resource>(
         _ resource: R,
         configuration: Configuration,
+        tokens: TokenProvider?,
         encoder: JSONEncoder
     ) throws where R.Body: Encodable {
-        try self.init(resource, configuration: configuration)
+        try self.init(resource, configuration: configuration, tokens: tokens)
         httpBody = try encoder.encode(resource.body)
     }
 
     init<R: Resource & PaginatedResource>(
         _ resource: R,
         configuration: Configuration,
+        tokens: TokenProvider?,
         pageOptions: PageOptions? = nil
     ) throws {
-        try self.init(resource, configuration: configuration)
+        try self.init(resource, configuration: configuration, tokens: tokens)
         if let options = pageOptions {
             appendPageOptions(options)
         }
@@ -86,10 +89,11 @@ extension URLRequest {
     init<R: Resource & PaginatedResource>(
         _ resource: R,
         configuration: Configuration,
+        tokens: TokenProvider?,
         encoder: JSONEncoder,
         pageOptions: PageOptions? = nil
     ) throws where R.Body: Encodable {
-        try self.init(resource, configuration: configuration, encoder: encoder)
+        try self.init(resource, configuration: configuration, tokens: tokens, encoder: encoder)
         if let options = pageOptions {
             appendPageOptions(options)
         }

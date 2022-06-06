@@ -4,8 +4,8 @@
 
 ### Creating a Client
 
-- ``init(configuration:transport:)``
-- ``token``
+- ``init(configuration:transport:tokens:)``
+- ``init(configuration:transport:token:)``
 
 ### Sending Resources
 

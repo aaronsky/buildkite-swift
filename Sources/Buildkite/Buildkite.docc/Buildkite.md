@@ -59,9 +59,11 @@ The entire publicly documented REST API surface is supported by this package.
 
 ### Advanced
 
+- <doc:Authorization>
 - ``Configuration``
 - ``APIVersion``
 - ``Transport``
+- ``TokenProvider``
 - ``Response``
 - ``StatusCode``
 - ``BuildkiteError``
