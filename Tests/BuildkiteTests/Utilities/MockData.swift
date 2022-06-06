@@ -88,7 +88,7 @@ struct MockResources {
 }
 
 extension GraphQL {
-    struct Intermediary: Codable where T: Codable {
+    struct Intermediary: Codable where T: Encodable {
         var data: T
     }
 }
