@@ -21,17 +21,6 @@ let package = Package(
             name: "Buildkite",
             dependencies: []
         ),
-
-        // Examples
-
-        .executableTarget(
-            name: "graphql",
-            dependencies: ["Buildkite"],
-            path: "Examples/graphql"
-        ),
-
-        // Tests
-
         .testTarget(
             name: "BuildkiteTests",
             dependencies: ["Buildkite"]
