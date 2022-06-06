@@ -52,6 +52,8 @@ extension URLRequest {
         guard
             version == configuration.version
                 || version == configuration.graphQLVersion
+                || version == configuration.agentVersion
+                || version == configuration.testAnalyticsVersion
         else {
             throw ResourceError.incompatibleVersion(version)
         }

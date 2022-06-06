@@ -23,6 +23,16 @@ public struct APIVersion: Equatable {
         public static let v1 = APIVersion(baseURL: baseURL, version: "v1")
     }
 
+    public enum Agent {
+        private static let baseURL = URL(string: "https://agent.buildkite.com")!
+        public static let v3 = APIVersion(baseURL: baseURL, version: "v3")
+    }
+
+    public enum TestAnalytics {
+        private static let baseURL = URL(string: "https://analytics-api.buildkite.com")!
+        public static let v1 = APIVersion(baseURL: baseURL, version: "v1")
+    }
+
     public let baseURL: URL
     public let version: String
 
