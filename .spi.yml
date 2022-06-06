@@ -1,0 +1,12 @@
+version: 1
+builder:
+  configs:
+    - platform: ios
+      scheme: Buildkite
+    - platform: macos-xcodebuild
+      scheme: Buildkite
+    - platform: tvos
+      scheme: Buildkite
+    - platform: watchos
+      scheme: Buildkite
+    - documentation_targets: [Buildkite]
