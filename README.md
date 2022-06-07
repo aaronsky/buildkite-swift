@@ -7,8 +7,7 @@ A Swift library and client for the Buildkite REST and GraphQL APIs.
 ```swift
 import Buildkite
 
-let client = BuildkiteClient()
-client.token = "..."
+let client = BuildkiteClient(token: "...")
 
 let response = try await client.send(.pipelines(in: "buildkite"))
 let pipelines = response.content
@@ -17,7 +16,7 @@ print(pipelines)
 
 ## Usage
 
-[Getting Started](./Sources/Buildkite/Documentation.docc/Articles/GettingStarted.md)
+[Getting Started](./Sources/Buildkite/Buildkite.docc/Articles/GettingStarted.md)
 
 ## References
 

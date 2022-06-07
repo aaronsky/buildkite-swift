@@ -26,6 +26,7 @@ The entire publicly documented REST API surface is supported by this package.
 - ``Organization/Resources``
 - ``Pipeline/Resources``
 - ``Team/Resources``
+- ``TestAnalytics/Resources``
 - ``User/Resources``
 - ``Followable``
 - ``Resource``
