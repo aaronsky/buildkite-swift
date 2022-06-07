@@ -9,29 +9,8 @@
 import Buildkite
 import Foundation
 
-struct MyPipeline: Codable {
-    var organization: Organization?
-
-    struct Organization: Codable {
-        var pipelines: Pipelines
-
-        struct Pipelines: Codable {
-            var edges: [PipelineEdge]
-
-            struct PipelineEdge: Codable {
-                var node: Pipeline
-
-                struct Pipeline: Codable {
-                    var name: String
-                    var uuid: UUID
-                }
-            }
-        }
-    }
-}
-
 @main struct Example {
-    static func main() async {
+    static func main() async throws {
         let client = BuildkiteClient(token: "...")
 
         let query = """
@@ -49,17 +28,33 @@ struct MyPipeline: Codable {
             }
             """
 
-        do {
-            let pipelines = try await client.sendQuery(
-                GraphQL<MyPipeline>(
-                    rawQuery: query,
-                    variables: ["first": 30]
-                )
+        let pipelines = try await client.sendQuery(
+            GraphQL<MyPipeline>(
+                rawQuery: query,
+                variables: ["first": 30]
             )
-            print(pipelines)
-        } catch {
-            print(error)
-            exit(1)
+        )
+        print(pipelines)
+    }
+}
+
+struct MyPipeline: Codable {
+    var organization: Organization?
+
+    struct Organization: Codable {
+        var pipelines: Pipelines
+
+        struct Pipelines: Codable {
+            var edges: [PipelineEdge]
+
+            struct PipelineEdge: Codable {
+                var node: Pipeline
+
+                struct Pipeline: Codable {
+                    var name: String
+                    var uuid: UUID
+                }
+            }
         }
     }
 }

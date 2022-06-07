@@ -34,6 +34,26 @@ extension TestAnalytics.Resources {
                 public var commitSha: String?
                 public var message: String?
                 public var url: String?
+
+                public init(
+                    ci: String,
+                    key: String,
+                    number: String? = nil,
+                    jobId: String? = nil,
+                    branch: String? = nil,
+                    commitSha: String? = nil,
+                    message: String? = nil,
+                    url: String? = nil
+                ) {
+                    self.ci = ci
+                    self.key = key
+                    self.number = number
+                    self.jobId = jobId
+                    self.branch = branch
+                    self.commitSha = commitSha
+                    self.message = message
+                    self.url = url
+                }
             }
 
             private enum CodingKeys: String, CodingKey {
@@ -65,6 +85,10 @@ extension TestAnalytics.Resources {
             body: Body
         ) {
             self.body = body
+        }
+
+        public func transformRequest(_ request: inout URLRequest) {
+            request.httpMethod = "POST"
         }
     }
 }

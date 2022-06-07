@@ -14,6 +14,7 @@ let package = Package(
         .executable(name: "graphql", targets: ["graphql"]),
         .executable(name: "advanced-authorization", targets: ["advanced-authorization"]),
         .executable(name: "test-analytics", targets: ["test-analytics"]),
+        .executable(name: "webhooks", targets: ["webhooks"]),
     ],
     dependencies: [
         .package(name: "Buildkite", path: "../")
@@ -46,6 +47,13 @@ let package = Package(
                 .product(name: "Buildkite", package: "Buildkite")
             ],
             path: "test-analytics"
+        ),
+        .executableTarget(
+            name: "webhooks",
+            dependencies: [
+                .product(name: "Buildkite", package: "Buildkite")
+            ],
+            path: "webhooks"
         ),
     ]
 )

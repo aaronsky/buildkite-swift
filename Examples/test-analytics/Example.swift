@@ -10,7 +10,23 @@ import Buildkite
 import Foundation
 
 @main struct Example {
-    static func main() async {
+    static func main() async throws {
+        let token = ProcessInfo.processInfo.environment["TOKEN"] ?? "..."
+        let client = BuildkiteClient(token: token)
 
+        let result =
+            try await client.send(
+                .uploadTestAnalytics(
+                    [
+                        .init(id: UUID(), history: .init(section: "http")),
+                        .init(id: UUID(), history: .init(section: "http")),
+                        .init(id: UUID(), history: .init(section: "http")),
+                    ],
+                    environment: .init(ci: "buildkite", key: UUID().uuidString)
+                )
+            )
+            .content
+
+        print(result.runUrl)
     }
 }

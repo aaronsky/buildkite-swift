@@ -45,6 +45,28 @@ public struct Trace: Codable, Equatable, Identifiable {
     /// History object
     public var history: Span
 
+    public init(
+        id: UUID,
+        scope: String? = nil,
+        name: String? = nil,
+        identifier: String? = nil,
+        location: String? = nil,
+        fileName: String? = nil,
+        result: String? = nil,
+        failureReason: String? = nil,
+        history: Trace.Span
+    ) {
+        self.id = id
+        self.scope = scope
+        self.name = name
+        self.identifier = identifier
+        self.location = location
+        self.fileName = fileName
+        self.result = result
+        self.failureReason = failureReason
+        self.history = history
+    }
+
     public struct Span: Codable, Equatable {
         /// A section category for this span, e.g. `"http"`, `"sql"`, `"sleep"`, or `"annotation"`
         public var section: String
@@ -58,5 +80,21 @@ public struct Trace: Codable, Equatable, Identifiable {
         public var detail: [String: String] = [:]
         /// array of span objects
         public var children: [Span] = []
+
+        public init(
+            section: String,
+            startAt: TimeInterval? = nil,
+            endAt: TimeInterval? = nil,
+            duration: TimeInterval? = nil,
+            detail: [String: String] = [:],
+            children: [Trace.Span] = []
+        ) {
+            self.section = section
+            self.startAt = startAt
+            self.endAt = endAt
+            self.duration = duration
+            self.detail = detail
+            self.children = children
+        }
     }
 }

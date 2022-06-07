@@ -10,7 +10,11 @@ import Buildkite
 import Foundation
 
 @main struct Example {
-    static func main() async {
+    static func main() async throws {
+        let token = ProcessInfo.processInfo.environment["TOKEN"] ?? "..."
+        let client = BuildkiteClient(token: token)
 
+        let me = try await client.send(.me).content
+        print("Hello, \(me.name)! 👋🏼")
     }
 }

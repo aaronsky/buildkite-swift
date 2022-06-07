@@ -56,7 +56,10 @@ test-examples:
 		-scheme test-analytics \
 		-destination "$(DESTINATION_PLATFORM_MACOS)" \
 		-quiet
-
+	xcodebuild build \
+		-scheme webhooks \
+		-destination "$(DESTINATION_PLATFORM_MACOS)" \
+		-quiet
 
 DOC_WARNINGS := $(shell xcodebuild clean docbuild \
 	-scheme Buildkite \
