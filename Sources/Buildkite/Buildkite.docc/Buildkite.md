@@ -13,38 +13,7 @@ The entire publicly documented REST API surface is supported by this package.
 - <doc:GettingStarted>
 - ``BuildkiteClient``
 
-### Resources
-
-- ``AccessToken/Resources``
-- ``Agent/Resources``
-- ``AgentMetrics/Resources``
-- ``Annotation/Resources``
-- ``Artifact/Resources``
-- ``Build/Resources``
-- ``Emoji/Resources``
-- ``Job/Resources``
-- ``Meta/Resources``
-- ``Organization/Resources``
-- ``Pipeline/Resources``
-- ``Team/Resources``
-- ``TestAnalytics/Resources``
-- ``User/Resources``
-- ``Followable``
-- ``Resource``
-
-### GraphQL
-
-- <doc:UsingGraphQL>
-- ``GraphQL``
-- ``JSONValue``
-
-### Pagination
-
-- ``Page``
-- ``PageOptions``
-- ``PaginatedResource``
-
-### Models
+### REST API
 
 - ``AccessToken``
 - ``Agent``
@@ -52,6 +21,7 @@ The entire publicly documented REST API surface is supported by this package.
 - ``Artifact``
 - ``Build``
 - ``Emoji``
+- ``Followable``
 - ``Job``
 - ``Meta``
 - ``Organization``
@@ -59,13 +29,43 @@ The entire publicly documented REST API surface is supported by this package.
 - ``Team``
 - ``User``
 
-### Advanced
+### Authorization
 
 - <doc:Authorization>
+- ``TokenProvider``
+
+#### Pagination
+
+- ``Page``
+- ``PageOptions``
+- ``PaginatedResource``
+
+### GraphQL API
+
+- <doc:UsingGraphQL>
+- ``GraphQL``
+- ``JSONValue``
+
+### Agent API
+
+- ``AgentMetrics``
+
+### Test Analytics API
+
+- ``TestAnalytics``
+- ``Trace``
+
+### Webhook API
+
+- <doc:Webhooks>
+- ``WebhookEvent``
+
+### Advanced
+
 - ``Configuration``
 - ``APIVersion``
+- ``Resource``
 - ``Transport``
-- ``TokenProvider``
 - ``Response``
 - ``StatusCode``
 - ``BuildkiteError``

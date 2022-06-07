@@ -13,10 +13,10 @@ import FoundationNetworking
 #endif
 
 public enum WebhookEvent: Codable, Equatable {
-    case ping(WebhookEvents.Ping)
-    case build(WebhookEvents.Build)
-    case job(WebhookEvents.Job)
-    case agent(WebhookEvents.Agent)
+    case ping(Ping)
+    case build(Build)
+    case job(Job)
+    case agent(Agent)
 
     private enum Unassociated: String, Codable {
         case ping
@@ -41,13 +41,13 @@ public enum WebhookEvent: Codable, Equatable {
         let event = try container.decode(Unassociated.self, forKey: .event)
         switch event {
         case .ping:
-            self = .ping(try WebhookEvents.Ping(from: decoder))
+            self = .ping(try Ping(from: decoder))
         case .buildScheduled, .buildRunning, .buildFinished:
-            self = .build(try WebhookEvents.Build(from: decoder))
+            self = .build(try Build(from: decoder))
         case .jobScheduled, .jobStarted, .jobFinished, .jobActivated:
-            self = .job(try WebhookEvents.Job(from: decoder))
+            self = .job(try Job(from: decoder))
         case .agentConnected, .agentLost, .agentDisconnected, .agentStopping, .agentStopped:
-            self = .agent(try WebhookEvents.Agent(from: decoder))
+            self = .agent(try Agent(from: decoder))
         }
     }
 
@@ -67,9 +67,22 @@ public enum WebhookEvent: Codable, Equatable {
     private enum CodingKeys: String, CodingKey {
         case event
     }
-}
 
-public enum WebhookEvents {
+    public struct Service: Codable, Equatable, Identifiable {
+        public var id: UUID
+        public var provider: String
+        public var settings: Settings
+
+        public struct Settings: Codable, Equatable {
+            public var url: URL
+        }
+    }
+
+    public struct Sender: Codable, Equatable, Identifiable {
+        public var id: UUID
+        public var name: String
+    }
+
     public struct Ping: Codable, Equatable {
         /// The notification service that sent this webhook
         public var service: Service
@@ -142,58 +155,3 @@ public enum WebhookEvents {
         }
     }
 }
-
-public struct Service: Codable, Equatable, Identifiable {
-    public var id: UUID
-    public var provider: String
-    public var settings: Settings
-
-    public struct Settings: Codable, Equatable {
-        public var url: URL
-    }
-}
-
-public struct Sender: Codable, Equatable, Identifiable {
-    public var id: UUID
-    public var name: String
-}
-
-
-// Received POST {
-//   host: '3424-2601-192-8600-bfc0-a963-fc8-ece3-46b8.ngrok.io',
-//   'user-agent': 'Buildkite-Request',
-//   'content-length': '772',
-//   accept: '*/*',
-//   'accept-encoding': 'gzip;q=1.0,deflate;q=0.6,identity;q=0.3',
-//   'content-type': 'application/json',
-//   'x-buildkite-event': 'ping',
-//   'x-buildkite-request': '01813932-4ac5-490a-82cd-eb6bcb2b55b6',
-//   'x-buildkite-token': '62d32cdc0687926d9c556dff46a6f0e8',
-//   'x-datadog-parent-id': '3879493372906842722',
-//   'x-datadog-sampling-priority': '0',
-//   'x-datadog-trace-id': '2090185261397568562',
-//   'x-forwarded-for': '100.24.182.113',
-//   'x-forwarded-proto': 'https'
-// } {
-//   event: 'ping',
-//   service: {
-//     id: '69774b46-b443-4ed9-8ee5-7817f9d5d3d6',
-//     provider: 'webhook',
-//     settings: {
-//       url: 'https://3424-2601-192-8600-bfc0-a963-fc8-ece3-46b8.ngrok.io'
-//     }
-//   },
-//   organization: {
-//     id: '19ab06b9-17cd-4937-a44b-834976e5f894',
-//     graphql_id: 'T3JnYW5pemF0aW9uLS0tMTlhYjA2YjktMTdjZC00OTM3LWE0NGItODM0OTc2ZTVmODk0',
-//     url: 'https://api.buildkite.com/v2/organizations/asky',
-//     web_url: 'https://buildkite.com/asky',
-//     name: 'asky',
-//     slug: 'asky',
-//     agents_url: 'https://api.buildkite.com/v2/organizations/asky/agents',
-//     emojis_url: 'https://api.buildkite.com/v2/organizations/asky/emojis',
-//     created_at: '2020-03-14T20:04:43.567Z',
-//     pipelines_url: 'https://api.buildkite.com/v2/organizations/asky/pipelines'
-//   },
-//   sender: { id: 'df71cc10-3cf0-49b0-9acb-5882342ca649', name: 'Aaron Sky' }
-// }

@@ -1,8 +1,10 @@
 # Authorization
 
-Buildkite supports resources across several different APIs with a variety of versions and authorization interfaces. ``BuildkiteClient`` has built-in support to interoperate between the different APIs from a single client. 
+Authorizing with Buildkite APIs.
 
 ## Overview
+
+Buildkite supports resources across several different APIs with a variety of versions and authorization interfaces. ``BuildkiteClient`` has built-in support to interoperate between the different APIs from a single client. 
 
 The most basic means of authorizing with a single service in Buildkite is by the declaration of a fixed token string. The client instance will store a copy of this string in memory and use it with all subsequent requests.
 

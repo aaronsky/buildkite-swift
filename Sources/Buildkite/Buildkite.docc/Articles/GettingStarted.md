@@ -1,14 +1,14 @@
-# Getting Started with Buildkite
+# Getting Started
 
 Initialize a client and get started with sending resources by listing all pipelines. 
 
 ## Overview
 
-// TODO
+This article is an overview of how to set up your Buildkite client to interact with the REST API.
 
 ### Get Your Access Token
 
-In order to access the Buildkite API you must first create an API access token. Follow Buildkite's [own documentation on managing tokens](https://buildkite.com/docs/apis/managing-api-tokens) for more information on what to do. Keep in mind that securely storing tokens used with this package is the responsibility of the developer. 
+In order to access the Buildkite API you must first create an API access token. Follow Buildkite's own documentation on [managing API tokens](https://buildkite.com/docs/apis/managing-api-tokens) for more information on what to do. Keep in mind that securely storing tokens used with this package is the responsibility of the developer. 
 
 ### Create a Buildkite Client
 
