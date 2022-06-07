@@ -17,6 +17,7 @@ The entire publicly documented REST API surface is supported by this package.
 
 - ``AccessToken/Resources``
 - ``Agent/Resources``
+- ``AgentMetrics/Resources``
 - ``Annotation/Resources``
 - ``Artifact/Resources``
 - ``Build/Resources``
