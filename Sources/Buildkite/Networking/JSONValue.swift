@@ -30,23 +30,23 @@ extension JSONValue {
     }
 
     public subscript(_ key: JSONValue) -> JSONValue? {
-        if case let .number(key) = key {
+        if case .number(let key) = key {
             return self[Int(key)]
-        } else if case let .string(key) = key {
+        } else if case .string(let key) = key {
             return self[key]
         }
         return nil
     }
 
     public subscript(_ index: Int) -> JSONValue? {
-        guard case let .array(array) = self else {
+        guard case .array(let array) = self else {
             return nil
         }
         return array[index]
     }
 
     public subscript(_ key: String) -> JSONValue? {
-        guard case let .object(object) = self else {
+        guard case .object(let object) = self else {
             return nil
         }
         return object[key]

@@ -25,6 +25,10 @@ extension TokenProvider {
         switch version {
         case .GraphQL.v1, .REST.v2:
             return "Bearer \(token)"
+        case .Agent.v3:
+            return "Token \(token)"
+        case .TestAnalytics.v1:
+            return "Token token=\(token)"
         default:
             return nil
         }

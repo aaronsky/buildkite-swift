@@ -236,9 +236,9 @@ extension BuildkiteClient {
         send(resource) { result in
             do {
                 switch (try result.get()).content {
-                case let .data(data):
+                case .data(let data):
                     completion(.success(data))
-                case let .errors(errors):
+                case .errors(let errors):
                     completion(.failure(errors))
                 }
             } catch {
@@ -382,6 +382,7 @@ extension BuildkiteClient {
     /// Performs the given resource asynchronously.
     /// - Parameter resource: A resource.
     /// - Returns: A response containing the content of the response body, as well as other information about the HTTP operation.
+    /// - Throws: An error describing the manner in which the resource failed to complete.
     public func send<R>(_ resource: R) async throws -> Response<R.Content> where R: Resource, R.Content: Decodable {
         let request = try URLRequest(resource, configuration: configuration, tokens: tokens)
         let (data, response) = try await transport.send(request: request)
@@ -395,6 +396,7 @@ extension BuildkiteClient {
     ///    - resource: A resource.
     ///    - pageOptions: Page options to perform pagination.
     /// - Returns: A response containing the content of the response body, as well as other information about the HTTP operation.
+    /// - Throws: An error describing the manner in which the resource failed to complete.
     public func send<R>(_ resource: R, pageOptions: PageOptions? = nil) async throws -> Response<R.Content>
     where R: PaginatedResource {
         let request = try URLRequest(resource, configuration: configuration, tokens: tokens, pageOptions: pageOptions)
@@ -407,6 +409,7 @@ extension BuildkiteClient {
     /// Performs the given resource asynchronously.
     /// - Parameter resource: A resource.
     /// - Returns: A response containing the content of the response body, as well as other information about the HTTP operation.
+    /// - Throws: An error describing the manner in which the resource failed to complete.
     public func send<R>(_ resource: R) async throws -> Response<R.Content>
     where R: Resource, R.Body: Encodable, R.Content: Decodable {
         let request = try URLRequest(resource, configuration: configuration, tokens: tokens, encoder: encoder)
@@ -421,6 +424,7 @@ extension BuildkiteClient {
     ///    - resource: A resource.
     ///    - pageOptions: Page options to perform pagination.
     /// - Returns: A response containing the content of the response body, as well as other information about the HTTP operation.
+    /// - Throws: An error describing the manner in which the resource failed to complete.
     public func send<R>(_ resource: R, pageOptions: PageOptions? = nil) async throws -> Response<R.Content>
     where R: PaginatedResource, R.Body: Encodable {
         let request = try URLRequest(
@@ -440,6 +444,7 @@ extension BuildkiteClient {
     /// Performs the given resource asynchronously.
     /// - Parameter resource: A resource.
     /// - Returns: A response containing the content of the response body, as well as other information about the HTTP operation.
+    /// - Throws: An error describing the manner in which the resource failed to complete.
     public func send<R>(_ resource: R) async throws -> Response<R.Content> where R: Resource, R.Content == Void {
         let request = try URLRequest(resource, configuration: configuration, tokens: tokens)
         let (data, response) = try await transport.send(request: request)
@@ -450,6 +455,7 @@ extension BuildkiteClient {
     /// Performs the given resource asynchronously.
     /// - Parameter resource: A resource.
     /// - Returns: A response containing information about the HTTP operation, and no content.
+    /// - Throws: An error describing the manner in which the resource failed to complete.
     public func send<R>(_ resource: R) async throws -> Response<R.Content>
     where R: Resource, R.Body: Encodable, R.Content == Void {
         let request = try URLRequest(resource, configuration: configuration, tokens: tokens, encoder: encoder)

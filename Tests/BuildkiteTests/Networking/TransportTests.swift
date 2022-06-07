@@ -71,7 +71,7 @@ extension TransportTests {
         let expectation = XCTestExpectation()
         createSession()
             .send(request: request) {
-                if case let .failure(error) = $0 {
+                if case .failure(let error) = $0 {
                     XCTFail(error.localizedDescription)
                 }
                 expectation.fulfill()
@@ -108,7 +108,7 @@ extension TransportTests {
             .sendPublisher(request: request)
             .sink(
                 receiveCompletion: {
-                    if case let .failure(error) = $0 {
+                    if case .failure(let error) = $0 {
                         XCTFail(error.localizedDescription)
                     }
                     expectation.fulfill()

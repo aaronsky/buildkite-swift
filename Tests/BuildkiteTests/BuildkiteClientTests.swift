@@ -271,7 +271,7 @@ extension BuildkiteClientTests {
         testData.client.sendPublisher(testData.resources.contentResource)
             .sink(
                 receiveCompletion: {
-                    if case let .failure(error) = $0 {
+                    if case .failure(let error) = $0 {
                         XCTFail(error.localizedDescription)
                     }
                     expectation.fulfill()
@@ -290,7 +290,7 @@ extension BuildkiteClientTests {
             .sendPublisher(testData.resources.paginatedContentResource, pageOptions: PageOptions(page: 1, perPage: 30))
             .sink(
                 receiveCompletion: {
-                    if case let .failure(error) = $0 {
+                    if case .failure(let error) = $0 {
                         XCTFail(error.localizedDescription)
                     }
                     expectation.fulfill()
@@ -311,7 +311,7 @@ extension BuildkiteClientTests {
         testData.client.sendPublisher(testData.resources.noContentNoBodyResource)
             .sink(
                 receiveCompletion: {
-                    if case let .failure(error) = $0 {
+                    if case .failure(let error) = $0 {
                         XCTFail(error.localizedDescription)
                     }
                     expectation.fulfill()
@@ -329,7 +329,7 @@ extension BuildkiteClientTests {
         testData.client.sendPublisher(testData.resources.bodyResource)
             .sink(
                 receiveCompletion: {
-                    if case let .failure(error) = $0 {
+                    if case .failure(let error) = $0 {
                         XCTFail(error.localizedDescription)
                     }
                     expectation.fulfill()
@@ -347,7 +347,7 @@ extension BuildkiteClientTests {
         testData.client.sendPublisher(testData.resources.bodyAndContentResource)
             .sink(
                 receiveCompletion: {
-                    if case let .failure(error) = $0 {
+                    if case .failure(let error) = $0 {
                         XCTFail(error.localizedDescription)
                     }
                     expectation.fulfill()
@@ -368,7 +368,7 @@ extension BuildkiteClientTests {
             .sendPublisher(testData.resources.bodyAndPaginatedResource, pageOptions: PageOptions(page: 1, perPage: 30))
             .sink(
                 receiveCompletion: {
-                    if case let .failure(error) = $0 {
+                    if case .failure(let error) = $0 {
                         XCTFail(error.localizedDescription)
                     }
                     expectation.fulfill()
@@ -389,7 +389,7 @@ extension BuildkiteClientTests {
         testData.client.sendQueryPublisher(testData.resources.graphQLResource)
             .sink(
                 receiveCompletion: {
-                    if case let .failure(error) = $0 {
+                    if case .failure(let error) = $0 {
                         XCTFail(error.localizedDescription)
                     }
                     expectation.fulfill()

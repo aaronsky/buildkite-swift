@@ -49,9 +49,9 @@ public struct GraphQL<T: Decodable>: Resource {
 
         public func get() throws -> T {
             switch self {
-            case let .data(data):
+            case .data(let data):
                 return data
-            case let .errors(errors):
+            case .errors(let errors):
                 throw errors
             }
         }
