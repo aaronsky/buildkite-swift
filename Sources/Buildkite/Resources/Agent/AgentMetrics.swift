@@ -19,7 +19,7 @@ extension AgentMetrics {
 
 extension AgentMetrics.Resources {
     /// Get metrics about agents active with the current organization.
-    public struct Get: Resource {
+    public struct Get: Resource, Equatable, Hashable, Sendable {
         public typealias Content = AgentMetrics
 
         public var version: APIVersion {

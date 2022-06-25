@@ -20,7 +20,7 @@ extension Job.Resources {
     /// Retry a job
     ///
     /// Retries a `failed` or `timed_out` job.
-    public struct Retry: Resource {
+    public struct Retry: Resource, Equatable, Hashable, Sendable {
         public typealias Content = Job
         /// organization slug
         public var organization: String
@@ -55,7 +55,7 @@ extension Job.Resources {
     /// Unblock a job
     ///
     /// Unblocks a build’s "Block pipeline" job. The job’s `unblockable` property indicates whether it is able to be unblocked, and the `unblock_url` property points to this endpoint.
-    public struct Unblock: Resource {
+    public struct Unblock: Resource, Equatable, Hashable, Sendable {
         public typealias Content = Job
         /// organization slug
         public var organization: String
@@ -68,7 +68,7 @@ extension Job.Resources {
         /// body of the request
         public var body: Body
 
-        public struct Body: Codable {
+        public struct Body: Codable, Equatable, Hashable, Sendable {
             public var unblocker: UUID?
             public var fields: [String: String]
 
@@ -105,7 +105,7 @@ extension Job.Resources {
     }
 
     /// Get a job’s log output
-    public struct LogOutput: Resource {
+    public struct LogOutput: Resource, Equatable, Hashable, Sendable {
         public typealias Content = Job.LogOutput
         /// organization slug
         public var organization: String
@@ -134,7 +134,7 @@ extension Job.Resources {
     }
 
     /// Delete a job’s log output
-    public struct DeleteLogOutput: Resource {
+    public struct DeleteLogOutput: Resource, Equatable, Hashable, Sendable {
         /// organization slug
         public var organization: String
         /// pipeline slug
@@ -166,7 +166,7 @@ extension Job.Resources {
     }
 
     /// Get a job's environment variables
-    public struct EnvironmentVariables: Resource {
+    public struct EnvironmentVariables: Resource, Equatable, Hashable, Sendable {
         public typealias Content = Job.EnvironmentVariables
         /// organization slug
         public var organization: String
@@ -196,8 +196,8 @@ extension Job.Resources {
 }
 
 extension Job.Resources.LogOutput {
-    public struct Alternative: Resource {
-        public enum Format: String {
+    public struct Alternative: Resource, Equatable, Hashable, Sendable {
+        public enum Format: String, Equatable, Hashable, Sendable {
             case html
             case plainText = "txt"
         }

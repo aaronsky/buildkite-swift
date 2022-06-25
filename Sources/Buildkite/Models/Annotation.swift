@@ -12,8 +12,8 @@ import Foundation
 import FoundationNetworking
 #endif
 
-public struct Annotation: Codable, Equatable, Identifiable {
-    public enum Context: String, Codable {
+public struct Annotation: Codable, Equatable, Hashable, Identifiable, Sendable {
+    public enum Context: String, Codable, Hashable, Sendable {
         case success
         case info
         case warning

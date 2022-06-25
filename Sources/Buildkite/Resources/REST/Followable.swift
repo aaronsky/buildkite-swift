@@ -23,7 +23,7 @@ import FoundationNetworking
 /// let agentsResponse = await client.send(organizationResponse.content.agentsUrl)
 /// print(agentsResponse.content) // Array<Agent>(...)
 /// ```
-public struct Followable<R: Resource>: Codable, Equatable, Resource {
+public struct Followable<R: Resource>: Resource, Codable, Equatable, Hashable, Sendable {
     public typealias Content = R.Content
 
     public let path = ""

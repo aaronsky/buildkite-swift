@@ -12,7 +12,7 @@ import Foundation
 import FoundationNetworking
 #endif
 
-public enum WebhookEvent: Codable, Equatable {
+public enum WebhookEvent: Codable, Equatable, Hashable, Sendable {
     case ping(Ping)
     case build(Build)
     case job(Job)
@@ -68,22 +68,22 @@ public enum WebhookEvent: Codable, Equatable {
         case event
     }
 
-    public struct Service: Codable, Equatable, Identifiable {
+    public struct Service: Codable, Equatable, Hashable, Identifiable, Sendable {
         public var id: UUID
         public var provider: String
         public var settings: Settings
 
-        public struct Settings: Codable, Equatable {
+        public struct Settings: Codable, Equatable, Hashable, Sendable {
             public var url: URL
         }
     }
 
-    public struct Sender: Codable, Equatable, Identifiable {
+    public struct Sender: Codable, Equatable, Hashable, Identifiable, Sendable {
         public var id: UUID
         public var name: String
     }
 
-    public struct Ping: Codable, Equatable {
+    public struct Ping: Codable, Equatable, Hashable, Sendable {
         /// The notification service that sent this webhook
         public var service: Service
         /// The ``Organization`` this notification belongs to
@@ -92,7 +92,7 @@ public enum WebhookEvent: Codable, Equatable {
         public var sender: Sender
     }
 
-    public struct Build: Codable, Equatable {
+    public struct Build: Codable, Equatable, Hashable, Sendable {
         public var event: Event
         /// The ``Buildkite/Build`` this notification relates to
         public var build: Buildkite.Build
@@ -101,7 +101,7 @@ public enum WebhookEvent: Codable, Equatable {
         /// The user who created the webhook
         public var sender: Sender
 
-        public enum Event: String, Codable, Equatable {
+        public enum Event: String, Codable, Equatable, Hashable, Sendable {
             /// A build has been scheduled
             case scheduled
             /// A build has started running
@@ -111,7 +111,7 @@ public enum WebhookEvent: Codable, Equatable {
         }
     }
 
-    public struct Job: Codable, Equatable {
+    public struct Job: Codable, Equatable, Hashable, Sendable {
         public var event: Event
         /// The ``Buildkite/Job`` this notification relates to
         public var job: Buildkite.Job
@@ -122,7 +122,7 @@ public enum WebhookEvent: Codable, Equatable {
         /// The user who created the webhook
         public var sender: Sender
 
-        public enum Event: String, Codable, Equatable {
+        public enum Event: String, Codable, Equatable, Hashable, Sendable {
             /// A command step job has been scheduled to run on an agent
             case scheduled
             /// A command step job has started running on an agent
@@ -134,14 +134,14 @@ public enum WebhookEvent: Codable, Equatable {
         }
     }
 
-    public struct Agent: Codable, Equatable {
+    public struct Agent: Codable, Equatable, Hashable, Sendable {
         public var event: Event
         /// The ``Buildkite/Agent`` this notification relates to
         public var agent: Buildkite.Agent
         /// The user who created the webhook
         public var sender: Sender
 
-        public enum Event: String, Codable, Equatable {
+        public enum Event: String, Codable, Equatable, Hashable, Sendable {
             /// An agent has connected to the API
             case connected
             /// An agent has been marked as lost. This happens when Buildkite stops receiving pings from the agent

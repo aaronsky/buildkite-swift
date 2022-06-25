@@ -21,7 +21,7 @@ extension Agent.Resources {
     /// List agents in the organization
     ///
     /// Returns a paginated list of an organization’s agents.
-    public struct List: PaginatedResource {
+    public struct List: PaginatedResource, Equatable, Hashable, Sendable {
         public typealias Content = [Agent]
         /// organization slug
         public var organization: String
@@ -59,7 +59,7 @@ extension Agent.Resources {
     }
 
     /// Get an agent by ID
-    public struct Get: Resource {
+    public struct Get: Resource, Equatable, Hashable, Sendable {
         public typealias Content = Agent
         /// organization slug
         public var organization: String
@@ -82,7 +82,7 @@ extension Agent.Resources {
     /// Stop an agent by ID
     ///
     /// Instruct an agent to stop accepting new build jobs and shut itself down.
-    public struct Stop: Resource {
+    public struct Stop: Resource, Equatable, Hashable, Sendable {
         /// organization slug
         public var organization: String
         /// agent ID
@@ -90,7 +90,7 @@ extension Agent.Resources {
         /// body of the request
         public var body: Body
 
-        public struct Body: Codable {
+        public struct Body: Codable, Equatable, Hashable, Sendable {
             /// If the agent is currently processing a job, the job and the build will be canceled.
             public var force: Bool?
 

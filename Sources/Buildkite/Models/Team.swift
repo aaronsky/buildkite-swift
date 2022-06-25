@@ -12,7 +12,7 @@ import Foundation
 import FoundationNetworking
 #endif
 
-public struct Team: Codable, Equatable, Identifiable {
+public struct Team: Codable, Equatable, Hashable, Identifiable, Sendable {
     /// ID of the team
     public var id: UUID
     /// Name of the team
@@ -30,7 +30,7 @@ public struct Team: Codable, Equatable, Identifiable {
     /// User who created the team
     public var createdBy: User?
 
-    public enum Visibility: String, Codable, Equatable {
+    public enum Visibility: String, Codable, Equatable, Hashable, Sendable {
         case visible
         case secret
     }

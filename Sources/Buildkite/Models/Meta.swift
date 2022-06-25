@@ -12,7 +12,7 @@ import Foundation
 import FoundationNetworking
 #endif
 
-public struct Meta: Codable, Equatable {
+public struct Meta: Codable, Equatable, Hashable, Sendable {
     /// A list of IP addresses in CIDR notation that Buildkite uses to
     /// send outbound traffic such as webhooks and commit statuses.
     /// These are subject to change from time to time.

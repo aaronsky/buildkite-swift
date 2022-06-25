@@ -20,7 +20,7 @@ extension Annotation.Resources {
     /// List annotations for a build
     ///
     /// Returns a paginated list of a build’s annotations.
-    public struct List: PaginatedResource {
+    public struct List: PaginatedResource, Equatable, Hashable, Sendable {
         public typealias Content = [Annotation]
         /// organization slug
         public var organization: String

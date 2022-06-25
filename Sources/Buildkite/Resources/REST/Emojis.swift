@@ -20,7 +20,7 @@ extension Emoji.Resources {
     /// List emojis
     ///
     /// Returns a list of all the emojis for a given organization, including custom emojis and aliases. This list is not paginated.
-    public struct List: Resource {
+    public struct List: Resource, Equatable, Hashable, Sendable {
         public typealias Content = [Emoji]
         /// organization slug
         public var organization: String

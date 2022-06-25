@@ -12,7 +12,7 @@ import Foundation
 import FoundationNetworking
 #endif
 
-public struct Trace: Codable, Equatable, Identifiable {
+public struct Trace: Codable, Equatable, Hashable, Identifiable, Sendable {
     /// a unique identifier for this test result
     public var id: UUID
     /// a group or topic for the test
@@ -67,7 +67,7 @@ public struct Trace: Codable, Equatable, Identifiable {
         self.history = history
     }
 
-    public struct Span: Codable, Equatable {
+    public struct Span: Codable, Equatable, Hashable, Sendable {
         /// A section category for this span, e.g. `"http"`, `"sql"`, `"sleep"`, or `"annotation"`
         public var section: String
         /// A monotonically increasing number

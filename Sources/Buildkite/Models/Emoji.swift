@@ -12,7 +12,7 @@ import Foundation
 import FoundationNetworking
 #endif
 
-public struct Emoji: Codable, Equatable {
+public struct Emoji: Codable, Equatable, Hashable, Sendable {
     public var name: String
     public var url: URL
     public var aliases: [String]? = []

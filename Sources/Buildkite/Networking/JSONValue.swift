@@ -15,7 +15,7 @@ import FoundationNetworking
 #endif
 
 @dynamicMemberLookup
-public enum JSONValue {
+public enum JSONValue: Equatable, Hashable, Sendable {
     case null
     case bool(Bool)
     case number(Double)
@@ -52,8 +52,6 @@ extension JSONValue {
         return object[key]
     }
 }
-
-extension JSONValue: Equatable, Hashable {}
 
 extension JSONValue: Encodable {
     public func encode(to encoder: Encoder) throws {

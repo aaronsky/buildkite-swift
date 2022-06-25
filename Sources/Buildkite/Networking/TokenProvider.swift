@@ -36,7 +36,7 @@ extension TokenProvider {
 }
 
 /// Wrapper for a raw representable token provider
-struct RawTokenProvider: RawRepresentable, TokenProvider {
+struct RawTokenProvider: RawRepresentable, TokenProvider, Sendable {
     let rawValue: String
 
     func token(for version: APIVersion) -> String? {

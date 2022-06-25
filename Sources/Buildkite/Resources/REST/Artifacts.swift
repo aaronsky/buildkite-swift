@@ -20,7 +20,7 @@ extension Artifact.Resources {
     /// List artifacts for a build
     ///
     /// Returns a paginated list of a build’s artifacts across all of its jobs.
-    public struct ListByBuild: PaginatedResource {
+    public struct ListByBuild: PaginatedResource, Equatable, Hashable, Sendable {
         public typealias Content = [Artifact]
         /// organization slug
         public var organization: String
@@ -47,7 +47,7 @@ extension Artifact.Resources {
     /// List artifacts for a job
     ///
     /// Returns a paginated list of a job’s artifacts.
-    public struct ListByJob: PaginatedResource {
+    public struct ListByJob: PaginatedResource, Equatable, Hashable, Sendable {
         public typealias Content = [Artifact]
         /// organization slug
         public var organization: String
@@ -76,7 +76,7 @@ extension Artifact.Resources {
     }
 
     /// Get an artifact
-    public struct Get: Resource {
+    public struct Get: Resource, Equatable, Hashable, Sendable {
         public typealias Content = Artifact
         /// organization slug
         public var organization: String
@@ -111,7 +111,7 @@ extension Artifact.Resources {
     /// Download an artifact
     ///
     ///
-    public struct Download: Resource {
+    public struct Download: Resource, Equatable, Hashable, Sendable {
         public typealias Content = Artifact.URLs
         /// organization slug
         public var organization: String
@@ -146,7 +146,7 @@ extension Artifact.Resources {
     /// Delete an artifact
     ///
     ///
-    public struct Delete: Resource {
+    public struct Delete: Resource, Equatable, Hashable, Sendable {
         /// organization slug
         public var organization: String
         /// pipeline slug

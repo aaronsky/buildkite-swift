@@ -12,19 +12,19 @@ import Foundation
 import FoundationNetworking
 #endif
 
-public struct AgentMetrics: Codable, Equatable {
+public struct AgentMetrics: Codable, Equatable, Hashable, Sendable {
     public var agents: AgentTotals
     public var jobs: JobTotals
     public var organization: Organization
 
-    public struct AgentTotals: Codable, Equatable {
+    public struct AgentTotals: Codable, Equatable, Hashable, Sendable {
         public var idle: Int
         public var busy: Int
         public var total: Int
         public var queues: [String: AgentTotals] = [:]
     }
 
-    public struct JobTotals: Codable, Equatable {
+    public struct JobTotals: Codable, Equatable, Hashable, Sendable {
         public var scheduled: Int
         public var running: Int
         public var waiting: Int
@@ -32,7 +32,7 @@ public struct AgentMetrics: Codable, Equatable {
         public var queues: [String: JobTotals] = [:]
     }
 
-    public struct Organization: Codable, Equatable {
+    public struct Organization: Codable, Equatable, Hashable, Sendable {
         public var slug: String
     }
 }

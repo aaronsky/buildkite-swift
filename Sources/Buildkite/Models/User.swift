@@ -12,7 +12,7 @@ import Foundation
 import FoundationNetworking
 #endif
 
-public struct User: Codable, Equatable, Identifiable {
+public struct User: Codable, Equatable, Hashable, Identifiable, Sendable {
     public var id: UUID
     public var name: String
     public var email: String

@@ -12,8 +12,8 @@ import Foundation
 import FoundationNetworking
 #endif
 
-public struct GraphQL<T: Decodable>: Resource {
-    public struct Body: Encodable {
+public struct GraphQL<T: Decodable>: Resource, Equatable, Hashable, Sendable {
+    public struct Body: Encodable, Equatable, Hashable, Sendable {
         /// The query or mutation to be sent
         public var query: String
         /// The variables to be provided alongside the query or mutation
@@ -82,18 +82,18 @@ public struct GraphQL<T: Decodable>: Resource {
         request.httpMethod = "POST"
     }
 
-    public struct Errors: Swift.Error, Equatable, Hashable {
+    public struct Errors: Swift.Error, Equatable, Hashable, Sendable {
         var errors: [Error]
         var type: String?
     }
 
-    public struct Error: Swift.Error, Equatable, Hashable, Decodable {
+    public struct Error: Swift.Error, Decodable, Equatable, Hashable, Sendable {
         public var message: String
         public var locations: [Location]?
         public var path: [String]?
         public var extensions: JSONValue?
 
-        public struct Location: Equatable, Hashable, Decodable {
+        public struct Location: Decodable, Equatable, Hashable, Sendable {
             public var line: Int
             public var column: Int
         }
@@ -102,3 +102,4 @@ public struct GraphQL<T: Decodable>: Resource {
 
 extension GraphQL.Content: Equatable where T: Equatable {}
 extension GraphQL.Content: Hashable where T: Hashable {}
+extension GraphQL.Content: Sendable where T: Sendable {}

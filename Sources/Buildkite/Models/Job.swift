@@ -12,7 +12,7 @@ import Foundation
 import FoundationNetworking
 #endif
 
-public enum Job: Codable, Equatable {
+public enum Job: Codable, Equatable, Hashable, Sendable {
     case script(Command)
     case waiter(Wait)
     case manual(Block)
@@ -59,8 +59,8 @@ public enum Job: Codable, Equatable {
         case type
     }
 
-    public struct Command: Codable, Equatable, Identifiable {
-        public struct AgentRef: Codable, Equatable {
+    public struct Command: Codable, Equatable, Hashable, Identifiable, Sendable {
+        public struct AgentRef: Codable, Equatable, Hashable, Sendable {
             public var id: UUID
             public var name: String
             public var url: URL
@@ -94,12 +94,12 @@ public enum Job: Codable, Equatable {
         public var parallelGroupTotal: Int?
     }
 
-    public struct Wait: Codable, Equatable, Identifiable {
+    public struct Wait: Codable, Equatable, Hashable, Identifiable, Sendable {
         public var type = "waiter"
         public var id: UUID
     }
 
-    public struct Block: Codable, Equatable, Identifiable {
+    public struct Block: Codable, Equatable, Hashable, Identifiable, Sendable {
         public var type = "manual"
         public var id: UUID
         public var label: String
@@ -111,8 +111,8 @@ public enum Job: Codable, Equatable {
         public var unblockUrl: URL
     }
 
-    public struct Trigger: Codable, Equatable {
-        public struct TriggeredBuild: Codable, Equatable, Identifiable {
+    public struct Trigger: Codable, Equatable, Hashable, Sendable {
+        public struct TriggeredBuild: Codable, Equatable, Hashable, Identifiable, Sendable {
             public var id: UUID
             public var number: Int
             public var url: URL
@@ -131,14 +131,14 @@ public enum Job: Codable, Equatable {
         public var triggeredBuild: TriggeredBuild?
     }
 
-    public struct LogOutput: Codable, Equatable {
+    public struct LogOutput: Codable, Equatable, Hashable, Sendable {
         public var url: Followable<Job.Resources.LogOutput>
         public var content: String
         public var size: Int
         public var headerTimes: [Int]
     }
 
-    public struct EnvironmentVariables: Codable, Equatable {
+    public struct EnvironmentVariables: Codable, Equatable, Hashable, Sendable {
         public var env: [String: String]
     }
 }

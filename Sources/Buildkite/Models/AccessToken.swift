@@ -12,7 +12,7 @@ import Foundation
 import FoundationNetworking
 #endif
 
-public struct AccessToken: Codable, Equatable {
+public struct AccessToken: Codable, Equatable, Hashable, Sendable {
     public var uuid: UUID
     public var scopes: [String]
 }

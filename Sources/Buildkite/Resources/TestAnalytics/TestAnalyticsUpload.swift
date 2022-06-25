@@ -19,13 +19,13 @@ public enum TestAnalytics {
 
 extension TestAnalytics.Resources {
     /// Get metrics about agents active with the current organization.
-    public struct Upload: Resource {
-        public struct Body: Encodable {
+    public struct Upload: Resource, Equatable, Hashable, Sendable {
+        public struct Body: Encodable, Equatable, Hashable, Sendable {
             public var format: String
             public var environment: Environment
             public var data: [Trace]
 
-            public struct Environment: Encodable {
+            public struct Environment: Encodable, Equatable, Hashable, Sendable {
                 public var ci: String
                 public var key: String
                 public var number: String?
@@ -63,7 +63,7 @@ extension TestAnalytics.Resources {
             }
         }
 
-        public struct Content: Codable, Equatable {
+        public struct Content: Codable, Equatable, Hashable, Sendable {
             public var id: UUID
             public var runId: UUID
             public var queued: Int

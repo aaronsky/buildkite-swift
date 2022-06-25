@@ -21,7 +21,7 @@ extension Meta.Resources {
     /// Get an object with properties describing Buildkite
     ///
     /// Returns meta information about Buildkite.
-    public struct Get: Resource {
+    public struct Get: Resource, Equatable, Hashable, Sendable {
         public typealias Content = Meta
         public let path = "meta"
 

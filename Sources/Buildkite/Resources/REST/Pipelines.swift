@@ -21,7 +21,7 @@ extension Pipeline.Resources {
     /// List pipelines
     ///
     /// Returns a paginated list of an organization’s pipelines.
-    public struct List: PaginatedResource {
+    public struct List: PaginatedResource, Equatable, Hashable, Sendable {
         public typealias Content = [Pipeline]
         /// organization slug
         public var organization: String
@@ -38,7 +38,7 @@ extension Pipeline.Resources {
     }
 
     /// Get a pipeline
-    public struct Get: Resource {
+    public struct Get: Resource, Equatable, Hashable, Sendable {
         public typealias Content = Pipeline
         /// organization slug
         public var organization: String
@@ -59,14 +59,14 @@ extension Pipeline.Resources {
     }
 
     /// Create a YAML pipeline
-    public struct Create: Resource {
+    public struct Create: Resource, Equatable, Hashable, Sendable {
         public typealias Content = Pipeline
         /// organization slug
         public var organization: String
 
         public var body: Body
 
-        public struct Body: Codable {
+        public struct Body: Codable, Equatable, Hashable, Sendable {
             /// The name of the pipeline.
             public var name: String
             /// The repository URL.
@@ -140,14 +140,14 @@ extension Pipeline.Resources {
     }
 
     /// Create a visual step pipeline
-    public struct CreateVisualSteps: Resource {
+    public struct CreateVisualSteps: Resource, Equatable, Hashable, Sendable {
         public typealias Content = Pipeline
         /// organization slug
         public var organization: String
 
         public var body: Body
 
-        public struct Body: Codable {
+        public struct Body: Codable, Equatable, Hashable, Sendable {
             /// The name of the pipeline.
             public var name: String
             /// The repository URL.
@@ -227,7 +227,7 @@ extension Pipeline.Resources {
     /// Update a pipeline
     ///
     /// Updates one or more properties of an existing pipeline
-    public struct Update: Resource {
+    public struct Update: Resource, Equatable, Hashable, Sendable {
         public typealias Content = Pipeline
         /// organization slug
         public var organization: String
@@ -236,7 +236,7 @@ extension Pipeline.Resources {
 
         public var body: Body
 
-        public struct Body: Codable {
+        public struct Body: Codable, Equatable, Hashable, Sendable {
             /// A branch filter pattern to limit which pushed branches trigger builds on this pipeline.
             public var branchConfiguration: String?
             /// Cancel intermediate builds. When a new build is created on a branch, any previous builds that are running on the same branch will be automatically canceled.
@@ -311,7 +311,7 @@ extension Pipeline.Resources {
     }
 
     /// Archive a pipeline
-    public struct Archive: Resource {
+    public struct Archive: Resource, Equatable, Hashable, Sendable {
         public typealias Content = Pipeline
         /// organization slug
         public var organization: String
@@ -336,7 +336,7 @@ extension Pipeline.Resources {
     }
 
     /// Unarchive an archived pipeline
-    public struct Unarchive: Resource {
+    public struct Unarchive: Resource, Equatable, Hashable, Sendable {
         public typealias Content = Pipeline
         /// organization slug
         public var organization: String
@@ -361,7 +361,7 @@ extension Pipeline.Resources {
     }
 
     /// Delete a pipeline
-    public struct Delete: Resource {
+    public struct Delete: Resource, Equatable, Hashable, Sendable {
         /// organization slug
         public var organization: String
         /// pipeline slug
@@ -381,7 +381,7 @@ extension Pipeline.Resources {
     }
 
     /// Create a webhook for a pipeline
-    public struct CreateWebhook: Resource {
+    public struct CreateWebhook: Resource, Equatable, Hashable, Sendable {
         /// organization slug
         public var organization: String
         /// pipeline slug

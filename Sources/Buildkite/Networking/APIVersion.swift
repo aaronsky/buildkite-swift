@@ -12,7 +12,7 @@ import Foundation
 import FoundationNetworking
 #endif
 
-public struct APIVersion: Equatable {
+public struct APIVersion: Equatable, Hashable, Sendable {
     public enum REST {
         private static let baseURL = URL(string: "https://api.buildkite.com")!
         public static let v2 = APIVersion(baseURL: baseURL, version: "v2")

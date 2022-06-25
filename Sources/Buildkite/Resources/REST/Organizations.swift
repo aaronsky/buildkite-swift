@@ -21,7 +21,7 @@ extension Organization.Resources {
     /// List organizations
     ///
     /// Returns a paginated list of the user’s organizations.
-    public struct List: PaginatedResource {
+    public struct List: PaginatedResource, Equatable, Hashable, Sendable {
         public typealias Content = [Organization]
         public let path = "organizations"
 
@@ -29,7 +29,7 @@ extension Organization.Resources {
     }
 
     /// Get an organization
-    public struct Get: Resource {
+    public struct Get: Resource, Equatable, Hashable, Sendable {
         public typealias Content = Organization
         /// organization slug
         public var organization: String

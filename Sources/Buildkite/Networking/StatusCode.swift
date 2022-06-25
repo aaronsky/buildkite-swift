@@ -12,7 +12,7 @@ import Foundation
 import FoundationNetworking
 #endif
 
-public enum StatusCode: Int, Error, Codable {
+public enum StatusCode: Int, Error, Codable, Equatable, Hashable, Sendable {
     /// The request was successfully processed by Buildkite.
     case ok = 200
 

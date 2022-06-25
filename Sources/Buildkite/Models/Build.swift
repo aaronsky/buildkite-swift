@@ -12,7 +12,7 @@ import Foundation
 import FoundationNetworking
 #endif
 
-public struct Build: Codable, Equatable, Identifiable {
+public struct Build: Codable, Equatable, Hashable, Identifiable, Sendable {
     public var id: UUID
     public var url: Followable<Build.Resources.Get>
     public var webUrl: URL
@@ -34,7 +34,7 @@ public struct Build: Codable, Equatable, Identifiable {
     public var pullRequest: [String: String?]?
     public var pipeline: Pipeline
 
-    public enum State: String, Codable, Equatable {
+    public enum State: String, Codable, Equatable, Hashable, Sendable {
         case running
         case scheduled
         case passed

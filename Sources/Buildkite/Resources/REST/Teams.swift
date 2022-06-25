@@ -19,7 +19,7 @@ extension Team {
 
 extension Team.Resources {
     /// List all teams in the given organization
-    public struct List: PaginatedResource {
+    public struct List: PaginatedResource, Equatable, Hashable, Sendable {
         public typealias Content = [Team]
         /// organization slug
         public var organization: String

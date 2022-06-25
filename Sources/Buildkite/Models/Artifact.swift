@@ -12,8 +12,8 @@ import Foundation
 import FoundationNetworking
 #endif
 
-public struct Artifact: Codable, Equatable, Identifiable {
-    public enum State: String, Codable, Equatable {
+public struct Artifact: Codable, Equatable, Hashable, Identifiable, Sendable {
+    public enum State: String, Codable, Equatable, Hashable, Sendable {
         case new
         case error
         case finished

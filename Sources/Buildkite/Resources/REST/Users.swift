@@ -21,7 +21,7 @@ extension User.Resources {
     /// Get the current user
     ///
     /// Returns details about the currently-authenticated user.
-    public struct Me: Resource {
+    public struct Me: Resource, Equatable, Hashable, Sendable {
         public typealias Content = User
         public let path = "user"
 

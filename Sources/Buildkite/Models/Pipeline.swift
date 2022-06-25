@@ -12,7 +12,7 @@ import Foundation
 import FoundationNetworking
 #endif
 
-public struct Pipeline: Codable, Equatable, Identifiable {
+public struct Pipeline: Codable, Equatable, Hashable, Identifiable, Sendable {
     public var id: UUID
     public var url: Followable<Pipeline.Resources.Get>
     public var webUrl: URL
@@ -38,7 +38,7 @@ public struct Pipeline: Codable, Equatable, Identifiable {
     public var steps: [Step]
     public var env: JSONValue?
 
-    public struct Provider: Codable, Equatable {
+    public struct Provider: Codable, Equatable, Hashable, Identifiable, Sendable {
         public var id: String
         public var webhookUrl: URL?
         public var settings: Settings
@@ -46,7 +46,7 @@ public struct Pipeline: Codable, Equatable, Identifiable {
 }
 
 extension Pipeline.Provider {
-    public struct Settings: Codable, Equatable {
+    public struct Settings: Codable, Equatable, Hashable, Sendable {
         public var repository: String?
         /// Whether to create builds for commits that are part of a Pull Request.
         public var buildPullRequests: Bool?
@@ -80,7 +80,7 @@ extension Pipeline.Provider {
 }
 
 extension Pipeline {
-    public enum Step: Codable, Equatable {
+    public enum Step: Codable, Equatable, Hashable, Sendable {
         case script(Command)
         case waiter(Wait)
         case manual(Block)
@@ -127,7 +127,7 @@ extension Pipeline {
             case type
         }
 
-        public struct Command: Codable, Equatable {
+        public struct Command: Codable, Equatable, Hashable, Sendable {
             public var type = "script"
             public var name: String?
             public var command: String?
@@ -142,18 +142,18 @@ extension Pipeline {
             public var parallelism: Int?
         }
 
-        public struct Wait: Codable, Equatable {
+        public struct Wait: Codable, Equatable, Hashable, Sendable {
             public var type = "waiter"
             public var label: String?
             public var continueAfterFailure: Bool?
         }
 
-        public struct Block: Codable, Equatable {
+        public struct Block: Codable, Equatable, Hashable, Sendable {
             public var type = "manual"
             public var label: String?
         }
 
-        public struct Trigger: Codable, Equatable {
+        public struct Trigger: Codable, Equatable, Hashable, Sendable {
             public var type = "trigger"
             public var triggerProjectSlug: String?
             public var label: String?

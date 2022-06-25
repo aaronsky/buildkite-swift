@@ -21,7 +21,7 @@ extension AccessToken.Resources {
     /// Get the current token
     ///
     /// Returns details about the API Access Token that was used to authenticate the request.
-    public struct Get: Resource {
+    public struct Get: Resource, Equatable, Hashable, Sendable {
         public typealias Content = AccessToken
         public let path = "access-token"
 
@@ -31,7 +31,7 @@ extension AccessToken.Resources {
     /// Revoke the current token
     ///
     /// Once revoked, the token can no longer be used for further requests.
-    public struct Revoke: Resource {
+    public struct Revoke: Resource, Equatable, Hashable, Sendable {
         public let path = "access-token"
 
         public init() {}

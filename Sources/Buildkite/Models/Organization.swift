@@ -12,7 +12,7 @@ import Foundation
 import FoundationNetworking
 #endif
 
-public struct Organization: Codable, Equatable, Identifiable {
+public struct Organization: Codable, Equatable, Hashable, Identifiable, Sendable {
     public var id: UUID
     public var url: Followable<Organization.Resources.Get>
     public var webUrl: URL

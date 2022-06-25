@@ -21,7 +21,7 @@ extension Build.Resources {
     ///
     /// Returns a paginated list of all builds across all the user’s organizations and pipelines. If using token-based authentication
     /// the list of builds will be for the authorized organizations only. Builds are listed in the order they were created (newest first).
-    public struct ListAll: PaginatedResource {
+    public struct ListAll: PaginatedResource, Equatable, Hashable, Sendable {
         public typealias Content = [Build]
         public let path = "builds"
 
@@ -52,7 +52,7 @@ extension Build.Resources {
     ///
     /// Returns a paginated list of an organization’s builds across all of an organization’s pipelines. Builds are listed in the order
     /// they were created (newest first).
-    public struct ListForOrganization: PaginatedResource {
+    public struct ListForOrganization: PaginatedResource, Equatable, Hashable, Sendable {
         public typealias Content = [Build]
         /// organization slug
         public var organization: String
@@ -89,7 +89,7 @@ extension Build.Resources {
     /// List builds for a pipeline
     ///
     /// Returns a paginated list of a pipeline’s builds. Builds are listed in the order they were created (newest first).
-    public struct ListForPipeline: PaginatedResource {
+    public struct ListForPipeline: PaginatedResource, Equatable, Hashable, Sendable {
         public typealias Content = [Build]
         /// organization slug
         public var organization: String
@@ -128,7 +128,7 @@ extension Build.Resources {
     }
 
     /// Get a build
-    public struct Get: Resource {
+    public struct Get: Resource, Equatable, Hashable, Sendable {
         public typealias Content = Build
         /// organization slug
         public var organization: String
@@ -153,7 +153,7 @@ extension Build.Resources {
     }
 
     /// Create a build
-    public struct Create: Resource {
+    public struct Create: Resource, Equatable, Hashable, Sendable {
         public typealias Content = Build
         /// organization slug
         public var organization: String
@@ -162,8 +162,8 @@ extension Build.Resources {
         /// body of the request
         public var body: Body
 
-        public struct Body: Codable {
-            public struct Author: Codable {
+        public struct Body: Codable, Equatable, Hashable, Sendable {
+            public struct Author: Codable, Equatable, Hashable, Sendable {
                 public var name: String
                 public var email: String
 
@@ -250,7 +250,7 @@ extension Build.Resources {
     /// Cancel a build
     ///
     /// Cancels the build if it's state is either scheduled or running.
-    public struct Cancel: Resource {
+    public struct Cancel: Resource, Equatable, Hashable, Sendable {
         public typealias Content = Build
         /// organization slug
         public var organization: String
@@ -281,7 +281,7 @@ extension Build.Resources {
     /// Rebuild a build
     ///
     /// Returns the newly created build.
-    public struct Rebuild: Resource {
+    public struct Rebuild: Resource, Equatable, Hashable, Sendable {
         public typealias Content = Build
         /// organization slug
         public var organization: String
@@ -309,7 +309,7 @@ extension Build.Resources {
         }
     }
 
-    public struct QueryOptions {
+    public struct QueryOptions: Equatable, Hashable, Sendable {
         /// Filters the results by the given branch or branches.
         public var branches: [String] = []
         /// Filters the results by the commit (only works for full sha, not for shortened ones).

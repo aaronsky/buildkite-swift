@@ -31,6 +31,10 @@ public struct Response<T> {
     }
 }
 
+extension Response: Equatable where T: Equatable {}
+extension Response: Hashable where T: Hashable {}
+extension Response: Sendable where T: Sendable {}
+
 public enum ResponseError: Error {
     case incompatibleResponse(URLResponse)
 }

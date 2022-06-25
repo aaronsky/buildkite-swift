@@ -12,7 +12,7 @@ import Foundation
 import FoundationNetworking
 #endif
 
-public struct Page {
+public struct Page: Equatable, Hashable, Sendable {
     public var nextPage: Int?
     public var previousPage: Int?
     public var firstPage: Int?
@@ -62,7 +62,7 @@ public struct Page {
     }
 }
 
-public struct PageOptions {
+public struct PageOptions: Equatable, Hashable, Sendable {
     public var page: Int
     public var perPage: Int
 
