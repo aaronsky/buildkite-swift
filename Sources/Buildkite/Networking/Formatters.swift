@@ -14,13 +14,8 @@ import FoundationNetworking
 
 enum Formatters {
     static let iso8601WithFractionalSeconds: ISO8601DateFormatter = {
-        let formatter: ISO8601DateFormatter
-        if #available(iOS 11.0, macOS 10.13, tvOS 11.0, watchOS 4.0, *) {
-            formatter = ISO8601DateFormatter()
-            formatter.formatOptions = [.withInternetDateTime, .withFractionalSeconds]
-        } else {
-            formatter = Formatters.iso8601WithoutFractionalSeconds
-        }
+        let formatter = ISO8601DateFormatter()
+        formatter.formatOptions = [.withInternetDateTime, .withFractionalSeconds]
         return formatter
     }()
 

@@ -28,29 +28,3 @@ To send a resource, simply use one of the `send` methods on the client. This sam
 let response = try await client.send(.pipelines(in: "buildkite"))
 let pipelines = response.content
 ```
-
-For platforms that do not support Swift Concurrency, you can use the closure-based interface.
-
-```swift
-client.send(.pipelines(in: "buildkite")) { result in
-    do {
-        let response = try result.get()
-        let pipelines = response.content
-    } catch {
-        print(error)
-    }
-}
-```
-
-Combine is also supported, on platforms where it is available.
-
-```swift
-var cancellables: Set<AnyCancellable> = []
-client.sendPublisher(.pipelines(in: "buildkite"))
-    .map(\.content)
-    .sink { _ in
-
-    } receiveValue: { pipelines in
-        print(pipelines)
-    }.store(in: &cancellables)
-```

@@ -139,6 +139,14 @@ extension MockData {
         throw error
     }
 
+    static func mockingUnrecognizedBuildkiteError(for url: URL) -> (Data, URLResponse) {
+        let json = #"{"message":-1000}"#
+        guard let data = json.data(using: .utf8) else {
+            fatalError("Could not encode json as data")
+        }
+        return (data, urlResponse(for: url, status: .notFound))
+    }
+
     private static func urlResponse(for url: URL, status: StatusCode) -> URLResponse {
         urlResponse(for: url, rawStatus: status.rawValue)
     }

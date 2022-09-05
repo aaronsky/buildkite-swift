@@ -90,7 +90,7 @@ class PipelinesTests: XCTestCase {
     func testPipelinesCreate() async throws {
         let steps: [Pipeline.Step] = [
             .script(
-                Pipeline.Step.Command(
+                .init(
                     name: "📦",
                     command: "echo true",
                     label: "📦",
@@ -103,7 +103,7 @@ class PipelinesTests: XCTestCase {
         let expected = Pipeline(steps: steps)
         let context = try MockContext(content: expected)
 
-        _ = try await context.client.send(
+        let response = try await context.client.send(
             .createPipeline(
                 .init(
                     name: "My Pipeline",
@@ -113,12 +113,14 @@ class PipelinesTests: XCTestCase {
                 in: "buildkite"
             )
         )
+
+        XCTAssertEqual(expected, response.content)
     }
 
     func testPipelinesCreateVisualSteps() async throws {
         let steps: [Pipeline.Step] = [
             .script(
-                Pipeline.Step.Command(
+                .init(
                     name: "📦",
                     command: "echo true",
                     label: "📦",
@@ -133,14 +135,14 @@ class PipelinesTests: XCTestCase {
                 )
             ),
             .waiter(
-                Pipeline.Step.Wait(
+                .init(
                     label: "wait",
                     continueAfterFailure: true
                 )
             ),
-            .manual(Pipeline.Step.Block(label: "manual")),
+            .manual(.init(label: "manual")),
             .trigger(
-                Pipeline.Step.Trigger(
+                .init(
                     triggerProjectSlug: "my-other-pipeline",
                     label: "trigger",
                     triggerCommit: nil,
@@ -152,7 +154,7 @@ class PipelinesTests: XCTestCase {
         let expected = Pipeline(steps: steps)
         let context = try MockContext(content: expected)
 
-        _ = try await context.client.send(
+        let response = try await context.client.send(
             .createVisualStepsPipeline(
                 .init(
                     name: "My Pipeline",
@@ -172,13 +174,15 @@ class PipelinesTests: XCTestCase {
                 in: "buildkite"
             )
         )
+
+        XCTAssertEqual(expected, response.content)
     }
 
     func testPipelinesUpdate() async throws {
         let expected = Pipeline()
         let context = try MockContext(content: expected)
 
-        _ = try await context.client.send(
+        let response = try await context.client.send(
             .updatePipeline(
                 "my-pipeline",
                 in: "buildkite",
@@ -199,11 +203,47 @@ class PipelinesTests: XCTestCase {
                 )
             )
         )
+
+        XCTAssertEqual(expected, response.content)
+    }
+
+    func testPipelinesArchive() async throws {
+        let expected = Pipeline()
+        let context = try MockContext(content: expected)
+
+        let response = try await context.client.send(
+            .archivePipeline(
+                "my-pipeline",
+                in: "buildkite"
+            )
+        )
+
+        XCTAssertEqual(expected, response.content)
+    }
+
+    func testPipelinesUnarchive() async throws {
+        let expected = Pipeline()
+        let context = try MockContext(content: expected)
+
+        let response = try await context.client.send(
+            .unarchivePipeline(
+                "my-pipeline",
+                in: "buildkite"
+            )
+        )
+
+        XCTAssertEqual(expected, response.content)
     }
 
     func testPipelinesDelete() async throws {
         let context = MockContext()
 
         _ = try await context.client.send(.deletePipeline("my-pipeline", in: "buildkite"))
+    }
+
+    func testPipelinesCreateWebhook() async throws {
+        let context = MockContext()
+
+        _ = try await context.client.send(.createWebhookForPipeline("my-pipeline", in: "buildkite"))
     }
 }

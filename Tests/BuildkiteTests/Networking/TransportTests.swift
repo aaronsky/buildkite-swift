@@ -63,92 +63,15 @@ class TransportTests: XCTestCase {
     }
 }
 
-// MARK: - Closure-based Requests
-
-extension TransportTests {
-    func testURLSessionSendClosureBasedRequest() {
-        let request = URLRequest(url: URL())
-        let expectation = XCTestExpectation()
-        createSession()
-            .send(request: request) {
-                if case .failure(let error) = $0 {
-                    XCTFail(error.localizedDescription)
-                }
-                expectation.fulfill()
-            }
-        wait(for: [expectation])
-    }
-
-    func testURLSessionSendClosureBasedRequestFailure() {
-        let request = URLRequest(url: URL())
-        let expectation = XCTestExpectation()
-        createSession(testCase: .error)
-            .send(request: request) {
-                if case .success(_) = $0 {
-                    XCTFail("Expected to have failed with an error, but closure fulfilled normally")
-                }
-                expectation.fulfill()
-            }
-        wait(for: [expectation])
-    }
-}
-
-// MARK: - Combine-based Requests
-
-#if canImport(Combine)
-import Combine
-
-@available(iOS 13, macOS 10.15, tvOS 13, watchOS 6, *)
-extension TransportTests {
-    func testURLSessionSendPublisherBasedRequest() {
-        let request = URLRequest(url: URL())
-        let expectation = XCTestExpectation()
-        var cancellables: Set<AnyCancellable> = []
-        createSession()
-            .sendPublisher(request: request)
-            .sink(
-                receiveCompletion: {
-                    if case .failure(let error) = $0 {
-                        XCTFail(error.localizedDescription)
-                    }
-                    expectation.fulfill()
-                },
-                receiveValue: { _ in }
-            )
-            .store(in: &cancellables)
-        wait(for: [expectation])
-    }
-
-    func testURLSessionSendPublisherBasedRequestFailure() {
-        let request = URLRequest(url: URL())
-        let expectation = XCTestExpectation()
-        var cancellables: Set<AnyCancellable> = []
-        createSession(testCase: .error)
-            .sendPublisher(request: request)
-            .sink(
-                receiveCompletion: {
-                    if case .finished = $0 {
-                        XCTFail("Expected to have failed with an error, but publisher fulfilled normally")
-                    }
-                    expectation.fulfill()
-                },
-                receiveValue: { _ in }
-            )
-            .store(in: &cancellables)
-        wait(for: [expectation])
-    }
-}
-#endif
-
 // MARK: - Async/Await-based Requests
 
 extension TransportTests {
-    func testURLSessionSendAsyncRequest() async throws {
+    func testURLSessionSendRequest() async throws {
         let request = URLRequest(url: URL())
         _ = try await createSession().send(request: request)
     }
 
-    func testURLSessionSendAsyncRequestFailure() async {
+    func testURLSessionSendRequestFailure() async {
         let request = URLRequest(url: URL())
         do {
             _ = try await createSession(testCase: .error).send(request: request)

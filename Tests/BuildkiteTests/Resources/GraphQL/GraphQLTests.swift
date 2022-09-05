@@ -82,11 +82,11 @@ class GraphQLTests: XCTestCase {
             _ = try await context.client.sendQuery(
                 GraphQL<JSONValue>(rawQuery: "query MyQuery{jeff,horses}", variables: [:])
             )
-            XCTFail("Expected to have failed with an error, but closure fulfilled normally")
+            XCTFail("Expected to have failed with an error, but operation fulfilled normally")
         } catch let error as GraphQL<JSONValue>.Errors {
             XCTAssertEqual(expected, error)
         } catch {
-            XCTFail("Expected to have failed with an error, but closure failed with unexpected error type")
+            XCTFail("Expected to have failed with an error, but operation failed with unexpected error type")
         }
     }
 
@@ -96,7 +96,7 @@ class GraphQLTests: XCTestCase {
 
         do {
             _ = try await context.client.sendQuery(GraphQL<JSONValue>(rawQuery: "", variables: [:]))
-            XCTFail("Expected to have failed with an error, but closure fulfilled normally")
+            XCTFail("Expected to have failed with an error, but operation fulfilled normally")
         } catch {}
     }
 

@@ -20,6 +20,17 @@ extension Array where Element == URLQueryItem {
         append(URLQueryItem(name: key, value: String(value)))
     }
 
+    mutating func appendIfNeeded(_ uuid: UUID?, forKey key: String) {
+        appendIfNeeded(uuid?.uuidString, forKey: key)
+    }
+
+    mutating func appendIfNeeded(_ date: Date?, forKey key: String) {
+        guard let date = date else {
+            return
+        }
+        appendIfNeeded(Formatters.iso8601WithoutFractionalSeconds.string(from: date), forKey: key)
+    }
+
     enum ArrayFormat {
         case indices
         case brackets
@@ -66,24 +77,24 @@ extension Array where Element == URLQueryItem {
     }
 }
 
-extension Date: LosslessStringConvertible {
-    public init?(
-        _ description: String
-    ) {
-        guard let date = Formatters.dateIfPossible(fromISO8601: description) else {
-            return nil
-        }
-        self = date
-    }
-}
-
-extension UUID: LosslessStringConvertible {
-    public init?(
-        _ description: String
-    ) {
-        guard let id = UUID(uuidString: description) else {
-            return nil
-        }
-        self = id
-    }
-}
+//extension Date: LosslessStringConvertible {
+//    public init?(
+//        _ description: String
+//    ) {
+//        guard let date = Formatters.dateIfPossible(fromISO8601: description) else {
+//            return nil
+//        }
+//        self = date
+//    }
+//}
+//
+//extension UUID: LosslessStringConvertible {
+//    public init?(
+//        _ description: String
+//    ) {
+//        guard let id = UUID(uuidString: description) else {
+//            return nil
+//        }
+//        self = id
+//    }
+//}
