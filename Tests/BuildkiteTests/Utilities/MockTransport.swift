@@ -31,9 +31,11 @@ final class MockTransport {
 extension MockTransport: Transport {
     func send(request: URLRequest) async throws -> Output {
         history.append(request)
-        guard !responses.isEmpty else {
+
+        if responses.isEmpty {
             throw MockTransport.Error.tooManyRequests
         }
+
         return responses.removeFirst()
     }
 }

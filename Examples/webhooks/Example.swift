@@ -19,8 +19,13 @@ import Vapor
 
         app.group(buildkite) {
             $0.post("buildkite_webhook") { req in
-                let event = try req.content.decode(WebhookEvent.self, using: buildkite)
+                guard let body = req.body.data else {
+                    throw Abort(.noContent)
+                }
+
+                let event = try buildkite.decodeWebhook(from: Data(buffer: body))
                 print(event)
+
                 return HTTPStatus.ok
             }
         }

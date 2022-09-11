@@ -117,18 +117,15 @@ extension MockData {
     }
 
     static func mockingUnsuccessfulResponse(for url: URL) -> (Data, URLResponse) {
-        let json = #"{"message":"not found","errors": ["go away"]}"#
-        guard let data = json.data(using: .utf8) else {
-            fatalError("Could not encode json as data")
-        }
-        return (data, urlResponse(for: url, status: .notFound))
+        let json = """
+        {"message":"not found","errors": ["go away"]}
+        """.data(using: .utf8)!
+
+        return (json, urlResponse(for: url, status: .notFound))
     }
 
     static func mockingSuccessNoContent(for request: URLRequest) throws -> (Data, URLResponse) {
-        guard let url = request.url else {
-            fatalError("No URL was present on the request")
-        }
-        return mockingSuccessNoContent(url: url)
+        return mockingSuccessNoContent(url: request.url!)
     }
 
     static func mockingError(for request: URLRequest) throws -> (Data, URLResponse) {
@@ -140,11 +137,10 @@ extension MockData {
     }
 
     static func mockingUnrecognizedBuildkiteError(for url: URL) -> (Data, URLResponse) {
-        let json = #"{"message":-1000}"#
-        guard let data = json.data(using: .utf8) else {
-            fatalError("Could not encode json as data")
-        }
-        return (data, urlResponse(for: url, status: .notFound))
+        let json = """
+        {"message":-1000}
+        """.data(using: .utf8)!
+        return (json, urlResponse(for: url, status: .notFound))
     }
 
     private static func urlResponse(for url: URL, status: StatusCode) -> URLResponse {

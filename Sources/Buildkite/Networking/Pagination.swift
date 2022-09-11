@@ -21,7 +21,7 @@ public struct Page: Equatable, Hashable, Sendable {
     init?(
         for header: String
     ) {
-        guard !header.isEmpty else {
+        if header.isEmpty {
             return nil
         }
 

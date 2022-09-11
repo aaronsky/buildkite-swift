@@ -24,13 +24,6 @@ extension HTTPHeaders {
     }
 }
 
-extension BuildkiteClient: ContentDecoder {
-    public nonisolated func decode<D>(_ decodable: D.Type, from body: ByteBuffer, headers: HTTPHeaders) throws -> D where D : Decodable {
-        // FIXME: force cast
-        try decodeWebhook(from: Data(buffer: body)) as! D
-    }
-}
-
 @available(macOS 12.0, *)
 extension BuildkiteClient: AsyncMiddleware {
     public func respond(to request: Request, chainingTo next: AsyncResponder) async throws -> Vapor.Response {
@@ -56,14 +49,17 @@ extension BuildkiteClient: AsyncMiddleware {
         if
             let signature = request.headers.buildkiteSignature,
             let payload = request.body.data {
-            try self.validateWebhookPayload(
+            try validateWebhookPayload(
                 signatureHeader: signature,
                 body: Data(buffer: payload),
                 secretKey: secretKey,
                 replayLimit: replayLimit
             )
         } else if let token = request.headers.buildkiteToken {
-            try self.validateWebhookPayload(tokenHeader: token, secretKey: secretKey)
+            try validateWebhookPayload(
+                tokenHeader: token,
+                secretKey: secretKey
+            )
         } else {
             throw Abort(.unauthorized)
         }

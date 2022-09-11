@@ -38,7 +38,7 @@ public struct APIVersion: Equatable, Hashable, Sendable {
 
     func url(for path: String) -> URL {
         let url = baseURL.appendingPathComponent(version)
-        guard !path.isEmpty else {
+        if path.isEmpty {
             return url
         }
         return url.appendingPathComponent(path)

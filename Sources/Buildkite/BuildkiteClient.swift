@@ -13,6 +13,15 @@ import FoundationNetworking
 #endif
 
 public actor BuildkiteClient {
+    /// Configuration for general interaction with the Buildkite API, including access tokens and supported API versions.
+    var configuration: Configuration
+
+    /// The network (or whatever) transport layer. Implemented by URLSession by default.
+    var transport: Transport
+
+    /// Convenience property for setting the access token used by the client.
+    var tokens: TokenProvider?
+
     nonisolated var encoder: JSONEncoder {
         let encoder = JSONEncoder()
         encoder.dateEncodingStrategy = .custom(Formatters.encodeISO8601)
@@ -24,15 +33,6 @@ public actor BuildkiteClient {
         decoder.dateDecodingStrategy = .custom(Formatters.decodeISO8601)
         return decoder
     }
-
-    /// Configuration for general interaction with the Buildkite API, including access tokens and supported API versions.
-    var configuration: Configuration
-
-    /// The network (or whatever) transport layer. Implemented by URLSession by default.
-    var transport: Transport
-
-    /// Convenience property for setting the access token used by the client.
-    var tokens: TokenProvider?
 
     /// Creates a session with the specified configuration, transport layer, and token provider.
     /// - Parameters:
@@ -62,35 +62,17 @@ public actor BuildkiteClient {
         self.init(configuration: configuration, transport: transport, tokens: RawTokenProvider(rawValue: token))
     }
 
-    private func checkResponseForIssues(_ response: URLResponse, data: Data? = nil) throws {
-        guard let httpResponse = response as? HTTPURLResponse,
-            let statusCode = StatusCode(rawValue: httpResponse.statusCode)
-        else {
-            throw ResponseError.incompatibleResponse(response)
-        }
-        if !statusCode.isSuccess {
-            guard let data = data,
-                let errorIntermediary = try? decoder.decode(BuildkiteError.Intermediary.self, from: data)
-            else {
-                throw statusCode
-            }
-            throw BuildkiteError(statusCode: statusCode, intermediary: errorIntermediary)
-        }
-    }
-}
-
-// MARK: - Async/Await API
-
-extension BuildkiteClient {
     /// Performs the given resource asynchronously.
     /// - Parameter resource: A resource.
     /// - Returns: A response containing the content of the response body, as well as other information about the HTTP operation.
     /// - Throws: An error describing the manner in which the resource failed to complete.
     public func send<R>(_ resource: R) async throws -> Response<R.Content> where R: Resource, R.Content: Decodable {
         let request = try URLRequest(resource, configuration: configuration, tokens: tokens)
+
         let (data, response) = try await transport.send(request: request)
         try checkResponseForIssues(response, data: data)
         let content = try self.decoder.decode(R.Content.self, from: data)
+
         return Response(content: content, response: response)
     }
 
@@ -103,9 +85,11 @@ extension BuildkiteClient {
     public func send<R>(_ resource: R, pageOptions: PageOptions? = nil) async throws -> Response<R.Content>
     where R: PaginatedResource {
         let request = try URLRequest(resource, configuration: configuration, tokens: tokens, pageOptions: pageOptions)
+
         let (data, response) = try await transport.send(request: request)
         try checkResponseForIssues(response, data: data)
         let content = try self.decoder.decode(R.Content.self, from: data)
+
         return Response(content: content, response: response)
     }
 
@@ -116,9 +100,11 @@ extension BuildkiteClient {
     public func send<R>(_ resource: R) async throws -> Response<R.Content>
     where R: Resource, R.Body: Encodable, R.Content: Decodable {
         let request = try URLRequest(resource, configuration: configuration, tokens: tokens, encoder: encoder)
+
         let (data, response) = try await transport.send(request: request)
         try checkResponseForIssues(response, data: data)
         let content = try self.decoder.decode(R.Content.self, from: data)
+
         return Response(content: content, response: response)
     }
 
@@ -141,6 +127,7 @@ extension BuildkiteClient {
         let (data, response) = try await transport.send(request: request)
         try checkResponseForIssues(response, data: data)
         let content = try self.decoder.decode(R.Content.self, from: data)
+
         return Response(content: content, response: response)
     }
 
@@ -150,8 +137,10 @@ extension BuildkiteClient {
     /// - Throws: An error describing the manner in which the resource failed to complete.
     public func send<R>(_ resource: R) async throws -> Response<R.Content> where R: Resource, R.Content == Void {
         let request = try URLRequest(resource, configuration: configuration, tokens: tokens)
+
         let (data, response) = try await transport.send(request: request)
         try checkResponseForIssues(response, data: data)
+
         return Response(content: (), response: response)
     }
 
@@ -162,8 +151,10 @@ extension BuildkiteClient {
     public func send<R>(_ resource: R) async throws -> Response<R.Content>
     where R: Resource, R.Body: Encodable, R.Content == Void {
         let request = try URLRequest(resource, configuration: configuration, tokens: tokens, encoder: encoder)
+
         let (data, response) = try await transport.send(request: request)
         try checkResponseForIssues(response, data: data)
+
         return Response(content: (), response: response)
     }
 
@@ -173,6 +164,29 @@ extension BuildkiteClient {
     /// - Throws: An error either of type ``BuildkiteError`` or ``GraphQL/Errors``.
     public func sendQuery<T>(_ resource: GraphQL<T>) async throws -> T {
         let response = try await send(resource)
+
         return try response.content.get()
+    }
+
+    private func checkResponseForIssues(_ response: URLResponse, data: Data? = nil) throws {
+        guard
+            let httpResponse = response as? HTTPURLResponse,
+            let statusCode = StatusCode(rawValue: httpResponse.statusCode)
+        else {
+            throw ResponseError.incompatibleResponse(response)
+        }
+
+        if statusCode.isSuccess {
+            return
+        }
+
+        guard
+            let data = data,
+            let errorIntermediary = try? decoder.decode(BuildkiteError.Intermediary.self, from: data)
+        else {
+            throw statusCode
+        }
+
+        throw BuildkiteError(statusCode: statusCode, intermediary: errorIntermediary)
     }
 }

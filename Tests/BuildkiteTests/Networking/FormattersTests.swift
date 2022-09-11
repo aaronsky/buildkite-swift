@@ -15,24 +15,35 @@ import FoundationNetworking
 #endif
 
 final class FormattersTests: XCTestCase {
-    func testDecode() throws {
-        // let expected = DateComponents(
-        //     year: 2020, 
-        //     month: 3, 
-        //     day: 14, 
-        //     hour: 20, 
-        //     minute: 4, 
-        //     second: 43
-        // ).date!
-        // let actual = try XCTUnwrap(
-        //     Formatters.dateIfPossible(
-        //         fromISO8601: "2020-03-14T20:04:43.567Z"
-        //     )
-        // )
-        // XCTAssertEqual(actual, expected)
+    func testFormatters() throws {
+        struct Foo: Codable, Equatable {
+            var date: Date
+        }
+
+        let expected = Foo(date: Date(timeIntervalSince1970: 1584216283.567))
+
+        let encoder = JSONEncoder()
+        encoder.dateEncodingStrategy = .custom(Formatters.encodeISO8601)
+        let data = try encoder.encode(expected)
+
+        let decoder = JSONDecoder()
+        decoder.dateDecodingStrategy = .custom(Formatters.decodeISO8601)
+        let actual = try decoder.decode(Foo.self, from: data)
+
+        XCTAssertEqual(expected, actual)
     }
 
-    func testEncode() {
+    func testFormatters_DecodeError() throws {
+        struct Foo: Codable, Equatable {
+            var date: Date
+        }
 
+        let data = """
+        {"date":"invalid"}
+        """.data(using: .utf8)!
+
+        let decoder = JSONDecoder()
+        decoder.dateDecodingStrategy = .custom(Formatters.decodeISO8601)
+        XCTAssertThrowsError(try decoder.decode(Foo.self, from: data))
     }
 }
