@@ -300,6 +300,16 @@ final class WebhooksTests: XCTestCase {
         )
     }
 
+    func testValidateWebhookPayload_signatureWithReplayLimit() throws {
+        let replayLimit = (-1 * Date(timeIntervalSince1970: 1642080837).timeIntervalSinceNow + 10)
+        try client.validateWebhookPayload(
+            signatureHeader: defaultSignature,
+            body: defaultBody.data(using: .utf8)!,
+            secretKey: secretKey,
+            replayLimit: replayLimit
+        )
+    }
+
     func testValidateWebhookPayload_errorSignatureMissing() throws {
         try XCTAssertThrowsError(
             client.validateWebhookPayload(
@@ -347,10 +357,10 @@ final class WebhooksTests: XCTestCase {
     func testValidateWebhookPayload_errorTimestampRefused() throws {
         try XCTAssertThrowsError(
             client.validateWebhookPayload(
-                signatureHeader: "timestamp=1000,signature=582d496ac2d869dd97a3101c4cda346288c49a742592daf582ec64c86449f79c",
+                signatureHeader: defaultSignature,
                 body: defaultBody.data(using: .utf8)!,
                 secretKey: secretKey,
-                replayLimit: 300
+                replayLimit: 1
             ),
             error: WebhookValidationError.timestampRefused
         )

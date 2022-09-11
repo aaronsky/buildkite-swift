@@ -74,22 +74,26 @@ extension BuildkiteClient {
         replayLimit: TimeInterval? = nil
     ) throws {
         let (timestamp, signature) = try getTimestampAndSignature(signatureHeader)
-        guard let macPayload = "\(timestamp).\(body)".data(using: .utf8) else {
+        guard let prefix = "\(timestamp).".data(using: .utf8) else {
             throw WebhookValidationError.payloadCorrupted
         }
+        let payload = prefix + body
 
         try checkMAC(
-            message: macPayload,
+            message: payload,
             signature: signature,
             secretKey: secretKey
         )
 
         if let replayLimit = replayLimit {
-            try checkReplayLimit(time: timestamp, replayLimit: replayLimit)
+            guard let timestamp = TimeInterval(timestamp) else {
+                throw WebhookValidationError.timestampRefused
+            }
+            try checkReplayLimit(timestamp: timestamp, replayLimit: replayLimit)
         }
     }
 
-    private nonisolated func getTimestampAndSignature(_ header: String) throws -> (timestamp: Date, signature: Data) {
+    private nonisolated func getTimestampAndSignature(_ header: String) throws -> (timestamp: String, signature: Data) {
         let parts: [String: String] = Dictionary(
             uniqueKeysWithValues: header
                 .split(separator: ",")
@@ -104,9 +108,7 @@ extension BuildkiteClient {
             throw WebhookValidationError.signatureFormatInvalid
         }
 
-        guard let timestamp = parts["timestamp"]
-                .flatMap(TimeInterval.init)
-                .flatMap(Date.init(timeIntervalSince1970:)) else {
+        guard let timestamp = parts["timestamp"] else {
             throw WebhookValidationError.signatureCorrupted
         }
 
@@ -126,14 +128,10 @@ extension BuildkiteClient {
 
     private nonisolated func checkMAC(message: Data, signature: Data, secretKey: Data) throws {
         let key = SymmetricKey(data: secretKey)
-        let expectedMAC = HMAC<SHA256>.authenticationCode(
-            for: message,
-            using: key
-        )
         guard
-            HMAC.isValidAuthenticationCode(
-                expectedMAC,
-                authenticating: signature,
+            HMAC<SHA256>.isValidAuthenticationCode(
+                signature,
+                authenticating: message,
                 using: key
             )
         else {
@@ -142,10 +140,12 @@ extension BuildkiteClient {
     }
 
     private nonisolated func checkReplayLimit(
-        time: Date,
+        timestamp: TimeInterval,
         replayLimit: TimeInterval
     ) throws {
-        guard time.timeIntervalSinceNow <= replayLimit else {
+        let time = Date(timeIntervalSince1970: timestamp)
+        // All times must be in the past, and must be smaller than replayLimit
+        guard time.timeIntervalSinceNow < 0 && abs(time.timeIntervalSinceNow) <= replayLimit else {
             throw WebhookValidationError.timestampRefused
         }
     }
@@ -153,6 +153,7 @@ extension BuildkiteClient {
 
 // MARK: - Hex string decoding
 // Adapted from swift-crypto
+// https://github.com/apple/swift-crypto/blob/main/Sources/Crypto/Util/PrettyBytes.swift
 
 private enum ByteHexEncodingError: Error {
     case incorrectHexValue
