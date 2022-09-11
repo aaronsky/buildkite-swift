@@ -52,7 +52,7 @@ extension Date {
     init?(iso8601String: String) {
         guard 
             let date = Formatters.iso8601WithFractionalSeconds.date(from: iso8601String) ?? 
-                             Formatters.iso8601WithoutFractionalSeconds.date(from: iso8601String)
+                Formatters.iso8601WithoutFractionalSeconds.date(from: iso8601String)
         else { return nil }
         self = date
     }

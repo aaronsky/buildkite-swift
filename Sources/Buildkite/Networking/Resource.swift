@@ -12,7 +12,7 @@ import Foundation
 import FoundationNetworking
 #endif
 
-public enum ResourceError: Error {
+public enum ResourceError: Error, Equatable {
     case incompatibleVersion(APIVersion)
 }
 

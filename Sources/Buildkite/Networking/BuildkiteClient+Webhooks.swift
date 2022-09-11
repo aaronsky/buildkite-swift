@@ -27,19 +27,19 @@ extension WebhookEvent {
     }
 }
 
-extension BuildkiteClient {
-    public enum WebhookValidationError: Error {
-        // Token
-        case tokenRefused
-        // Signature
-        case signatureFormatInvalid
-        case signatureCorrupted
-        case payloadCorrupted
-        case signatureRefused
-        // Replay Protection
-        case timestampRefused
-    }
+public enum WebhookValidationError: Error {
+    // Token
+    case tokenRefused
+    // Signature
+    case signatureFormatInvalid
+    case signatureCorrupted
+    case payloadCorrupted
+    case signatureRefused
+    // Replay Protection
+    case timestampRefused
+}
 
+extension BuildkiteClient {
     public nonisolated func decodeWebhook(from body: Data) throws -> WebhookEvent {
         try decoder.decode(WebhookEvent.self, from: body)
     }
@@ -93,9 +93,10 @@ extension BuildkiteClient {
         let parts: [String: String] = Dictionary(
             uniqueKeysWithValues: header
                 .split(separator: ",")
-                .map { kv in
+                .compactMap { kv in
                     let kvp = kv.split(separator: "=", maxSplits: 2)
                         .map { $0.trimmingCharacters(in: .whitespaces) }
+                    guard kvp.count == 2 else { return nil }
                     return (kvp[0], kvp[1])
                 }
         )
@@ -103,14 +104,20 @@ extension BuildkiteClient {
             throw WebhookValidationError.signatureFormatInvalid
         }
 
-        guard
-            let timestamp = parts["timestamp"]
+        guard let timestamp = parts["timestamp"]
                 .flatMap(TimeInterval.init)
-                .flatMap(Date.init(timeIntervalSince1970:)),
-            // FIXME: Needs to be a hex-decoded
-            let signature = parts["signature"]?
-                .data(using: .utf8)
-        else {
+                .flatMap(Date.init(timeIntervalSince1970:)) else {
+            throw WebhookValidationError.signatureCorrupted
+        }
+
+        let signature: Data?
+        do {
+            signature = try parts["signature"]
+                .flatMap(Data.init(hexString:))
+        } catch is ByteHexEncodingError {
+            throw WebhookValidationError.signatureCorrupted
+        }
+        guard let signature = signature else {
             throw WebhookValidationError.signatureCorrupted
         }
 
@@ -140,6 +147,59 @@ extension BuildkiteClient {
     ) throws {
         guard time.timeIntervalSinceNow <= replayLimit else {
             throw WebhookValidationError.timestampRefused
+        }
+    }
+}
+
+// MARK: - Hex string decoding
+// Adapted from swift-crypto
+
+private enum ByteHexEncodingError: Error {
+    case incorrectHexValue
+    case incorrectString
+}
+
+private let char_a = UInt8(UnicodeScalar("a").value)
+private let char_A = UInt8(UnicodeScalar("A").value)
+private let char_f = UInt8(UnicodeScalar("f").value)
+private let char_F = UInt8(UnicodeScalar("F").value)
+private let char_0 = UInt8(UnicodeScalar("0").value)
+private let char_9 = UInt8(UnicodeScalar("9").value)
+
+private func htoi(_ value: UInt8) throws -> UInt8 {
+    switch value {
+    case char_0...char_9:
+        return value - char_0
+    case char_a...char_f:
+        return value - char_a + 10
+    case char_A...char_F:
+        return value - char_A + 10
+    default:
+        throw ByteHexEncodingError.incorrectHexValue
+    }
+}
+
+private extension Data {
+    init(hexString: String) throws {
+        self.init()
+
+        if hexString.isEmpty {
+            return
+        }
+
+        guard hexString.count.isMultiple(of: 2) else {
+            throw ByteHexEncodingError.incorrectString
+        }
+        guard let stringData = hexString.data(using: .utf8) else {
+            throw ByteHexEncodingError.incorrectString
+        }
+        let stringBytes = Array(stringData)
+
+        for i in 0...((hexString.count / 2) - 1) {
+            let char1 = stringBytes[2 * i]
+            let char2 = stringBytes[2 * i + 1]
+
+            try self.append(htoi(char1) << 4 + htoi(char2))
         }
     }
 }

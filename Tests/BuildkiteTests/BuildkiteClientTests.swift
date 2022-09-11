@@ -89,14 +89,10 @@ class BuildkiteClientTests: XCTestCase {
     func testResourceWithIncompatibleAPIVersion() async throws {
         let testData = try TestData(testCase: .success)
         let resource = MockResources.IsAPIIncompatible()
-        do {
-            _ = try await testData.client.send(resource)
-            XCTFail("Expected to have failed with an error, but operation fulfilled normally")
-        } catch ResourceError.incompatibleVersion(resource.version) {
-            // Expected error
-        } catch {
-            XCTFail("Expected to have failed with an error, but not this one: \(error)")
-        }
+        try await XCTAssertThrowsError(
+            await testData.client.send(resource),
+            error: ResourceError.incompatibleVersion(resource.version)
+        )
     }
 }
 
@@ -153,24 +149,22 @@ extension BuildkiteClientTests {
 
     func testInvalidResponse() async throws {
         let testData = try TestData(testCase: .badResponse)
-        do {
-            _ = try await testData.client.send(testData.resources.contentResource)
-            XCTFail("Expected to have failed with an error, but task fulfilled normally")
-        } catch {}
+        try await XCTAssertThrowsError(
+            await testData.client.send(testData.resources.contentResource)
+        )
     }
 
     func testUnsuccessfulResponse() async throws {
         let testData = try TestData(testCase: .unsuccessfulResponse)
-        do {
-            _ = try await testData.client.send(testData.resources.contentResource)
-            XCTFail("Expected to have failed with an error, but task fulfilled normally")
-        } catch {}
+        try await XCTAssertThrowsError(
+            await testData.client.send(testData.resources.contentResource)
+        )
     }
 
     func testUnrecognizedBuildkiteError() async throws {
         let testData = try TestData(testCase: .unrecognizedBuildkiteError)
-        do {
-            _ = try await testData.client.send(testData.resources.contentResource)
-        } catch {}
+        try await XCTAssertThrowsError(
+            await testData.client.send(testData.resources.contentResource)
+        )
     }
 }

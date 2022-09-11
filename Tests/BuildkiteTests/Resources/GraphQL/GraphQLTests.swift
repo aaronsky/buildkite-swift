@@ -78,30 +78,34 @@ class GraphQLTests: XCTestCase {
         ]
         let context = try MockContext(content: content)
 
-        do {
-            _ = try await context.client.sendQuery(
+        try await XCTAssertThrowsError(
+            await context.client.sendQuery(
                 GraphQL<JSONValue>(rawQuery: "query MyQuery{jeff,horses}", variables: [:])
-            )
-            XCTFail("Expected to have failed with an error, but operation fulfilled normally")
-        } catch let error as GraphQL<JSONValue>.Errors {
-            XCTAssertEqual(expected, error)
-        } catch {
-            XCTFail("Expected to have failed with an error, but operation failed with unexpected error type")
-        }
+            ),
+            error: expected
+        )
     }
 
     func testGraphQLIncompatibleResponse() async throws {
         let content: JSONValue = [:]
         let context = try MockContext(content: content)
 
-        do {
-            _ = try await context.client.sendQuery(GraphQL<JSONValue>(rawQuery: "", variables: [:]))
-            XCTFail("Expected to have failed with an error, but operation fulfilled normally")
-        } catch {}
+        try await XCTAssertThrowsError(
+            await context.client.sendQuery(GraphQL<JSONValue>(rawQuery: "", variables: [:]))
+        )
     }
 
     func testGraphQLContentGet() throws {
         try XCTAssertNoThrow(GraphQL.Content.data("hello").get())
-        try XCTAssertThrowsError(GraphQL<String>.Content.errors(.init(errors: [], type: nil)).get())
+
+        let errors = GraphQL<String>.Errors(
+            errors: [],
+            type: nil
+        )
+        try XCTAssertThrowsError(
+            GraphQL<String>.Content.errors(errors)
+                .get(),
+            error: errors
+        )
     }
 }

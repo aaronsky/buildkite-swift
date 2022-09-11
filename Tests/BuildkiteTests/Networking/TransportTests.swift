@@ -73,9 +73,8 @@ extension TransportTests {
 
     func testURLSessionSendRequestFailure() async {
         let request = URLRequest(url: URL())
-        do {
-            _ = try await createSession(testCase: .error).send(request: request)
-            XCTFail("Expected to have failed with an error, but task fulfilled normally")
-        } catch {}
+        try await XCTAssertThrowsError(
+            await createSession(testCase: .error).send(request: request)
+        )
     }
 }

@@ -84,7 +84,7 @@ public enum WebhookEvent: Codable, Equatable, Hashable, Sendable {
     }
 
     public struct Ping: Codable, Equatable, Hashable, Sendable {
-        public var event: Event
+        public var event: Event = .ping
         /// The notification service that sent this webhook
         public var service: Service
         /// The ``Organization`` this notification belongs to
