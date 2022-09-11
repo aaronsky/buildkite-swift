@@ -5,7 +5,7 @@ GIT_REPO_TOPLEVEL := $(shell git rev-parse --show-toplevel)
 DESTINATION_PLATFORM_IOS_SIMULATOR = platform=iOS Simulator,name=iPhone 11 Pro Max
 DESTINATION_PLATFORM_MACOS = platform=macOS
 DESTINATION_PLATFORM_TVOS_SIMULATOR = platform=tvOS Simulator,name=Apple TV
-DESTINATION_PLATFORM_WATCHOS_SIMULATOR = platform=watchOS Simulator,name=Apple Watch Series 5 - 44mm
+DESTINATION_PLATFORM_WATCHOS_SIMULATOR = platform=watchOS Simulator,name=Apple Watch Series 5 (44mm)
 
 # Formatting
 SWIFT_FORMAT_BIN := swift format
