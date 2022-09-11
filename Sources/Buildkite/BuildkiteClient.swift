@@ -13,17 +13,15 @@ import FoundationNetworking
 #endif
 
 public actor BuildkiteClient {
-    private var encoder: JSONEncoder {
+    nonisolated var encoder: JSONEncoder {
         let encoder = JSONEncoder()
         encoder.dateEncodingStrategy = .custom(Formatters.encodeISO8601)
-        encoder.keyEncodingStrategy = .convertToSnakeCase
         return encoder
     }
 
-    private var decoder: JSONDecoder {
+    nonisolated var decoder: JSONDecoder {
         let decoder = JSONDecoder()
         decoder.dateDecodingStrategy = .custom(Formatters.decodeISO8601)
-        decoder.keyDecodingStrategy = .convertFromSnakeCase
         return decoder
     }
 

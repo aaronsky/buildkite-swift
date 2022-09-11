@@ -15,6 +15,7 @@ import FoundationNetworking
 public struct Team: Codable, Equatable, Hashable, Identifiable, Sendable {
     /// ID of the team
     public var id: UUID
+    public var graphqlId: String
     /// Name of the team
     public var name: String
     /// URL slug of the team
@@ -33,5 +34,17 @@ public struct Team: Codable, Equatable, Hashable, Identifiable, Sendable {
     public enum Visibility: String, Codable, Equatable, Hashable, Sendable {
         case visible
         case secret
+    }
+
+    private enum CodingKeys: String, CodingKey {
+        case id
+        case graphqlId = "graphql_id"
+        case name
+        case slug
+        case description
+        case privacy
+        case `default`
+        case createdAt = "created_at"
+        case createdBy = "created_by"
     }
 }

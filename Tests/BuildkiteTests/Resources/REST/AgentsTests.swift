@@ -20,15 +20,16 @@ extension Agent {
         let job = Job.script(
             Job.Command(
                 id: UUID(),
+                graphqlId: "",
                 name: "📦",
                 state: "passed",
                 command: nil,
                 stepKey: nil,
-                buildUrl: URL(),
-                webUrl: URL(),
-                logUrl: Followable(),
-                rawLogUrl: Followable(),
-                artifactsUrl: URL(),
+                buildURL: URL(),
+                webURL: URL(),
+                logURL: Followable(),
+                rawLogURL: Followable(),
+                artifactsURL: URL(),
                 softFailed: false,
                 exitStatus: 0,
                 artifactPaths: nil,
@@ -49,8 +50,9 @@ extension Agent {
 
         self.init(
             id: UUID(),
+            graphqlId: "",
             url: Followable(),
-            webUrl: URL(),
+            webURL: URL(),
             name: "jeffrey",
             connectionState: "connected",
             hostname: "jeffrey",

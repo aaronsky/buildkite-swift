@@ -24,7 +24,7 @@ class TestAnalyticsUpload: XCTestCase {
             .init(id: .init(), history: .init(section: "http")),
             .init(id: .init(), history: .init(section: "http")),
         ]
-        let expected = Resource.Content(id: .init(), runId: .init(), queued: 0, skipped: 0, errors: [], runUrl: .init())
+        let expected = Resource.Content(id: .init(), runId: .init(), queued: 0, skipped: 0, errors: [], runURL: .init())
         let context = try MockContext(content: expected)
 
         let response = try await context.client.send(

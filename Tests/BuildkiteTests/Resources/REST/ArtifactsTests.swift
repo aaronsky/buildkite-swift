@@ -21,7 +21,7 @@ extension Artifact {
             id: UUID(),
             jobId: UUID(),
             url: Followable(),
-            downloadUrl: Followable(),
+            downloadURL: Followable(),
             state: .new,
             path: "",
             dirname: "",

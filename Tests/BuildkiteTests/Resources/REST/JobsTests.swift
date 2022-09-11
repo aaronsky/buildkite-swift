@@ -17,7 +17,7 @@ import FoundationNetworking
 
 class JobsTests: XCTestCase {
     func testJobsRetryWaiter() async throws {
-        let expected: Job = .waiter(Job.Wait(id: UUID()))
+        let expected: Job = .waiter(Job.Wait(id: UUID(), graphqlId: ""))
         let context = try MockContext(content: expected)
 
         let response = try await context.client.send(
@@ -32,8 +32,8 @@ class JobsTests: XCTestCase {
             Job.Trigger(
                 name: nil,
                 state: nil,
-                buildUrl: URL(),
-                webUrl: URL(),
+                buildURL: URL(),
+                webURL: URL(),
                 createdAt: Date(timeIntervalSince1970: 1000),
                 scheduledAt: nil,
                 finishedAt: nil,
@@ -42,7 +42,7 @@ class JobsTests: XCTestCase {
                     id: UUID(),
                     number: 0,
                     url: URL(),
-                    webUrl: URL()
+                    webURL: URL()
                 )
             )
         )
@@ -59,13 +59,14 @@ class JobsTests: XCTestCase {
         let expected: Job = .manual(
             Job.Block(
                 id: UUID(),
+                graphqlId: "",
                 label: "",
                 state: "",
-                webUrl: nil,
+                webURL: nil,
                 unblockedBy: User(),
                 unblockedAt: Date(timeIntervalSince1970: 1000),
                 unblockable: true,
-                unblockUrl: URL()
+                unblockURL: URL()
             )
         )
         let context = try MockContext(content: expected)

@@ -76,25 +76,3 @@ extension Array where Element == URLQueryItem {
         )
     }
 }
-
-//extension Date: LosslessStringConvertible {
-//    public init?(
-//        _ description: String
-//    ) {
-//        guard let date = Formatters.dateIfPossible(fromISO8601: description) else {
-//            return nil
-//        }
-//        self = date
-//    }
-//}
-//
-//extension UUID: LosslessStringConvertible {
-//    public init?(
-//        _ description: String
-//    ) {
-//        guard let id = UUID(uuidString: description) else {
-//            return nil
-//        }
-//        self = id
-//    }
-//}

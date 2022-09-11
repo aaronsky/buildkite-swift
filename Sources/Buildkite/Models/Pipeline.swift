@@ -14,8 +14,9 @@ import FoundationNetworking
 
 public struct Pipeline: Codable, Equatable, Hashable, Identifiable, Sendable {
     public var id: UUID
+    public var graphqlId: String
     public var url: Followable<Pipeline.Resources.Get>
-    public var webUrl: URL
+    public var webURL: URL
     public var name: String
     public var slug: String
     public var repository: String
@@ -26,8 +27,8 @@ public struct Pipeline: Codable, Equatable, Hashable, Identifiable, Sendable {
     public var skipQueuedBranchBuildsFilter: String?
     public var cancelRunningBranchBuilds: Bool
     public var cancelRunningBranchBuildsFilter: String?
-    public var buildsUrl: Followable<Build.Resources.ListForPipeline>
-    public var badgeUrl: URL
+    public var buildsURL: Followable<Build.Resources.ListForPipeline>
+    public var badgeURL: URL
     public var createdAt: Date
     public var scheduledBuildsCount: Int
     public var runningBuildsCount: Int
@@ -40,8 +41,42 @@ public struct Pipeline: Codable, Equatable, Hashable, Identifiable, Sendable {
 
     public struct Provider: Codable, Equatable, Hashable, Identifiable, Sendable {
         public var id: String
-        public var webhookUrl: URL?
+        public var webhookURL: URL?
         public var settings: Settings
+
+        private enum CodingKeys: String, CodingKey {
+            case id
+            case webhookURL = "webhook_url"
+            case settings
+        }
+    }
+
+    private enum CodingKeys: String, CodingKey {
+        case id
+        case graphqlId = "graphql_id"
+        case url
+        case webURL = "web_url"
+        case name
+        case slug
+        case repository
+        case branchConfiguration = "branch_configuration"
+        case defaultBranch = "default_branch"
+        case provider
+        case skipQueuedBranchBuilds = "skip_queued_branch_builds"
+        case skipQueuedBranchBuildsFilter = "skip_queued_branch_builds_filter"
+        case cancelRunningBranchBuilds = "cancel_running_branch_builds"
+        case cancelRunningBranchBuildsFilter = "cancel_running_branch_builds_filter"
+        case buildsURL = "builds_url"
+        case badgeURL = "badge_url"
+        case createdAt = "created_at"
+        case scheduledBuildsCount = "scheduled_builds_count"
+        case runningBuildsCount = "running_builds_count"
+        case scheduledJobsCount = "scheduled_jobs_count"
+        case runningJobsCount = "running_jobs_count"
+        case waitingJobsCount = "waiting_jobs_count"
+        case visibility
+        case steps
+        case env
     }
 }
 
@@ -76,6 +111,24 @@ extension Pipeline.Provider {
         public var separatePullRequestStatuses: Bool?
         /// The status to use for blocked builds. Pending can be used with required status checks to prevent merging pull requests with blocked builds.
         public var publishBlockedAsPending: Bool?
+
+        private enum CodingKeys: String, CodingKey {
+            case repository
+            case buildPullRequests = "build_pull_requests"
+            case pullRequestBranchFilterEnabled = "pull_request_branch_filter_enabled"
+            case pullRequestBranchFilterConfiguration = "pull_request_branch_filter_configuration"
+            case skipPullRequestBuildsForExistingCommits = "skip_pull_request_builds_for_existing_commits"
+            case buildTags = "build_tags"
+            case publishCommitStatus = "publish_commit_status"
+            case publishCommitStatusPerStep = "publish_commit_status_per_step"
+            case triggerMode = "trigger_mode"
+            case filterEnabled = "filter_enabled"
+            case filterCondition = "filter_condition"
+            case buildPullRequestForks = "build_pull_request_forks"
+            case prefixPullRequestForkBranchNames = "prefix_pull_request_fork_branch_names"
+            case separatePullRequestStatuses = "separate_pull_request_statuses"
+            case publishBlockedAsPending = "publish_blocked_as_pending"
+        }
     }
 }
 
@@ -140,12 +193,33 @@ extension Pipeline {
             public var async: Bool?
             public var concurrency: Int?
             public var parallelism: Int?
+
+            private enum CodingKeys: String, CodingKey {
+                case type
+                case name
+                case command
+                case label
+                case artifactPaths = "artifact_paths"
+                case branchConfiguration = "branch_configuration"
+                case env
+                case timeoutInMinutes = "timeout_in_minutes"
+                case agentQueryRules = "agent_query_rules"
+                case async
+                case concurrency
+                case parallelism
+            }
         }
 
         public struct Wait: Codable, Equatable, Hashable, Sendable {
             public var type = "waiter"
             public var label: String?
             public var continueAfterFailure: Bool?
+
+            private enum CodingKeys: String, CodingKey {
+                case type
+                case label
+                case continueAfterFailure = "continue_after_failure"
+            }
         }
 
         public struct Block: Codable, Equatable, Hashable, Sendable {
@@ -160,6 +234,15 @@ extension Pipeline {
             public var triggerCommit: String?
             public var triggerBranch: String?
             public var triggerAsync: Bool?
+
+            private enum CodingKeys: String, CodingKey {
+                case type
+                case triggerProjectSlug = "trigger_project_slug"
+                case label
+                case triggerCommit = "trigger_commit"
+                case triggerBranch = "trigger_branch"
+                case triggerAsync = "trigger_async"
+            }
         }
     }
 }

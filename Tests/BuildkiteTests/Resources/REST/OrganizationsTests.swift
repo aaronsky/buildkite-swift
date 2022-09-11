@@ -19,13 +19,14 @@ extension Organization {
     init() {
         self.init(
             id: UUID(),
+            graphqlId: "",
             url: Followable(),
-            webUrl: URL(),
+            webURL: URL(),
             name: "Buildkite",
             slug: "buildkite",
-            pipelinesUrl: Followable(),
-            agentsUrl: Followable(),
-            emojisUrl: Followable(),
+            pipelinesURL: Followable(),
+            agentsURL: Followable(),
+            emojisURL: Followable(),
             createdAt: Date(timeIntervalSince1970: 1000)
         )
     }

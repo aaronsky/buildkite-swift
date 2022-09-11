@@ -23,7 +23,7 @@ public struct Artifact: Codable, Equatable, Hashable, Identifiable, Sendable {
     public var id: UUID
     public var jobId: UUID
     public var url: Followable<Artifact.Resources.Get>
-    public var downloadUrl: Followable<Artifact.Resources.Download>
+    public var downloadURL: Followable<Artifact.Resources.Download>
     public var state: State
     public var path: String
     public var dirname: String
@@ -34,5 +34,19 @@ public struct Artifact: Codable, Equatable, Hashable, Identifiable, Sendable {
 
     public struct URLs: Codable, Equatable {
         public var url: URL
+    }
+
+    private enum CodingKeys: String, CodingKey {
+        case id
+        case jobId = "job_id"
+        case url
+        case downloadURL = "download_url"
+        case state
+        case path
+        case dirname
+        case filename
+        case mimeType = "mime_type"
+        case fileSize = "file_size"
+        case sha1sum
     }
 }

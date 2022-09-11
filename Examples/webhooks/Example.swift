@@ -7,14 +7,28 @@
 //
 
 import Buildkite
-import Foundation
+import Vapor
 
-#if canImport(FoundationNetworking)
-import FoundationNetworking
-#endif
-
+@available(macOS 12.0, *)
 @main struct Example {
-    static func main() {
+    static func main() throws {
+        let app = try Application(.detect())
+        defer { app.shutdown() }
 
+        let buildkite = BuildkiteClient(/*transport: app.client*/)
+
+        app.group(buildkite) {
+            $0.post("buildkite_webhook") { req in
+                let event = try req.content.decode(WebhookEvent.self, using: buildkite)
+                print(event)
+                return HTTPStatus.ok
+            }
+        }
+
+        app.get("buildkite_webhook") { req in
+            "Hello world"
+        }
+
+        try app.run()
     }
 }

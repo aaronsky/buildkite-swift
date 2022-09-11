@@ -26,4 +26,13 @@ public struct Annotation: Codable, Equatable, Hashable, Identifiable, Sendable {
     public var bodyHtml: String
     public var createdAt: Date
     public var updatedAt: Date
+
+    private enum CodingKeys: String, CodingKey {
+        case id
+        case context
+        case style
+        case bodyHtml = "body_html"
+        case createdAt = "created_at"
+        case updatedAt = "updated_at"
+    }
 }

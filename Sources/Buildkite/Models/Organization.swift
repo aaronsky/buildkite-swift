@@ -14,12 +14,26 @@ import FoundationNetworking
 
 public struct Organization: Codable, Equatable, Hashable, Identifiable, Sendable {
     public var id: UUID
+    public var graphqlId: String
     public var url: Followable<Organization.Resources.Get>
-    public var webUrl: URL
+    public var webURL: URL
     public var name: String
     public var slug: String
-    public var pipelinesUrl: Followable<Pipeline.Resources.List>
-    public var agentsUrl: Followable<Agent.Resources.List>
-    public var emojisUrl: Followable<Emoji.Resources.List>
+    public var pipelinesURL: Followable<Pipeline.Resources.List>
+    public var agentsURL: Followable<Agent.Resources.List>
+    public var emojisURL: Followable<Emoji.Resources.List>
     public var createdAt: Date
+
+    private enum CodingKeys: String, CodingKey {
+        case id
+        case graphqlId = "graphql_id"
+        case url
+        case webURL = "web_url"
+        case name
+        case slug
+        case pipelinesURL = "pipelines_url"
+        case agentsURL = "agents_url"
+        case emojisURL = "emojis_url"
+        case createdAt = "created_at"
+    }
 }

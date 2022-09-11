@@ -19,8 +19,9 @@ extension Build {
     init() {
         self.init(
             id: UUID(),
+            graphqlId: "",
             url: Followable(),
-            webUrl: URL(),
+            webURL: URL(),
             number: 1,
             state: .passed,
             blocked: false,

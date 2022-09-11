@@ -21,8 +21,9 @@ extension Pipeline {
     ) {
         self.init(
             id: UUID(),
+            graphqlId: "",
             url: Followable(),
-            webUrl: URL(),
+            webURL: URL(),
             name: "My Pipeline",
             slug: "my-pipeline",
             repository: "git@github.com:buildkite/agent.git",
@@ -30,7 +31,7 @@ extension Pipeline {
             defaultBranch: "master",
             provider: Provider(
                 id: "github",
-                webhookUrl: URL(),
+                webhookURL: URL(),
                 settings: Provider.Settings(
                     repository: nil,
                     buildPullRequests: nil,
@@ -53,8 +54,8 @@ extension Pipeline {
             skipQueuedBranchBuildsFilter: nil,
             cancelRunningBranchBuilds: false,
             cancelRunningBranchBuildsFilter: nil,
-            buildsUrl: Followable(),
-            badgeUrl: URL(),
+            buildsURL: Followable(),
+            badgeURL: URL(),
             createdAt: Date(timeIntervalSince1970: 1000),
             scheduledBuildsCount: 0,
             runningBuildsCount: 0,

@@ -16,10 +16,18 @@ let package = Package(
             targets: ["Buildkite"]
         )
     ],
+    dependencies: [
+        .package(
+            url: "https://github.com/apple/swift-crypto.git",
+            .upToNextMajor(from: "2.0.0")
+        )
+    ],
     targets: [
         .target(
             name: "Buildkite",
-            dependencies: []
+            dependencies: [
+                .product(name: "Crypto", package: "swift-crypto"),
+            ]
         ),
         .testTarget(
             name: "BuildkiteTests",

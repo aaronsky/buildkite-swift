@@ -25,19 +25,10 @@ enum Formatters {
         return formatter
     }()
 
-    static func dateIfPossible(fromISO8601 string: String) -> Date? {
-        if let date = iso8601WithFractionalSeconds.date(from: string) {
-            return date
-        } else if let date = iso8601WithoutFractionalSeconds.date(from: string) {
-            return date
-        }
-        return nil
-    }
-
     @Sendable
     static func encodeISO8601(date: Date, encoder: Encoder) throws {
         var container = encoder.singleValueContainer()
-        let dateString = iso8601WithoutFractionalSeconds.string(from: date)
+        let dateString = iso8601WithFractionalSeconds.string(from: date)
         try container.encode(dateString)
     }
 
@@ -45,14 +36,24 @@ enum Formatters {
     static func decodeISO8601(decoder: Decoder) throws -> Date {
         let container = try decoder.singleValueContainer()
         let dateString = try container.decode(String.self)
-        guard let date = dateIfPossible(fromISO8601: dateString) else {
+        guard let date = Date(iso8601String: dateString) else {
             throw DecodingError.dataCorrupted(
                 DecodingError.Context(
                     codingPath: container.codingPath,
-                    debugDescription: "Expected date string to be ISO8601-formatted."
+                    debugDescription: "Expected date string \"\(dateString)\" to be ISO8601-formatted."
                 )
             )
         }
         return date
+    }
+}
+
+extension Date {
+    init?(iso8601String: String) {
+        guard 
+            let date = Formatters.iso8601WithFractionalSeconds.date(from: iso8601String) ?? 
+                             Formatters.iso8601WithoutFractionalSeconds.date(from: iso8601String)
+        else { return nil }
+        self = date
     }
 }

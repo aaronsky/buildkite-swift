@@ -23,7 +23,6 @@ public struct Meta: Codable, Equatable, Hashable, Sendable {
     public var webhookIPRanges: [String]
 
     private enum CodingKeys: String, CodingKey {
-        // This corresponds to the key "webhook_ips" from the Buildkite payload.
-        case webhookIPRanges = "webhookIps"
+        case webhookIPRanges = "webhook_ips"
     }
 }

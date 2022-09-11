@@ -69,7 +69,16 @@ extension TestAnalytics.Resources {
             public var queued: Int
             public var skipped: Int
             public var errors: [String]
-            public var runUrl: URL
+            public var runURL: URL
+
+            private enum CodingKeys: String, CodingKey {
+                case id
+                case runId = "run_id"
+                case queued
+                case skipped
+                case errors
+                case runURL = "run_url"
+            }
         }
 
         public var version: APIVersion {

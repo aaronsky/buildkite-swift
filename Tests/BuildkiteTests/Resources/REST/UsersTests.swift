@@ -19,9 +19,10 @@ extension User {
     init() {
         self.init(
             id: UUID(),
+            graphqlId: "",
             name: "Jeff",
             email: "jeff@buildkite.com",
-            avatarUrl: URL(),
+            avatarURL: URL(),
             createdAt: Date(timeIntervalSince1970: 1000)
         )
     }

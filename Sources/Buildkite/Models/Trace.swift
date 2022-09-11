@@ -96,5 +96,26 @@ public struct Trace: Codable, Equatable, Hashable, Identifiable, Sendable {
             self.detail = detail
             self.children = children
         }
+
+        private enum CodingKeys: String, CodingKey {
+            case section
+            case startAt = "start_at"
+            case endAt = "end_at"
+            case duration
+            case detail
+            case children
+        }
+    }
+
+    private enum CodingKeys: String, CodingKey {
+        case id
+        case scope
+        case name
+        case identifier
+        case location
+        case fileName = "file_name"
+        case result
+        case failureReason = "failure_reason"
+        case history
     }
 }

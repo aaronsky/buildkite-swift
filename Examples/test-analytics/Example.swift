@@ -27,6 +27,6 @@ import Foundation
             )
             .content
 
-        print(result.runUrl)
+        print(result.runURL)
     }
 }

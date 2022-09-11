@@ -84,12 +84,17 @@ public enum WebhookEvent: Codable, Equatable, Hashable, Sendable {
     }
 
     public struct Ping: Codable, Equatable, Hashable, Sendable {
+        public var event: Event
         /// The notification service that sent this webhook
         public var service: Service
         /// The ``Organization`` this notification belongs to
         public var organization: Organization
         /// The user who created the webhook
         public var sender: Sender
+
+        public enum Event: String, Codable, Equatable, Hashable, Sendable {
+            case ping
+        }
     }
 
     public struct Build: Codable, Equatable, Hashable, Sendable {
@@ -103,11 +108,11 @@ public enum WebhookEvent: Codable, Equatable, Hashable, Sendable {
 
         public enum Event: String, Codable, Equatable, Hashable, Sendable {
             /// A build has been scheduled
-            case scheduled
+            case scheduled = "build.scheduled"
             /// A build has started running
-            case running
+            case running = "build.running"
             /// A build has finished
-            case finished
+            case finished = "build.finished"
         }
     }
 
@@ -124,13 +129,13 @@ public enum WebhookEvent: Codable, Equatable, Hashable, Sendable {
 
         public enum Event: String, Codable, Equatable, Hashable, Sendable {
             /// A command step job has been scheduled to run on an agent
-            case scheduled
+            case scheduled = "job.scheduled"
             /// A command step job has started running on an agent
-            case started
+            case started = "job.started"
             /// A job has finished
-            case finished
+            case finished = "job.finished"
             /// A block step job has been unblocked using the web or API
-            case activated
+            case activated = "job.activated"
         }
     }
 
@@ -143,15 +148,15 @@ public enum WebhookEvent: Codable, Equatable, Hashable, Sendable {
 
         public enum Event: String, Codable, Equatable, Hashable, Sendable {
             /// An agent has connected to the API
-            case connected
+            case connected = "agent.connected"
             /// An agent has been marked as lost. This happens when Buildkite stops receiving pings from the agent
-            case lost
+            case lost = "agent.lost"
             /// An agent has disconnected. This happens when the agent shuts down and disconnects from the API
-            case disconnected
+            case disconnected = "agent.disconnected"
             /// An agent is stopping. This happens when an agent is instructed to stop from the API. It first transitions to stopping and finishes any current jobs
-            case stopping
+            case stopping = "agent.stopping"
             /// An agent has stopped. This happens when an agent is instructed to stop from the API. It can be graceful or forceful
-            case stopped
+            case stopped = "agent.stopped"
         }
     }
 }

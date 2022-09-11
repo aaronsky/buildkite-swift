@@ -14,8 +14,9 @@ import FoundationNetworking
 
 public struct Agent: Codable, Equatable, Hashable, Identifiable, Sendable {
     public var id: UUID
+    public var graphqlId: String
     public var url: Followable<Agent.Resources.Get>
-    public var webUrl: URL
+    public var webURL: URL
     public var name: String
     public var connectionState: String
     public var hostname: String
@@ -28,4 +29,23 @@ public struct Agent: Codable, Equatable, Hashable, Identifiable, Sendable {
     public var lastJobFinishedAt: Date?
     public var priority: Int?
     public var metaData: [String]
+
+    private enum CodingKeys: String, CodingKey {
+        case id
+        case graphqlId = "graphql_id"
+        case url
+        case webURL = "web_url"
+        case name
+        case connectionState = "connection_state"
+        case hostname
+        case ipAddress = "ip_address"
+        case userAgent = "user_agent"
+        case version
+        case creator
+        case createdAt = "created_at"
+        case job
+        case lastJobFinishedAt = "last_job_finished_at"
+        case priority
+        case metaData = "meta_data"
+    }
 }

@@ -14,8 +14,9 @@ import FoundationNetworking
 
 public struct Build: Codable, Equatable, Hashable, Identifiable, Sendable {
     public var id: UUID
+    public var graphqlId: String
     public var url: Followable<Build.Resources.Get>
-    public var webUrl: URL
+    public var webURL: URL
     public var number: Int
     public var state: State
     public var blocked: Bool
@@ -45,5 +46,29 @@ public struct Build: Codable, Equatable, Hashable, Identifiable, Sendable {
         case skipped
         case notRun = "not_run"
         case finished
+    }
+
+    private enum CodingKeys: String, CodingKey {
+        case id
+        case graphqlId = "graphql_id"
+        case url
+        case webURL = "web_url"
+        case number
+        case state
+        case blocked
+        case message
+        case commit
+        case branch
+        case env
+        case source
+        case creator
+        case jobs
+        case createdAt = "created_at"
+        case scheduledAt = "scheduled_at"
+        case startedAt = "started_at"
+        case finishedAt = "finished_at"
+        case metaData = "meta_data"
+        case pullRequest = "pull_request"
+        case pipeline
     }
 }

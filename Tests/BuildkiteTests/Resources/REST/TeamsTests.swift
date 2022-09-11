@@ -19,6 +19,7 @@ extension Team {
     fileprivate init() {
         self.init(
             id: UUID(),
+            graphqlId: "",
             name: "",
             slug: "",
             description: "",

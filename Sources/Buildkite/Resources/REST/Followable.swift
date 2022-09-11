@@ -20,7 +20,7 @@ import FoundationNetworking
 /// ```swift
 /// let client = BuildkiteClient(token: "...")
 /// let organizationResponse = await client.send(.organization("buildkite")
-/// let agentsResponse = await client.send(organizationResponse.content.agentsUrl)
+/// let agentsResponse = await client.send(organizationResponse.content.agentsURL)
 /// print(agentsResponse.content) // Array<Agent>(...)
 /// ```
 public struct Followable<R: Resource>: Resource, Codable, Equatable, Hashable, Sendable {

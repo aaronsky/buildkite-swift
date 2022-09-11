@@ -14,8 +14,18 @@ import FoundationNetworking
 
 public struct User: Codable, Equatable, Hashable, Identifiable, Sendable {
     public var id: UUID
+    public var graphqlId: String
     public var name: String
     public var email: String
-    public var avatarUrl: URL
+    public var avatarURL: URL
     public var createdAt: Date
+
+    private enum CodingKeys: String, CodingKey {
+        case id
+        case graphqlId = "graphql_id"
+        case name
+        case email
+        case avatarURL = "avatar_url"
+        case createdAt = "created_at"
+    }
 }
