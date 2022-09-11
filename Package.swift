@@ -5,10 +5,10 @@ import PackageDescription
 let package = Package(
     name: "Buildkite",
     platforms: [
-        .iOS(.v13),
+        .iOS("13.2"),
         .macOS(.v10_15),
-        .tvOS(.v13),
-        .watchOS(.v6),
+        .tvOS("13.2"),
+        .watchOS("6.1"),
     ],
     products: [
         .library(
