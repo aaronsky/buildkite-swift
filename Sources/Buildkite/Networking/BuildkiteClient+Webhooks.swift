@@ -27,6 +27,7 @@ extension WebhookEvent {
     }
 }
 
+/// Errors returned during webhook authentication validation.
 public enum WebhookValidationError: Error {
     // Token
     case tokenRefused
@@ -40,6 +41,9 @@ public enum WebhookValidationError: Error {
 }
 
 extension BuildkiteClient {
+    /// Decode a webhook event out of the given data.
+    ///
+    /// - Parameter body: Data, presumably from a request body, to decode into a ``WebhookEvent``.
     public nonisolated func decodeWebhook(from body: Data) throws -> WebhookEvent {
         try decoder.decode(WebhookEvent.self, from: body)
     }

@@ -12,16 +12,27 @@ import Foundation
 import FoundationNetworking
 #endif
 
+/// Information about an organization the authenticated user is a member of.
 public struct Organization: Codable, Equatable, Hashable, Identifiable, Sendable {
+    /// ID of the organization.
     public var id: UUID
+    /// ID of the organization to be used with the GraphQL API.
     public var graphqlId: String
+    /// Followable URL to fetch this specific organization.
     public var url: Followable<Organization.Resources.Get>
+    /// Human-readable URL of this organization in the Buildkite dashboard.
     public var webURL: URL
+    /// Name of the organization.
     public var name: String
+    /// Organization slug.
     public var slug: String
+    /// Followable URL to fetch some of this organization's pipelines.
     public var pipelinesURL: Followable<Pipeline.Resources.List>
+    /// Followable URL to fetch some of this organization's agents.
     public var agentsURL: Followable<Agent.Resources.List>
+    /// Followable URL to fetch this organization's emojis.
     public var emojisURL: Followable<Emoji.Resources.List>
+    /// When this organization was created.
     public var createdAt: Date
 
     private enum CodingKeys: String, CodingKey {

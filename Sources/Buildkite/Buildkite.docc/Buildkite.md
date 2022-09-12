@@ -55,10 +55,11 @@ The entire publicly documented REST API surface is supported by this package.
 - ``TestAnalytics``
 - ``Trace``
 
-### Webhook API
+### Webhooks API
 
 - <doc:Webhooks>
 - ``WebhookEvent``
+- ``WebhookValidationError``
 
 ### Advanced
 

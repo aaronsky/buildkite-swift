@@ -14,6 +14,7 @@ import Foundation
 import FoundationNetworking
 #endif
 
+/// A container for JSON-like data.
 @dynamicMemberLookup
 public enum JSONValue: Equatable, Hashable, Sendable {
     case null

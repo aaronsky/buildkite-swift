@@ -12,6 +12,7 @@ import Foundation
 import FoundationNetworking
 #endif
 
+/// Client used to interface with all available Buildkite APIs. The primary mechanism of this library.
 public actor BuildkiteClient {
     /// Configuration for general interaction with the Buildkite API, including access tokens and supported API versions.
     var configuration: Configuration

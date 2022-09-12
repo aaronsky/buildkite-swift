@@ -12,35 +12,23 @@ import Foundation
 import FoundationNetworking
 #endif
 
+/// Analytics event used in reporting to ``TestAnalytics``
 public struct Trace: Codable, Equatable, Hashable, Identifiable, Sendable {
-    /// a unique identifier for this test result
+    /// Unique identifier for this test result
     public var id: UUID
-    /// a group or topic for the test
-    ///
-    /// - `Student.isEnrolled()`
+    /// Group or topic for the test
     public var scope: String?
-    /// a name or description for the test
-    ///
-    /// - `Manager.isEnrolled()`
-    /// - `returns_boolean`
+    /// Name or description for the test
     public var name: String?
-    /// a unique identifier for the test. If your test runner supports it, use the identifier needed to rerun this test
-    ///
-    /// - `Manager.isEnrolled#returns_boolean`
+    /// Unique identifier for the test. If your test runner supports it, use the identifier needed to rerun this test
     public var identifier: String?
-    /// the file and line number where the test originates, separated by a colon (:)
-    ///
-    /// - `./tests/Manager/isEnrolled.js:32`
+    /// File and line number where the test originates, separated by a colon (:)
     public var location: String?
-    /// the file where the test originates
-    ///
-    /// - `./tests/Manager/isEnrolled.js`
+    /// File where the test originates
     public var fileName: String?
-    /// the outcome of the test, e.g. `"passed"`, `"failed"`, `"skipped"`, or `"unknown"``
+    /// Outcome of the test, e.g. `"passed"`, `"failed"`, `"skipped"`, or `"unknown"``
     public var result: String?
-    /// if applicable, a short summary of why the test failed
-    ///
-    /// - `Expected Boolean, got Object`
+    /// Short summary of why the test failed, if applicable
     public var failureReason: String?
     /// History object
     public var history: Span
@@ -67,18 +55,19 @@ public struct Trace: Codable, Equatable, Hashable, Identifiable, Sendable {
         self.history = history
     }
 
+    /// A duration of some event or tree of events.
     public struct Span: Codable, Equatable, Hashable, Sendable {
-        /// A section category for this span, e.g. `"http"`, `"sql"`, `"sleep"`, or `"annotation"`
+        /// Section category for this span, e.g. `"http"`, `"sql"`, `"sleep"`, or `"annotation"`
         public var section: String
-        /// A monotonically increasing number
+        /// Monotonically increasing number
         public var startAt: TimeInterval?
-        /// A monotonically increasing number
+        /// Monotonically increasing number
         public var endAt: TimeInterval?
         /// How long the span took to run
         public var duration: TimeInterval?
-        /// Any information related to this span
+        /// Information related to this span
         public var detail: [String: String] = [:]
-        /// array of span objects
+        /// Array of span objects
         public var children: [Span] = []
 
         public init(

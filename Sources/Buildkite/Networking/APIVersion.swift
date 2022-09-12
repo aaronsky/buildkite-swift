@@ -12,6 +12,7 @@ import Foundation
 import FoundationNetworking
 #endif
 
+/// API base URL and version compatibility metadata used to connect to Buildkite.
 public struct APIVersion: Equatable, Hashable, Sendable {
     public enum REST {
         private static let baseURL = URL(string: "https://api.buildkite.com")!

@@ -12,6 +12,7 @@ import Foundation
 import FoundationNetworking
 #endif
 
+/// Information about a job created as part of a build.
 public enum Job: Codable, Equatable, Hashable, Sendable {
     case script(Command)
     case waiter(Wait)
@@ -59,40 +60,74 @@ public enum Job: Codable, Equatable, Hashable, Sendable {
         case type
     }
 
+    /// Command job.
     public struct Command: Codable, Equatable, Hashable, Identifiable, Sendable {
-        public struct AgentRef: Codable, Equatable, Hashable, Sendable {
-            public var id: UUID
-            public var name: String
-            public var url: URL
-        }
-
+        /// Type of the job. Always `"script"`.
         public var type = "script"
+        /// ID of the job.
         public var id: UUID
+        /// ID of the job to be used with the GraphQL API.
         public var graphqlId: String
+        /// Name of the job.
         public var name: String?
+        /// Job state.
         public var state: String?
+        /// Command(s) the job will run.
         public var command: String?
+        /// A key to reference the job by using the [buildkite-agent step command](https://buildkite.com/docs/agent/v3/cli-step).
         public var stepKey: String?
+        /// Build URL.
         public var buildURL: URL
+        /// Human-readable URL of this job in the Buildkite dashboard.
         public var webURL: URL
+        /// Followable URL to the job's log output.
         public var logURL: Followable<Job.Resources.LogOutput>
+        /// Followable URL to the job's raw log output.
         public var rawLogURL: Followable<Job.Resources.LogOutput.Alternative>
+        /// Artifacts URL.
         public var artifactsURL: URL
+        /// Whether or not the job can "soft fail".
         public var softFailed: Bool
+        /// The exit code the job's command concluded with.
         public var exitStatus: Int?
+        /// Artifact paths to files that will be automatically uploaded as artifacts.
         public var artifactPaths: String?
+        /// A list of [agent tag](https://buildkite.com/docs/agent/v3/cli-start#setting-tags)
+        /// keys to values to [target specific agents](https://buildkite.com/docs/agent/v3/cli-start#agent-targeting)
+        /// that this job was configured to target.
         public var agentQueryRules: [String]
+        /// The agent this job has been assigned to, if any.
         public var agent: AgentRef?
+        /// When the job was created.
         public var createdAt: Date
+        /// When the job was scheduled.
         public var scheduledAt: Date?
+        /// When the job became runnable.
         public var runnableAt: Date?
+        /// When the job was started.
         public var startedAt: Date?
+        /// When the job finished.
         public var finishedAt: Date?
+        /// Whether or not the job has been retried.
         public var retried: Bool
+        /// The ID of the job it was retried into, if any.
         public var retriedInJobId: UUID?
+        /// The number of times this job has been retried.
         public var retriesCount: Int?
+        /// The index out of parallel executions of this job.
         public var parallelGroupIndex: Int?
+        /// Total number of parallel executions of this job.
         public var parallelGroupTotal: Int?
+
+        /// Reference to an agent.
+        public struct AgentRef: Codable, Equatable, Hashable, Sendable {
+            /// ID of the agent.
+            public var id: UUID
+            /// Name of the agent.
+            public var name: String
+            /// Followable URL to the specific agent.
+            public var url: Followable<Agent.Resources.Get>
+        }
 
         private enum CodingKeys: String, CodingKey {
             case type
@@ -125,9 +160,13 @@ public enum Job: Codable, Equatable, Hashable, Sendable {
         }
     }
 
+    /// Wait job.
     public struct Wait: Codable, Equatable, Hashable, Identifiable, Sendable {
+        /// Type of the job. Always `"waiter"`.
         public var type = "waiter"
+        /// ID of the job.
         public var id: UUID
+        /// ID of the job to be used with the GraphQL API.
         public var graphqlId: String
 
         private enum CodingKeys: String, CodingKey {
@@ -137,16 +176,27 @@ public enum Job: Codable, Equatable, Hashable, Sendable {
         }
     }
 
+    /// Block job.
     public struct Block: Codable, Equatable, Hashable, Identifiable, Sendable {
+        /// Type of the job. Always `"manual"`.
         public var type = "manual"
+        /// ID of the job.
         public var id: UUID
+        /// ID of the job to be used with the GraphQL API.
         public var graphqlId: String
+        /// Label for the job.
         public var label: String
+        /// Job state.
         public var state: String
+        /// Human-readable URL of this job in the Buildkite dashboard.
         public var webURL: URL?
+        /// User who unblocked this job, if any.
         public var unblockedBy: User?
+        /// When this job was unblocked.
         public var unblockedAt: Date?
+        /// Whether or not this job can be unblocked.
         public var unblockable: Bool
+        /// Human-readable URL to unblock this job.
         public var unblockURL: URL
 
         private enum CodingKeys: String, CodingKey {
@@ -163,11 +213,38 @@ public enum Job: Codable, Equatable, Hashable, Sendable {
         }
     }
 
+    /// Trigger job.
     public struct Trigger: Codable, Equatable, Hashable, Sendable {
+        /// Type of the job. Always `"trigger"`.
+        public var type = "trigger"
+        /// Name of the job.
+        public var name: String?
+        /// Job state.
+        public var state: String?
+        /// Build URL.
+        public var buildURL: URL
+        /// Human-readable URL of this job in the Buildkite dashboard.
+        public var webURL: URL
+        /// When the job was created.
+        public var createdAt: Date
+        /// When the job was scheduled.
+        public var scheduledAt: Date?
+        /// When the job finished.
+        public var finishedAt: Date?
+        /// When the build became runnable.
+        public var runnableAt: Date?
+        /// Build that was triggered by this job.
+        public var triggeredBuild: TriggeredBuild?
+
+        /// Build triggered by this job.
         public struct TriggeredBuild: Codable, Equatable, Hashable, Identifiable, Sendable {
+            /// ID of the triggered build.
             public var id: UUID
+            /// Build number.
             public var number: Int
+            /// Build URL.
             public var url: URL
+            /// Human-readable URL to this build in the Buildkite dashboard.
             public var webURL: URL
 
             private enum CodingKeys: String, CodingKey {
@@ -177,17 +254,6 @@ public enum Job: Codable, Equatable, Hashable, Sendable {
                 case webURL = "web_url"
             }
         }
-
-        public var type = "trigger"
-        public var name: String?
-        public var state: String?
-        public var buildURL: URL
-        public var webURL: URL
-        public var createdAt: Date
-        public var scheduledAt: Date?
-        public var finishedAt: Date?
-        public var runnableAt: Date?
-        public var triggeredBuild: TriggeredBuild?
 
         private enum CodingKeys: String, CodingKey {
             case type
@@ -203,10 +269,15 @@ public enum Job: Codable, Equatable, Hashable, Sendable {
         }
     }
 
+    /// Log output from a job.
     public struct LogOutput: Codable, Equatable, Hashable, Sendable {
+        /// Followable URL to this specific job's log output.
         public var url: Followable<Job.Resources.LogOutput>
+        /// Log content.
         public var content: String
+        /// Size of the logs in bytes.
         public var size: Int
+        /// Header timestamps.
         public var headerTimes: [Int]
 
         private enum CodingKeys: String, CodingKey {
@@ -217,6 +288,7 @@ public enum Job: Codable, Equatable, Hashable, Sendable {
         }
     }
 
+    /// Environment variables for a job.
     public struct EnvironmentVariables: Codable, Equatable, Hashable, Sendable {
         public var env: [String: String]
     }

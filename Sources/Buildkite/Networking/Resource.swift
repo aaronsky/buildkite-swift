@@ -12,17 +12,26 @@ import Foundation
 import FoundationNetworking
 #endif
 
+/// Error thrown when the ``Resource`` provided to the client is incompatible
+/// with the client's supported API versions.
 public enum ResourceError: Error, Equatable {
     case incompatibleVersion(APIVersion)
 }
 
+/// Resource describes an endpoint on any of Buildkite's APIs. Do not implement this type.
 public protocol Resource {
+    /// The input type.
     associatedtype Body = Void
+    /// The return type.
     associatedtype Content = Void
 
+    /// The API and version for the resource.
     var version: APIVersion { get }
+    /// The path to the resource.
     var path: String { get }
+    /// An instance of the input type to be served with the request.
     var body: Body { get }
+    /// Transform the given URLRequest to fit the resource.
     func transformRequest(_ request: inout URLRequest)
 }
 
@@ -40,6 +49,7 @@ extension Resource where Body == Void {
     }
 }
 
+/// A specialization of ``Resource`` that supports pagination.
 public protocol PaginatedResource: Resource where Content: Decodable {}
 
 extension URLRequest {

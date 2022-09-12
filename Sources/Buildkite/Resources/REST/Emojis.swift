@@ -38,6 +38,9 @@ extension Emoji.Resources {
 }
 
 extension Resource where Self == Emoji.Resources.List {
+    /// List emojis
+    ///
+    /// Returns a list of all the emojis for a given organization, including custom emojis and aliases. This list is not paginated.
     public static func emojis(in organization: String) -> Self {
         Self(organization: organization)
     }

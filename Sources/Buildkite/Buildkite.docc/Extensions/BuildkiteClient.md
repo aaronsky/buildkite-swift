@@ -16,3 +16,9 @@
 - ``send(_:pageOptions:)-1c2y7``
 - ``send(_:pageOptions:)-6obx7``
 - ``sendQuery(_:)``
+
+### Processing Webhook Events
+
+- ``validateWebhookPayload(tokenHeader:secretKey:)``
+- ``validateWebhookPayload(signatureHeader:body:secretKey:replayLimit:)``
+- ``decodeWebhook(from:)``

@@ -12,23 +12,25 @@ import Foundation
 import FoundationNetworking
 #endif
 
+/// Information about a team the authenticated user has visibility into.
 public struct Team: Codable, Equatable, Hashable, Identifiable, Sendable {
-    /// ID of the team
+    /// ID of the team.
     public var id: UUID
+    /// ID of the team to be used with the GraphQL API.
     public var graphqlId: String
-    /// Name of the team
+    /// Name of the team.
     public var name: String
-    /// URL slug of the team
+    /// URL slug of the team.
     public var slug: String
-    /// Description of the team
+    /// Description of the team.
     public var description: String?
-    /// Privacy setting of the team
+    /// Privacy setting of the team.
     public var privacy: Visibility
-    /// Whether users join this team by default
+    /// Whether users join this team by default.
     public var `default`: Bool
-    /// Time of when the team was created
+    /// When the team was created.
     public var createdAt: Date
-    /// User who created the team
+    /// User who created the team.
     public var createdBy: User?
 
     public enum Visibility: String, Codable, Equatable, Hashable, Sendable {

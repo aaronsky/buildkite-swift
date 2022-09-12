@@ -309,6 +309,7 @@ extension Build.Resources {
         }
     }
 
+    /// Query options for listing builds.
     public struct QueryOptions: Equatable, Hashable, Sendable {
         /// Filters the results by the given branch or branches.
         public var branches: [String] = []
@@ -371,12 +372,20 @@ extension Array where Element == URLQueryItem {
 }
 
 extension Resource where Self == Build.Resources.ListAll {
+    /// List all builds
+    ///
+    /// Returns a paginated list of all builds across all the user’s organizations and pipelines. If using token-based authentication
+    /// the list of builds will be for the authorized organizations only. Builds are listed in the order they were created (newest first).
     public static func builds(options: Build.Resources.QueryOptions? = nil) -> Self {
         Self(queryOptions: options)
     }
 }
 
 extension Resource where Self == Build.Resources.ListForOrganization {
+    /// List builds for an organization
+    ///
+    /// Returns a paginated list of an organization’s builds across all of an organization’s pipelines. Builds are listed in the order
+    /// they were created (newest first).
     public static func builds(inOrganization organization: String, options: Build.Resources.QueryOptions? = nil) -> Self
     {
         Self(organization: organization, queryOptions: options)
@@ -384,6 +393,9 @@ extension Resource where Self == Build.Resources.ListForOrganization {
 }
 
 extension Resource where Self == Build.Resources.ListForPipeline {
+    /// List builds for a pipeline
+    ///
+    /// Returns a paginated list of a pipeline’s builds. Builds are listed in the order they were created (newest first).
     public static func builds(
         forPipeline pipeline: String,
         in organization: String,
@@ -394,24 +406,32 @@ extension Resource where Self == Build.Resources.ListForPipeline {
 }
 
 extension Resource where Self == Build.Resources.Get {
+    /// Get a build
     public static func build(_ build: Int, in organization: String, pipeline: String) -> Self {
         Self(organization: organization, pipeline: pipeline, build: build)
     }
 }
 
 extension Resource where Self == Build.Resources.Create {
+    /// Create a build
     public static func createBuild(in organization: String, pipeline: String, with body: Self.Body) -> Self {
         Self(organization: organization, pipeline: pipeline, body: body)
     }
 }
 
 extension Resource where Self == Build.Resources.Cancel {
+    /// Cancel a build
+    ///
+    /// Cancels the build if it's state is either scheduled or running.
     public static func cancelBuild(_ build: Int, in organization: String, pipeline: String) -> Self {
         Self(organization: organization, pipeline: pipeline, build: build)
     }
 }
 
 extension Resource where Self == Build.Resources.Rebuild {
+    /// Rebuild a build
+    ///
+    /// Returns the newly created build.
     public static func rebuild(_ build: Int, in organization: String, pipeline: String) -> Self {
         Self(organization: organization, pipeline: pipeline, build: build)
     }

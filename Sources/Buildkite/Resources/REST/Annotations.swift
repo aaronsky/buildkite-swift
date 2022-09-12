@@ -46,6 +46,9 @@ extension Annotation.Resources {
 }
 
 extension Resource where Self == Annotation.Resources.List {
+    /// List annotations for a build
+    ///
+    /// Returns a paginated list of a build’s annotations.
     public static func annotations(in organization: String, pipeline: String, build: Int) -> Self {
         Self(organization: organization, pipeline: pipeline, build: build)
     }

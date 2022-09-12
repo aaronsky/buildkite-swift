@@ -28,3 +28,9 @@ To send a resource, simply use one of the `send` methods on the client. This sam
 let response = try await client.send(.pipelines(in: "buildkite"))
 let pipelines = response.content
 ```
+
+## See Also
+
+- <doc:UsingGraphQL>
+- <doc:Authorization>
+- <doc:Webhooks>

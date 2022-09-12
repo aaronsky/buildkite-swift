@@ -12,8 +12,10 @@ import Foundation
 import FoundationNetworking
 #endif
 
+/// Generic configuration for the ``BuildkiteClient``.
 public struct Configuration: Equatable, Hashable, Sendable {
     public let userAgent = "buildkite-swift"
+
     public var version: APIVersion
     public var graphQLVersion: APIVersion
     public var agentVersion: APIVersion

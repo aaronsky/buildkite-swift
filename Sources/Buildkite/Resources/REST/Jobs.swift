@@ -196,6 +196,7 @@ extension Job.Resources {
 }
 
 extension Job.Resources.LogOutput {
+    /// Get a job’s log output in an alternative format.
     public struct Alternative: Resource, Equatable, Hashable, Sendable {
         public enum Format: String, Equatable, Hashable, Sendable {
             case html
@@ -235,12 +236,18 @@ extension Job.Resources.LogOutput {
 }
 
 extension Resource where Self == Job.Resources.Retry {
+    /// Retry a job
+    ///
+    /// Retries a `failed` or `timed_out` job.
     public static func retryJob(_ job: UUID, in organization: String, pipeline: String, build: Int) -> Self {
         Self(organization: organization, pipeline: pipeline, build: build, job: job)
     }
 }
 
 extension Resource where Self == Job.Resources.Unblock {
+    /// Unblock a job
+    ///
+    /// Unblocks a build’s "Block pipeline" job. The job’s `unblockable` property indicates whether it is able to be unblocked, and the `unblock_url` property points to this endpoint.
     public static func unblockJob(
         _ job: UUID,
         in organization: String,
@@ -253,29 +260,14 @@ extension Resource where Self == Job.Resources.Unblock {
 }
 
 extension Resource where Self == Job.Resources.LogOutput {
+    /// Get a job’s log output
     public static func logOutput(for job: UUID, in organization: String, pipeline: String, build: Int) -> Self {
         Self(organization: organization, pipeline: pipeline, build: build, job: job)
     }
 }
 
-extension Resource where Self == Job.Resources.DeleteLogOutput {
-    public static func deleteLogOutput(for job: UUID, in organization: String, pipeline: String, build: Int) -> Self {
-        Self(organization: organization, pipeline: pipeline, build: build, job: job)
-    }
-}
-
-extension Resource where Self == Job.Resources.EnvironmentVariables {
-    public static func environmentVariables(
-        for job: UUID,
-        in organization: String,
-        pipeline: String,
-        build: Int
-    ) -> Self {
-        Self(organization: organization, pipeline: pipeline, build: build, job: job)
-    }
-}
-
 extension Resource where Self == Job.Resources.LogOutput.Alternative {
+    /// Get a job’s log output in an alternative format.
     public static func logOutput(
         _ format: Job.Resources.LogOutput.Alternative.Format,
         for job: UUID,
@@ -284,5 +276,25 @@ extension Resource where Self == Job.Resources.LogOutput.Alternative {
         build: Int
     ) -> Self {
         Self(organization: organization, pipeline: pipeline, build: build, job: job, format: format)
+    }
+}
+
+
+extension Resource where Self == Job.Resources.DeleteLogOutput {
+    /// Delete a job’s log output
+    public static func deleteLogOutput(for job: UUID, in organization: String, pipeline: String, build: Int) -> Self {
+        Self(organization: organization, pipeline: pipeline, build: build, job: job)
+    }
+}
+
+extension Resource where Self == Job.Resources.EnvironmentVariables {
+    /// Get a job's environment variables
+    public static func environmentVariables(
+        for job: UUID,
+        in organization: String,
+        pipeline: String,
+        build: Int
+    ) -> Self {
+        Self(organization: organization, pipeline: pipeline, build: build, job: job)
     }
 }

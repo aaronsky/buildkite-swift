@@ -12,13 +12,17 @@ import Foundation
 import FoundationNetworking
 #endif
 
+/// Error thrown when the transport resolves a data transfer and has received no data or
+/// response object.
 public enum TransportError: Error {
     case noResponse
 }
 
+/// Interface for the asynchronous communication layer the ``BuildkiteClient`` uses.
 public protocol Transport {
     typealias Output = (data: Data, response: URLResponse)
 
+    /// Send the request and receive the ``Output`` asynchronously.
     func send(request: URLRequest) async throws -> Output
 }
 

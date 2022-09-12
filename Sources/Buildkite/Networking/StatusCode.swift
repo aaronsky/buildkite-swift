@@ -12,6 +12,7 @@ import Foundation
 import FoundationNetworking
 #endif
 
+/// Status code from a completed ``Transport`` operation.
 public enum StatusCode: Int, Error, Codable, Equatable, Hashable, Sendable {
     /// The request was successfully processed by Buildkite.
     case ok = 200
@@ -58,6 +59,7 @@ public enum StatusCode: Int, Error, Codable, Equatable, Hashable, Sendable {
     /// The server was acting as a gateway or proxy and did not receive a timely response from the upstream server.
     case gatewayTimeout = 504
 
+    /// Whether or not the status code constitutes a success.
     var isSuccess: Bool {
         self == .ok
             || self == .created

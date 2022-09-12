@@ -12,12 +12,19 @@ import Foundation
 import FoundationNetworking
 #endif
 
+/// Information about the user account that owns the API token that is currently being used.
 public struct User: Codable, Equatable, Hashable, Identifiable, Sendable {
+    /// ID of the user.
     public var id: UUID
+    /// ID of the user to be used with the GraphQL API.
     public var graphqlId: String
+    /// User's name.
     public var name: String
+    /// User's email.
     public var email: String
+    /// URL to the user's profile image.
     public var avatarURL: URL
+    /// When the user was created.
     public var createdAt: Date
 
     private enum CodingKeys: String, CodingKey {

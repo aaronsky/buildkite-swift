@@ -12,6 +12,10 @@ import Foundation
 import FoundationNetworking
 #endif
 
+/// The Buildkite GraphQL API provides an alternative to the [REST API](https://buildkite.com/docs/apis/rest-api).
+/// It allows for more efficient retrieval of data by enabling you to fetch multiple, nested resources in a single request.
+///
+/// For the list of existing disparities between the GraphQL API and the REST API, see [API Differences](https://buildkite.com/docs/apis/api-differences).
 public struct GraphQL<T: Decodable>: Resource, Equatable, Hashable, Sendable {
     public struct Body: Encodable, Equatable, Hashable, Sendable {
         /// The query or mutation to be sent

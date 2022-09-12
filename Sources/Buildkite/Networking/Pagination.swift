@@ -12,10 +12,15 @@ import Foundation
 import FoundationNetworking
 #endif
 
+/// A page in a paginated REST API.
 public struct Page: Equatable, Hashable, Sendable {
+    /// Index of the next page, if any.
     public var nextPage: Int?
+    /// Index of the previous page, if any.
     public var previousPage: Int?
+    /// Index of the first page, if any.
     public var firstPage: Int?
+    /// Index of the last page, if any.
     public var lastPage: Int?
 
     init?(
@@ -26,8 +31,7 @@ public struct Page: Equatable, Hashable, Sendable {
         }
 
         for link in header.split(separator: ",") {
-            let segments =
-                link
+            let segments = link
                 .trimmingCharacters(in: .whitespacesAndNewlines)
                 .split(separator: ";")
             guard
@@ -62,8 +66,11 @@ public struct Page: Equatable, Hashable, Sendable {
     }
 }
 
+/// Page options to use when fetching a paginated resource.
 public struct PageOptions: Equatable, Hashable, Sendable {
+    /// Page index.
     public var page: Int
+    /// Limit of items per page.
     public var perPage: Int
 
     public init(

@@ -12,7 +12,10 @@ import Foundation
 import FoundationNetworking
 #endif
 
+/// Information about an access token registered with Buildkite.
 public struct AccessToken: Codable, Equatable, Hashable, Sendable {
+    /// ID of the access token, but not the token itself.
     public var uuid: UUID
+    /// [API scopes](https://buildkite.com/docs/apis/managing-api-tokens#token-scopes) the token has access to.
     public var scopes: [String]
 }

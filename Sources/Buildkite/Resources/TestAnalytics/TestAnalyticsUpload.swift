@@ -13,26 +13,40 @@ import FoundationNetworking
 #endif
 
 public enum TestAnalytics {
-    /// Resources for requesting information about your organization's Buildkite agents.
+    /// Resources for requesting information from Test Analytics.
     public enum Resources {}
 }
 
 extension TestAnalytics.Resources {
-    /// Get metrics about agents active with the current organization.
+    /// Upload a trace to Test Analytics.
     public struct Upload: Resource, Equatable, Hashable, Sendable {
         public struct Body: Encodable, Equatable, Hashable, Sendable {
+            /// Format of the data. Should be `"json"`.
             public var format: String
+            /// Environment the tests were run under.
             public var environment: Environment
+            /// Test results as traces.
             public var data: [Trace]
 
+            /// Environment the tests were run under.
+            ///
+            /// - SeeAlso: https://buildkite.com/docs/test-analytics/ci-environments
             public struct Environment: Encodable, Equatable, Hashable, Sendable {
+                /// CI provider, e.g. `"buildkite"`, `"circleci"`, `"github_actions"`, etc.
                 public var ci: String
+                /// Unique key identifying the upload. See the link for your specific CI environment for guidance.
                 public var key: String
+                /// Build number.
                 public var number: String?
+                /// ID of the build in the CI environment.
                 public var jobId: String?
+                /// The branch or reference for the build.
                 public var branch: String?
+                /// Commit hash for the head of the branch.
                 public var commitSha: String?
+                /// Commit message for the head of the branch.
                 public var message: String?
+                /// URL for the build.
                 public var url: String?
 
                 public init(
@@ -64,11 +78,17 @@ extension TestAnalytics.Resources {
         }
 
         public struct Content: Codable, Equatable, Hashable, Sendable {
+            /// ID of the Test Analytics upload.
             public var id: UUID
+            /// ID of the run in Test Analytics.
             public var runId: UUID
+            /// Number of tests queued.
             public var queued: Int
+            /// Number of tests skipped.
             public var skipped: Int
+            /// Errors in tests.
             public var errors: [String]
+            /// URL to the run in Test Analytics.
             public var runURL: URL
 
             private enum CodingKeys: String, CodingKey {
@@ -103,9 +123,7 @@ extension TestAnalytics.Resources {
 }
 
 extension Resource where Self == TestAnalytics.Resources.Upload {
-    /// Get an object with properties describing Buildkite
-    ///
-    /// Returns meta information about Buildkite.
+    /// Upload a trace to Test Analytics.
     public static func uploadTestAnalytics(_ data: [Trace], environment: Self.Body.Environment) -> Self {
         Self(body: .init(format: "json", environment: environment, data: data))
     }

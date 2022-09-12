@@ -12,25 +12,40 @@ import Foundation
 import FoundationNetworking
 #endif
 
+/// An artifact is a file uploaded by your agent during the execution of a build's job. The
+/// contents of the artifact can be retrieved using the ``downloadURL`` and the [artifact download]() API.
+/// Artifacts are created using ``Pipeline/Step/Command/artifactPaths`` on a pipeline, or the
+/// [buildkite-agent artifact command](https://buildkite.com/docs/agent/v3/cli-artifact) from within a job.
 public struct Artifact: Codable, Equatable, Hashable, Identifiable, Sendable {
+    /// ID of the artifact
+    public var id: UUID
+    /// ID of the job the artifact was uploaded from.
+    public var jobId: UUID
+    /// Followable URL to this specific artifact's information.
+    public var url: Followable<Artifact.Resources.Get>
+    /// Followable URL to this artifact's download information.
+    public var downloadURL: Followable<Artifact.Resources.Download>
+    /// The upload state of the artifact.
+    public var state: State
+    /// The full path of the artifact.
+    public var path: String
+    /// The directory the artifact file was stored in.
+    public var dirname: String
+    /// The basename of the artifact file.
+    public var filename: String
+    /// The MIME type of the artifact file
+    public var mimeType: String
+    /// The size in bytes of the artifact file
+    public var fileSize: Int
+    /// The artifact's checksum
+    public var sha1sum: String
+
     public enum State: String, Codable, Equatable, Hashable, Sendable {
         case new
         case error
         case finished
         case deleted
     }
-
-    public var id: UUID
-    public var jobId: UUID
-    public var url: Followable<Artifact.Resources.Get>
-    public var downloadURL: Followable<Artifact.Resources.Download>
-    public var state: State
-    public var path: String
-    public var dirname: String
-    public var filename: String
-    public var mimeType: String
-    public var fileSize: Int
-    public var sha1sum: String
 
     public struct URLs: Codable, Equatable {
         public var url: URL
