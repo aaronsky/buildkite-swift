@@ -19,7 +19,7 @@ struct MyTokenProvider: TokenProvider {
     let myGraphQLToken: String = "..."
     let myRESTToken: String = "..."
 
-    func token(for version: APIVersion) -> String? {
+    func token(for version: APIVersion) async -> String? {
         switch version {
         case .GraphQL.v1:
             return myGraphQLToken

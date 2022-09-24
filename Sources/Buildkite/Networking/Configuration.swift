@@ -46,9 +46,9 @@ public struct Configuration: Equatable, Hashable, Sendable {
         _ request: inout URLRequest,
         tokens: TokenProvider?,
         version: APIVersion
-    ) {
+    ) async {
         request.addValue(userAgent, forHTTPHeaderField: "User-Agent")
-        if let header = tokens?.authorizationHeader(for: version) {
+        if let header = await tokens?.authorizationHeader(for: version) {
             request.addValue(header, forHTTPHeaderField: "Authorization")
         }
     }

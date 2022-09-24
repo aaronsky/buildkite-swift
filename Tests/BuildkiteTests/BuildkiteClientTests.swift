@@ -82,7 +82,6 @@ class BuildkiteClientTests: XCTestCase {
                 transport: MockTransport(responses: responses),
                 token: token
             )
-            XCTAssertEqual(token, RawTokenProvider(rawValue: token).token(for: .REST.v2))
         }
     }
 
@@ -93,6 +92,13 @@ class BuildkiteClientTests: XCTestCase {
             await testData.client.send(resource),
             error: ResourceError.incompatibleVersion(resource.version)
         )
+    }
+
+    func testRawTokenProvider() async {
+        let expected = "a valid token, i guess"
+        let provider = RawTokenProvider(rawValue: expected)
+        let actual = await provider.token(for: .REST.v2)
+        XCTAssertEqual(expected, actual)
     }
 }
 

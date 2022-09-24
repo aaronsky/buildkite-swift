@@ -26,12 +26,12 @@ import FoundationNetworking
 /// client instantiation.
 public protocol TokenProvider {
     /// Returns a token string for the given ``APIVersion``. This will usually be a fixed constant such as ``APIVersion/REST/v2`` or ``APIVersion/GraphQL/v1``, so you can switch on the values of one of these.
-    func token(for version: APIVersion) -> String?
+    func token(for version: APIVersion) async -> String?
 }
 
 extension TokenProvider {
-    func authorizationHeader(for version: APIVersion) -> String? {
-        guard let token = token(for: version) else { return nil }
+    func authorizationHeader(for version: APIVersion) async -> String? {
+        guard let token = await token(for: version) else { return nil }
 
         switch version {
         case .GraphQL.v1, .REST.v2:
@@ -50,7 +50,7 @@ extension TokenProvider {
 struct RawTokenProvider: RawRepresentable, TokenProvider, Sendable {
     let rawValue: String
 
-    func token(for version: APIVersion) -> String? {
+    func token(for version: APIVersion) async -> String? {
         rawValue
     }
 }

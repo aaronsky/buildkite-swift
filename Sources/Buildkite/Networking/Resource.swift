@@ -57,7 +57,7 @@ extension URLRequest {
         _ resource: R,
         configuration: Configuration,
         tokens: TokenProvider?
-    ) throws {
+    ) async throws {
         let version = resource.version
         guard
             version == configuration.version
@@ -70,7 +70,7 @@ extension URLRequest {
 
         let url = version.url(for: resource.path)
         var request = URLRequest(url: url)
-        configuration.transformRequest(&request, tokens: tokens, version: version)
+        await configuration.transformRequest(&request, tokens: tokens, version: version)
         resource.transformRequest(&request)
 
         self = request
@@ -81,8 +81,8 @@ extension URLRequest {
         configuration: Configuration,
         tokens: TokenProvider?,
         encoder: JSONEncoder
-    ) throws where R.Body: Encodable {
-        try self.init(resource, configuration: configuration, tokens: tokens)
+    ) async throws where R.Body: Encodable {
+        try await self.init(resource, configuration: configuration, tokens: tokens)
         httpBody = try encoder.encode(resource.body)
     }
 
@@ -91,8 +91,8 @@ extension URLRequest {
         configuration: Configuration,
         tokens: TokenProvider?,
         pageOptions: PageOptions? = nil
-    ) throws {
-        try self.init(resource, configuration: configuration, tokens: tokens)
+    ) async throws {
+        try await self.init(resource, configuration: configuration, tokens: tokens)
         if let options = pageOptions {
             appendPageOptions(options)
         }
@@ -104,8 +104,8 @@ extension URLRequest {
         tokens: TokenProvider?,
         encoder: JSONEncoder,
         pageOptions: PageOptions? = nil
-    ) throws where R.Body: Encodable {
-        try self.init(resource, configuration: configuration, tokens: tokens, encoder: encoder)
+    ) async throws where R.Body: Encodable {
+        try await self.init(resource, configuration: configuration, tokens: tokens, encoder: encoder)
         if let options = pageOptions {
             appendPageOptions(options)
         }

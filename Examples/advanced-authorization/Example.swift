@@ -24,7 +24,7 @@ import Foundation
 }
 
 struct MyTokenProvider: TokenProvider {
-    func token(for version: APIVersion) -> String? {
+    func token(for version: APIVersion) async -> String? {
         switch version {
         case .GraphQL.v1:
             return "..."
