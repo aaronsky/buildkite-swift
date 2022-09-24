@@ -29,7 +29,7 @@ jobs:
   library-linux:
     runs-on: ubuntu-latest
     container:
-      image: swift:5.6
+      image: swift:5.7
     steps:
       - uses: actions/checkout@v1.0.0
       - name: Run tests

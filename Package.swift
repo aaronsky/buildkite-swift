@@ -1,4 +1,4 @@
-// swift-tools-version:5.5
+// swift-tools-version:5.6
 
 import PackageDescription
 
@@ -17,10 +17,8 @@ let package = Package(
         )
     ],
     dependencies: [
-        .package(
-            url: "https://github.com/apple/swift-crypto.git",
-            .upToNextMajor(from: "2.0.0")
-        )
+        .package(url: "https://github.com/apple/swift-crypto.git", .upToNextMajor(from: "2.0.0")),
+        .package(url: "https://github.com/apple/swift-docc-plugin", from: "1.0.0"),
     ],
     targets: [
         .target(
@@ -35,10 +33,3 @@ let package = Package(
         ),
     ]
 )
-
-#if swift(>=5.6)
-// Add the documentation compiler plugin if possible
-package.dependencies.append(
-    .package(url: "https://github.com/apple/swift-docc-plugin", from: "1.0.0")
-)
-#endif
