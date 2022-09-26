@@ -2,11 +2,7 @@ name: CI
 
 on:
   push:
-    branches:
-      - main
   pull_request:
-    branches:
-      - '*'
   workflow_dispatch:
 
 jobs:
@@ -15,7 +11,7 @@ jobs:
     strategy:
       matrix:
         xcode:
-          - '14.0'
+          - '14.0.1'
     env:
       DEVELOPER_DIR: /Applications/Xcode_${{ matrix.xcode }}.app/Contents/Developer
     steps:
@@ -23,7 +19,6 @@ jobs:
       - name: Run tests
         run: make test-library-xcode
       - name: Compile documentation
-        if: ${{ matrix.xcode == '14.0' }}
         run: make test-docs
 
   library-linux:
