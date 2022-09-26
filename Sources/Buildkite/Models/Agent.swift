@@ -47,6 +47,25 @@ public struct Agent: Codable, Equatable, Hashable, Identifiable, Sendable {
     /// Additional meta-data registered by the agent. 
     public var metaData: [String]
 
+    public init(id: UUID, graphqlId: String, url: Followable<Agent.Resources.Get>, webURL: URL, name: String, connectionState: String, hostname: String, ipAddress: String, userAgent: String, version: String, creator: User? = nil, createdAt: Date, job: Job? = nil, lastJobFinishedAt: Date? = nil, priority: Int? = nil, metaData: [String]) {
+        self.id = id
+        self.graphqlId = graphqlId
+        self.url = url
+        self.webURL = webURL
+        self.name = name
+        self.connectionState = connectionState
+        self.hostname = hostname
+        self.ipAddress = ipAddress
+        self.userAgent = userAgent
+        self.version = version
+        self.creator = creator
+        self.createdAt = createdAt
+        self.job = job
+        self.lastJobFinishedAt = lastJobFinishedAt
+        self.priority = priority
+        self.metaData = metaData
+    }
+
     private enum CodingKeys: String, CodingKey {
         case id
         case graphqlId = "graphql_id"

@@ -24,7 +24,7 @@ extension Team {
             slug: "",
             description: "",
             privacy: .visible,
-            default: true,
+            isDefault: true,
             createdAt: Date(timeIntervalSince1970: 1000),
             createdBy: User()
         )

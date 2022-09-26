@@ -27,11 +27,23 @@ public struct Team: Codable, Equatable, Hashable, Identifiable, Sendable {
     /// Privacy setting of the team.
     public var privacy: Visibility
     /// Whether users join this team by default.
-    public var `default`: Bool
+    public var isDefault: Bool
     /// When the team was created.
     public var createdAt: Date
     /// User who created the team.
     public var createdBy: User?
+
+    public init(id: UUID, graphqlId: String, name: String, slug: String, description: String? = nil, privacy: Visibility, isDefault: Bool, createdAt: Date, createdBy: User? = nil) {
+        self.id = id
+        self.graphqlId = graphqlId
+        self.name = name
+        self.slug = slug
+        self.description = description
+        self.privacy = privacy
+        self.isDefault = isDefault
+        self.createdAt = createdAt
+        self.createdBy = createdBy
+    }
 
     public enum Visibility: String, Codable, Equatable, Hashable, Sendable {
         case visible
@@ -45,7 +57,7 @@ public struct Team: Codable, Equatable, Hashable, Identifiable, Sendable {
         case slug
         case description
         case privacy
-        case `default`
+        case isDefault = "default"
         case createdAt = "created_at"
         case createdBy = "created_by"
     }

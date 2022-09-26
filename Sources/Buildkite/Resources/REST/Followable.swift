@@ -27,12 +27,9 @@ public struct Followable<R: Resource>: Resource, Codable, Equatable, Hashable, S
     public typealias Content = R.Content
 
     public let path = ""
+    public var url: URL
 
-    private var url: URL
-
-    init(
-        url: URL
-    ) {
+    public init(url: URL) {
         self.url = url
     }
 

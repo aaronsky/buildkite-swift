@@ -24,4 +24,10 @@ public struct Emoji: Codable, Equatable, Hashable, Sendable {
     public var url: URL
     /// Aliases configured with this emoji, if any.
     public var aliases: [String]? = []
+
+    public init(name: String, url: URL, aliases: [String]? = nil) {
+        self.name = name
+        self.url = url
+        self.aliases = aliases
+    }
 }

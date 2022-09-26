@@ -23,6 +23,10 @@ public struct Meta: Codable, Equatable, Hashable, Sendable {
     /// before they are used.
     public var webhookIPRanges: [String]
 
+    public init(webhookIPRanges: [String]) {
+        self.webhookIPRanges = webhookIPRanges
+    }
+
     private enum CodingKeys: String, CodingKey {
         case webhookIPRanges = "webhook_ips"
     }

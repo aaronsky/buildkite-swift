@@ -57,6 +57,30 @@ public struct Build: Codable, Equatable, Hashable, Identifiable, Sendable {
     /// Pipeline the build was created from.
     public var pipeline: Pipeline
 
+    public init(id: UUID, graphqlId: String, url: Followable<Build.Resources.Get>, webURL: URL, number: Int, state: State, blocked: Bool, message: String? = nil, commit: String, branch: String, env: [String : String]? = nil, source: String, creator: User? = nil, jobs: [Job], createdAt: Date, scheduledAt: Date? = nil, startedAt: Date? = nil, finishedAt: Date? = nil, metaData: [String : String], pullRequest: [String : String?]? = nil, pipeline: Pipeline) {
+        self.id = id
+        self.graphqlId = graphqlId
+        self.url = url
+        self.webURL = webURL
+        self.number = number
+        self.state = state
+        self.blocked = blocked
+        self.message = message
+        self.commit = commit
+        self.branch = branch
+        self.env = env
+        self.source = source
+        self.creator = creator
+        self.jobs = jobs
+        self.createdAt = createdAt
+        self.scheduledAt = scheduledAt
+        self.startedAt = startedAt
+        self.finishedAt = finishedAt
+        self.metaData = metaData
+        self.pullRequest = pullRequest
+        self.pipeline = pipeline
+    }
+
     /// The state of the build and its jobs.
     public enum State: String, Codable, Equatable, Hashable, Sendable {
         case running

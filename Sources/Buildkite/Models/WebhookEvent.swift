@@ -86,6 +86,16 @@ public enum WebhookEvent: Codable, Equatable, Hashable, Sendable {
         public struct Settings: Codable, Equatable, Hashable, Sendable {
             /// URL to the service.
             public var url: URL
+
+            public init(url: URL) {
+                self.url = url
+            }
+        }
+
+        public init(id: UUID, provider: String, settings: Settings) {
+            self.id = id
+            self.provider = provider
+            self.settings = settings
         }
     }
 
@@ -94,6 +104,11 @@ public enum WebhookEvent: Codable, Equatable, Hashable, Sendable {
         public var id: UUID
         /// Name of the user or entity that triggered the event.
         public var name: String
+
+        public init(id: UUID, name: String) {
+            self.id = id
+            self.name = name
+        }
     }
 
     /// Event sent when webhook notification settings have changed.
@@ -106,6 +121,12 @@ public enum WebhookEvent: Codable, Equatable, Hashable, Sendable {
         public var organization: Organization
         /// The user who created the webhook
         public var sender: Sender
+
+        public init(service: Service, organization: Organization, sender: Sender) {
+            self.service = service
+            self.organization = organization
+            self.sender = sender
+        }
     }
 
     /// Event sent when a build is scheduled, starts, or finishes.
@@ -118,6 +139,13 @@ public enum WebhookEvent: Codable, Equatable, Hashable, Sendable {
         public var pipeline: Pipeline
         /// The user who created the webhook.
         public var sender: Sender
+
+        public init(event: Event, build: Buildkite.Build, pipeline: Pipeline, sender: Sender) {
+            self.event = event
+            self.build = build
+            self.pipeline = pipeline
+            self.sender = sender
+        }
 
         public enum Event: String, Codable, Equatable, Hashable, Sendable {
             /// A build has been scheduled
@@ -142,6 +170,14 @@ public enum WebhookEvent: Codable, Equatable, Hashable, Sendable {
         /// The user who created the webhook.
         public var sender: Sender
 
+        public init(event: Event, job: Buildkite.Job, build: Buildkite.Build, pipeline: Pipeline, sender: Sender) {
+            self.event = event
+            self.job = job
+            self.build = build
+            self.pipeline = pipeline
+            self.sender = sender
+        }
+
         public enum Event: String, Codable, Equatable, Hashable, Sendable {
             /// A command step job has been scheduled to run on an agent.
             case scheduled = "job.scheduled"
@@ -161,6 +197,12 @@ public enum WebhookEvent: Codable, Equatable, Hashable, Sendable {
         public var agent: Buildkite.Agent
         /// The user who created the webhook.
         public var sender: Sender
+
+        public init(event: Event, agent: Buildkite.Agent, sender: Sender) {
+            self.event = event
+            self.agent = agent
+            self.sender = sender
+        }
 
         public enum Event: String, Codable, Equatable, Hashable, Sendable {
             /// An agent has connected to the API.

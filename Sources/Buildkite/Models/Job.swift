@@ -119,6 +119,35 @@ public enum Job: Codable, Equatable, Hashable, Sendable {
         /// Total number of parallel executions of this job.
         public var parallelGroupTotal: Int?
 
+        public init(id: UUID, graphqlId: String, name: String? = nil, state: String? = nil, command: String? = nil, stepKey: String? = nil, buildURL: URL, webURL: URL, logURL: Followable<Job.Resources.LogOutput>, rawLogURL: Followable<Job.Resources.LogOutput.Alternative>, artifactsURL: URL, softFailed: Bool, exitStatus: Int? = nil, artifactPaths: String? = nil, agentQueryRules: [String], agent: AgentRef? = nil, createdAt: Date, scheduledAt: Date? = nil, runnableAt: Date? = nil, startedAt: Date? = nil, finishedAt: Date? = nil, retried: Bool, retriedInJobId: UUID? = nil, retriesCount: Int? = nil, parallelGroupIndex: Int? = nil, parallelGroupTotal: Int? = nil) {
+            self.id = id
+            self.graphqlId = graphqlId
+            self.name = name
+            self.state = state
+            self.command = command
+            self.stepKey = stepKey
+            self.buildURL = buildURL
+            self.webURL = webURL
+            self.logURL = logURL
+            self.rawLogURL = rawLogURL
+            self.artifactsURL = artifactsURL
+            self.softFailed = softFailed
+            self.exitStatus = exitStatus
+            self.artifactPaths = artifactPaths
+            self.agentQueryRules = agentQueryRules
+            self.agent = agent
+            self.createdAt = createdAt
+            self.scheduledAt = scheduledAt
+            self.runnableAt = runnableAt
+            self.startedAt = startedAt
+            self.finishedAt = finishedAt
+            self.retried = retried
+            self.retriedInJobId = retriedInJobId
+            self.retriesCount = retriesCount
+            self.parallelGroupIndex = parallelGroupIndex
+            self.parallelGroupTotal = parallelGroupTotal
+        }
+
         /// Reference to an agent.
         public struct AgentRef: Codable, Equatable, Hashable, Sendable {
             /// ID of the agent.
@@ -127,6 +156,12 @@ public enum Job: Codable, Equatable, Hashable, Sendable {
             public var name: String
             /// Followable URL to the specific agent.
             public var url: Followable<Agent.Resources.Get>
+
+            public init(id: UUID, name: String, url: Followable<Agent.Resources.Get>) {
+                self.id = id
+                self.name = name
+                self.url = url
+            }
         }
 
         private enum CodingKeys: String, CodingKey {
@@ -169,6 +204,11 @@ public enum Job: Codable, Equatable, Hashable, Sendable {
         /// ID of the job to be used with the GraphQL API.
         public var graphqlId: String
 
+        public init(id: UUID, graphqlId: String) {
+            self.id = id
+            self.graphqlId = graphqlId
+        }
+
         private enum CodingKeys: String, CodingKey {
             case type
             case id
@@ -198,6 +238,18 @@ public enum Job: Codable, Equatable, Hashable, Sendable {
         public var unblockable: Bool
         /// Human-readable URL to unblock this job.
         public var unblockURL: URL
+
+        public init(id: UUID, graphqlId: String, label: String, state: String, webURL: URL? = nil, unblockedBy: User? = nil, unblockedAt: Date? = nil, unblockable: Bool, unblockURL: URL) {
+            self.id = id
+            self.graphqlId = graphqlId
+            self.label = label
+            self.state = state
+            self.webURL = webURL
+            self.unblockedBy = unblockedBy
+            self.unblockedAt = unblockedAt
+            self.unblockable = unblockable
+            self.unblockURL = unblockURL
+        }
 
         private enum CodingKeys: String, CodingKey {
             case type
@@ -236,6 +288,18 @@ public enum Job: Codable, Equatable, Hashable, Sendable {
         /// Build that was triggered by this job.
         public var triggeredBuild: TriggeredBuild?
 
+        public init(name: String? = nil, state: String? = nil, buildURL: URL, webURL: URL, createdAt: Date, scheduledAt: Date? = nil, finishedAt: Date? = nil, runnableAt: Date? = nil, triggeredBuild: TriggeredBuild? = nil) {
+            self.name = name
+            self.state = state
+            self.buildURL = buildURL
+            self.webURL = webURL
+            self.createdAt = createdAt
+            self.scheduledAt = scheduledAt
+            self.finishedAt = finishedAt
+            self.runnableAt = runnableAt
+            self.triggeredBuild = triggeredBuild
+        }
+
         /// Build triggered by this job.
         public struct TriggeredBuild: Codable, Equatable, Hashable, Identifiable, Sendable {
             /// ID of the triggered build.
@@ -246,6 +310,13 @@ public enum Job: Codable, Equatable, Hashable, Sendable {
             public var url: URL
             /// Human-readable URL to this build in the Buildkite dashboard.
             public var webURL: URL
+
+            public init(id: UUID, number: Int, url: URL, webURL: URL) {
+                self.id = id
+                self.number = number
+                self.url = url
+                self.webURL = webURL
+            }
 
             private enum CodingKeys: String, CodingKey {
                 case id
@@ -280,6 +351,13 @@ public enum Job: Codable, Equatable, Hashable, Sendable {
         /// Header timestamps.
         public var headerTimes: [Int]
 
+        public init(url: Followable<Job.Resources.LogOutput>, content: String, size: Int, headerTimes: [Int]) {
+            self.url = url
+            self.content = content
+            self.size = size
+            self.headerTimes = headerTimes
+        }
+
         private enum CodingKeys: String, CodingKey {
             case url
             case content
@@ -291,5 +369,9 @@ public enum Job: Codable, Equatable, Hashable, Sendable {
     /// Environment variables for a job.
     public struct EnvironmentVariables: Codable, Equatable, Hashable, Sendable {
         public var env: [String: String]
+
+        public init(env: [String : String]) {
+            self.env = env
+        }
     }
 }

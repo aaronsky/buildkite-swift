@@ -73,6 +73,34 @@ public struct Pipeline: Codable, Equatable, Hashable, Identifiable, Sendable {
     /// Environment configuration for builds run on this pipeline.
     public var env: JSONValue?
 
+    public init(id: UUID, graphqlId: String, url: Followable<Pipeline.Resources.Get>, webURL: URL, name: String, slug: String, repository: String, branchConfiguration: String? = nil, defaultBranch: String? = nil, provider: Provider, skipQueuedBranchBuilds: Bool, skipQueuedBranchBuildsFilter: String? = nil, cancelRunningBranchBuilds: Bool, cancelRunningBranchBuildsFilter: String? = nil, buildsURL: Followable<Build.Resources.ListForPipeline>, badgeURL: URL, createdAt: Date, scheduledBuildsCount: Int, runningBuildsCount: Int, scheduledJobsCount: Int, runningJobsCount: Int, waitingJobsCount: Int, visibility: String, steps: [Step], env: JSONValue? = nil) {
+        self.id = id
+        self.graphqlId = graphqlId
+        self.url = url
+        self.webURL = webURL
+        self.name = name
+        self.slug = slug
+        self.repository = repository
+        self.branchConfiguration = branchConfiguration
+        self.defaultBranch = defaultBranch
+        self.provider = provider
+        self.skipQueuedBranchBuilds = skipQueuedBranchBuilds
+        self.skipQueuedBranchBuildsFilter = skipQueuedBranchBuildsFilter
+        self.cancelRunningBranchBuilds = cancelRunningBranchBuilds
+        self.cancelRunningBranchBuildsFilter = cancelRunningBranchBuildsFilter
+        self.buildsURL = buildsURL
+        self.badgeURL = badgeURL
+        self.createdAt = createdAt
+        self.scheduledBuildsCount = scheduledBuildsCount
+        self.runningBuildsCount = runningBuildsCount
+        self.scheduledJobsCount = scheduledJobsCount
+        self.runningJobsCount = runningJobsCount
+        self.waitingJobsCount = waitingJobsCount
+        self.visibility = visibility
+        self.steps = steps
+        self.env = env
+    }
+
     /// Information about how the pipeline is triggered based on source code provider events.
     public struct Provider: Codable, Equatable, Hashable, Identifiable, Sendable {
         /// ID of the source code provider.
@@ -81,6 +109,12 @@ public struct Pipeline: Codable, Equatable, Hashable, Identifiable, Sendable {
         public var webhookURL: URL?
         /// Provider settings.
         public var settings: Settings
+
+        public init(id: String, webhookURL: URL? = nil, settings: Settings) {
+            self.id = id
+            self.webhookURL = webhookURL
+            self.settings = settings
+        }
 
         private enum CodingKeys: String, CodingKey {
             case id
@@ -150,6 +184,24 @@ extension Pipeline.Provider {
         public var separatePullRequestStatuses: Bool?
         /// The status to use for blocked builds. Pending can be used with required status checks to prevent merging pull requests with blocked builds.
         public var publishBlockedAsPending: Bool?
+
+        public init(repository: String? = nil, buildPullRequests: Bool? = nil, pullRequestBranchFilterEnabled: Bool? = nil, pullRequestBranchFilterConfiguration: String? = nil, skipPullRequestBuildsForExistingCommits: Bool? = nil, buildTags: Bool? = nil, publishCommitStatus: Bool? = nil, publishCommitStatusPerStep: Bool? = nil, triggerMode: String? = nil, filterEnabled: Bool? = nil, filterCondition: String? = nil, buildPullRequestForks: Bool? = nil, prefixPullRequestForkBranchNames: Bool? = nil, separatePullRequestStatuses: Bool? = nil, publishBlockedAsPending: Bool? = nil) {
+            self.repository = repository
+            self.buildPullRequests = buildPullRequests
+            self.pullRequestBranchFilterEnabled = pullRequestBranchFilterEnabled
+            self.pullRequestBranchFilterConfiguration = pullRequestBranchFilterConfiguration
+            self.skipPullRequestBuildsForExistingCommits = skipPullRequestBuildsForExistingCommits
+            self.buildTags = buildTags
+            self.publishCommitStatus = publishCommitStatus
+            self.publishCommitStatusPerStep = publishCommitStatusPerStep
+            self.triggerMode = triggerMode
+            self.filterEnabled = filterEnabled
+            self.filterCondition = filterCondition
+            self.buildPullRequestForks = buildPullRequestForks
+            self.prefixPullRequestForkBranchNames = prefixPullRequestForkBranchNames
+            self.separatePullRequestStatuses = separatePullRequestStatuses
+            self.publishBlockedAsPending = publishBlockedAsPending
+        }
 
         private enum CodingKeys: String, CodingKey {
             case repository
@@ -264,6 +316,20 @@ extension Pipeline {
             /// that will be created based on this step.
             public var parallelism: Int?
 
+            public init(name: String? = nil, command: String? = nil, label: String? = nil, artifactPaths: String? = nil, branchConfiguration: String? = nil, env: JSONValue, timeoutInMinutes: Int? = nil, agentQueryRules: [String], async: Bool? = nil, concurrency: Int? = nil, parallelism: Int? = nil) {
+                self.name = name
+                self.command = command
+                self.label = label
+                self.artifactPaths = artifactPaths
+                self.branchConfiguration = branchConfiguration
+                self.env = env
+                self.timeoutInMinutes = timeoutInMinutes
+                self.agentQueryRules = agentQueryRules
+                self.async = async
+                self.concurrency = concurrency
+                self.parallelism = parallelism
+            }
+
             private enum CodingKeys: String, CodingKey {
                 case type
                 case name
@@ -288,6 +354,11 @@ extension Pipeline {
             /// Whether to continue the build if previous steps have failed.
             public var continueAfterFailure: Bool?
 
+            public init(label: String? = nil, continueAfterFailure: Bool? = nil) {
+                self.label = label
+                self.continueAfterFailure = continueAfterFailure
+            }
+
             private enum CodingKeys: String, CodingKey {
                 case type
                 case label
@@ -300,6 +371,10 @@ extension Pipeline {
             public var type = "manual"
             /// Human-readable label.
             public var label: String?
+
+            public init(label: String? = nil) {
+                self.label = label
+            }
         }
 
         /// Trigger step.
@@ -321,6 +396,14 @@ extension Pipeline {
             /// build starts, the original pipeline will show that as successful. The original pipeline
             /// does not get updated after subsequent steps or after the triggered build completes.
             public var triggerAsync: Bool?
+
+            public init(triggerProjectSlug: String? = nil, label: String? = nil, triggerCommit: String? = nil, triggerBranch: String? = nil, triggerAsync: Bool? = nil) {
+                self.triggerProjectSlug = triggerProjectSlug
+                self.label = label
+                self.triggerCommit = triggerCommit
+                self.triggerBranch = triggerBranch
+                self.triggerAsync = triggerAsync
+            }
 
             private enum CodingKeys: String, CodingKey {
                 case type

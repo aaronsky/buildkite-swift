@@ -18,4 +18,9 @@ public struct AccessToken: Codable, Equatable, Hashable, Sendable {
     public var uuid: UUID
     /// [API scopes](https://buildkite.com/docs/apis/managing-api-tokens#token-scopes) the token has access to.
     public var scopes: [String]
+
+    public init(uuid: UUID, scopes: [String]) {
+        self.uuid = uuid
+        self.scopes = scopes
+    }
 }
