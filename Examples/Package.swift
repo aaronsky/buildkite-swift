@@ -18,7 +18,7 @@ let package = Package(
     ],
     dependencies: [
         .package(name: "Buildkite", path: "../"),
-        .package(url: "https://github.com/vapor/vapor", .upToNextMajor(from: "4.0.0"))
+        .package(url: "https://github.com/vapor/vapor", .upToNextMajor(from: "4.0.0")),
     ],
     targets: [
         .executableTarget(
@@ -53,7 +53,7 @@ let package = Package(
             name: "webhooks",
             dependencies: [
                 .product(name: "Buildkite", package: "Buildkite"),
-                .product(name: "Vapor", package: "vapor")
+                .product(name: "Vapor", package: "vapor"),
             ],
             path: "webhooks"
         ),

@@ -119,7 +119,34 @@ public enum Job: Codable, Equatable, Hashable, Sendable {
         /// Total number of parallel executions of this job.
         public var parallelGroupTotal: Int?
 
-        public init(id: UUID, graphqlId: String, name: String? = nil, state: String? = nil, command: String? = nil, stepKey: String? = nil, buildURL: URL, webURL: URL, logURL: Followable<Job.Resources.LogOutput>, rawLogURL: Followable<Job.Resources.LogOutput.Alternative>, artifactsURL: URL, softFailed: Bool, exitStatus: Int? = nil, artifactPaths: String? = nil, agentQueryRules: [String], agent: AgentRef? = nil, createdAt: Date, scheduledAt: Date? = nil, runnableAt: Date? = nil, startedAt: Date? = nil, finishedAt: Date? = nil, retried: Bool, retriedInJobId: UUID? = nil, retriesCount: Int? = nil, parallelGroupIndex: Int? = nil, parallelGroupTotal: Int? = nil) {
+        public init(
+            id: UUID,
+            graphqlId: String,
+            name: String? = nil,
+            state: String? = nil,
+            command: String? = nil,
+            stepKey: String? = nil,
+            buildURL: URL,
+            webURL: URL,
+            logURL: Followable<Job.Resources.LogOutput>,
+            rawLogURL: Followable<Job.Resources.LogOutput.Alternative>,
+            artifactsURL: URL,
+            softFailed: Bool,
+            exitStatus: Int? = nil,
+            artifactPaths: String? = nil,
+            agentQueryRules: [String],
+            agent: AgentRef? = nil,
+            createdAt: Date,
+            scheduledAt: Date? = nil,
+            runnableAt: Date? = nil,
+            startedAt: Date? = nil,
+            finishedAt: Date? = nil,
+            retried: Bool,
+            retriedInJobId: UUID? = nil,
+            retriesCount: Int? = nil,
+            parallelGroupIndex: Int? = nil,
+            parallelGroupTotal: Int? = nil
+        ) {
             self.id = id
             self.graphqlId = graphqlId
             self.name = name
@@ -157,7 +184,11 @@ public enum Job: Codable, Equatable, Hashable, Sendable {
             /// Followable URL to the specific agent.
             public var url: Followable<Agent.Resources.Get>
 
-            public init(id: UUID, name: String, url: Followable<Agent.Resources.Get>) {
+            public init(
+                id: UUID,
+                name: String,
+                url: Followable<Agent.Resources.Get>
+            ) {
                 self.id = id
                 self.name = name
                 self.url = url
@@ -204,7 +235,10 @@ public enum Job: Codable, Equatable, Hashable, Sendable {
         /// ID of the job to be used with the GraphQL API.
         public var graphqlId: String
 
-        public init(id: UUID, graphqlId: String) {
+        public init(
+            id: UUID,
+            graphqlId: String
+        ) {
             self.id = id
             self.graphqlId = graphqlId
         }
@@ -239,7 +273,17 @@ public enum Job: Codable, Equatable, Hashable, Sendable {
         /// Human-readable URL to unblock this job.
         public var unblockURL: URL
 
-        public init(id: UUID, graphqlId: String, label: String, state: String, webURL: URL? = nil, unblockedBy: User? = nil, unblockedAt: Date? = nil, unblockable: Bool, unblockURL: URL) {
+        public init(
+            id: UUID,
+            graphqlId: String,
+            label: String,
+            state: String,
+            webURL: URL? = nil,
+            unblockedBy: User? = nil,
+            unblockedAt: Date? = nil,
+            unblockable: Bool,
+            unblockURL: URL
+        ) {
             self.id = id
             self.graphqlId = graphqlId
             self.label = label
@@ -288,7 +332,17 @@ public enum Job: Codable, Equatable, Hashable, Sendable {
         /// Build that was triggered by this job.
         public var triggeredBuild: TriggeredBuild?
 
-        public init(name: String? = nil, state: String? = nil, buildURL: URL, webURL: URL, createdAt: Date, scheduledAt: Date? = nil, finishedAt: Date? = nil, runnableAt: Date? = nil, triggeredBuild: TriggeredBuild? = nil) {
+        public init(
+            name: String? = nil,
+            state: String? = nil,
+            buildURL: URL,
+            webURL: URL,
+            createdAt: Date,
+            scheduledAt: Date? = nil,
+            finishedAt: Date? = nil,
+            runnableAt: Date? = nil,
+            triggeredBuild: TriggeredBuild? = nil
+        ) {
             self.name = name
             self.state = state
             self.buildURL = buildURL
@@ -311,7 +365,12 @@ public enum Job: Codable, Equatable, Hashable, Sendable {
             /// Human-readable URL to this build in the Buildkite dashboard.
             public var webURL: URL
 
-            public init(id: UUID, number: Int, url: URL, webURL: URL) {
+            public init(
+                id: UUID,
+                number: Int,
+                url: URL,
+                webURL: URL
+            ) {
                 self.id = id
                 self.number = number
                 self.url = url
@@ -351,7 +410,12 @@ public enum Job: Codable, Equatable, Hashable, Sendable {
         /// Header timestamps.
         public var headerTimes: [Int]
 
-        public init(url: Followable<Job.Resources.LogOutput>, content: String, size: Int, headerTimes: [Int]) {
+        public init(
+            url: Followable<Job.Resources.LogOutput>,
+            content: String,
+            size: Int,
+            headerTimes: [Int]
+        ) {
             self.url = url
             self.content = content
             self.size = size
@@ -370,7 +434,9 @@ public enum Job: Codable, Equatable, Hashable, Sendable {
     public struct EnvironmentVariables: Codable, Equatable, Hashable, Sendable {
         public var env: [String: String]
 
-        public init(env: [String : String]) {
+        public init(
+            env: [String: String]
+        ) {
             self.env = env
         }
     }

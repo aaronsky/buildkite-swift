@@ -279,7 +279,6 @@ extension Resource where Self == Job.Resources.LogOutput.Alternative {
     }
 }
 
-
 extension Resource where Self == Job.Resources.DeleteLogOutput {
     /// Delete a job’s log output
     public static func deleteLogOutput(for job: UUID, in organization: String, pipeline: String, build: Int) -> Self {

@@ -21,7 +21,11 @@ public struct AgentMetrics: Codable, Equatable, Hashable, Sendable {
     /// Organization slug.
     public var organization: Organization
 
-    public init(agents: AgentTotals, jobs: JobTotals, organization: Organization) {
+    public init(
+        agents: AgentTotals,
+        jobs: JobTotals,
+        organization: Organization
+    ) {
         self.agents = agents
         self.jobs = jobs
         self.organization = organization
@@ -38,7 +42,12 @@ public struct AgentMetrics: Codable, Equatable, Hashable, Sendable {
         /// Breakdown of agent workloads by the special `queue` agent tag.
         public var queues: [String: AgentTotals] = [:]
 
-        public init(idle: Int, busy: Int, total: Int, queues: [String : AgentTotals]) {
+        public init(
+            idle: Int,
+            busy: Int,
+            total: Int,
+            queues: [String: AgentTotals]
+        ) {
             self.idle = idle
             self.busy = busy
             self.total = total
@@ -59,7 +68,13 @@ public struct AgentMetrics: Codable, Equatable, Hashable, Sendable {
         /// Breakdown of jobs in-flight by the special `queue` agent tag.
         public var queues: [String: JobTotals] = [:]
 
-        public init(scheduled: Int, running: Int, waiting: Int, total: Int, queues: [String : JobTotals]) {
+        public init(
+            scheduled: Int,
+            running: Int,
+            waiting: Int,
+            total: Int,
+            queues: [String: JobTotals]
+        ) {
             self.scheduled = scheduled
             self.running = running
             self.waiting = waiting
@@ -73,7 +88,9 @@ public struct AgentMetrics: Codable, Equatable, Hashable, Sendable {
         /// Organization slug.
         public var slug: String
 
-        public init(slug: String) {
+        public init(
+            slug: String
+        ) {
             self.slug = slug
         }
     }

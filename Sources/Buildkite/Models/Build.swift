@@ -57,7 +57,29 @@ public struct Build: Codable, Equatable, Hashable, Identifiable, Sendable {
     /// Pipeline the build was created from.
     public var pipeline: Pipeline
 
-    public init(id: UUID, graphqlId: String, url: Followable<Build.Resources.Get>, webURL: URL, number: Int, state: State, blocked: Bool, message: String? = nil, commit: String, branch: String, env: [String : String]? = nil, source: String, creator: User? = nil, jobs: [Job], createdAt: Date, scheduledAt: Date? = nil, startedAt: Date? = nil, finishedAt: Date? = nil, metaData: [String : String], pullRequest: [String : String?]? = nil, pipeline: Pipeline) {
+    public init(
+        id: UUID,
+        graphqlId: String,
+        url: Followable<Build.Resources.Get>,
+        webURL: URL,
+        number: Int,
+        state: State,
+        blocked: Bool,
+        message: String? = nil,
+        commit: String,
+        branch: String,
+        env: [String: String]? = nil,
+        source: String,
+        creator: User? = nil,
+        jobs: [Job],
+        createdAt: Date,
+        scheduledAt: Date? = nil,
+        startedAt: Date? = nil,
+        finishedAt: Date? = nil,
+        metaData: [String: String],
+        pullRequest: [String: String?]? = nil,
+        pipeline: Pipeline
+    ) {
         self.id = id
         self.graphqlId = graphqlId
         self.url = url

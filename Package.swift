@@ -24,7 +24,7 @@ let package = Package(
         .target(
             name: "Buildkite",
             dependencies: [
-                .product(name: "Crypto", package: "swift-crypto"),
+                .product(name: "Crypto", package: "swift-crypto")
             ]
         ),
         .testTarget(

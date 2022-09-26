@@ -46,8 +46,7 @@ extension BuildkiteClient: AsyncMiddleware {
             .get("BUILDKITE_WEBHOOK_REPLAY_LIMIT")
             .flatMap(TimeInterval.init)
 
-        if
-            let signature = request.headers.buildkiteSignature,
+        if let signature = request.headers.buildkiteSignature,
             let payload = request.body.data {
             try validateWebhookPayload(
                 signatureHeader: signature,

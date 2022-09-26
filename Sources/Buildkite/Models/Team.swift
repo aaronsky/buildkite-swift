@@ -33,7 +33,17 @@ public struct Team: Codable, Equatable, Hashable, Identifiable, Sendable {
     /// User who created the team.
     public var createdBy: User?
 
-    public init(id: UUID, graphqlId: String, name: String, slug: String, description: String? = nil, privacy: Visibility, isDefault: Bool, createdAt: Date, createdBy: User? = nil) {
+    public init(
+        id: UUID,
+        graphqlId: String,
+        name: String,
+        slug: String,
+        description: String? = nil,
+        privacy: Visibility,
+        isDefault: Bool,
+        createdAt: Date,
+        createdBy: User? = nil
+    ) {
         self.id = id
         self.graphqlId = graphqlId
         self.name = name

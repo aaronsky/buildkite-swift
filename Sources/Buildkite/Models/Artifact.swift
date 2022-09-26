@@ -40,7 +40,19 @@ public struct Artifact: Codable, Equatable, Hashable, Identifiable, Sendable {
     /// The artifact's checksum
     public var sha1sum: String
 
-    public init(id: UUID, jobId: UUID, url: Followable<Artifact.Resources.Get>, downloadURL: Followable<Artifact.Resources.Download>, state: State, path: String, dirname: String, filename: String, mimeType: String, fileSize: Int, sha1sum: String) {
+    public init(
+        id: UUID,
+        jobId: UUID,
+        url: Followable<Artifact.Resources.Get>,
+        downloadURL: Followable<Artifact.Resources.Download>,
+        state: State,
+        path: String,
+        dirname: String,
+        filename: String,
+        mimeType: String,
+        fileSize: Int,
+        sha1sum: String
+    ) {
         self.id = id
         self.jobId = jobId
         self.url = url
@@ -64,7 +76,9 @@ public struct Artifact: Codable, Equatable, Hashable, Identifiable, Sendable {
     public struct URLs: Codable, Equatable {
         public var url: URL
 
-        public init(url: URL) {
+        public init(
+            url: URL
+        ) {
             self.url = url
         }
     }

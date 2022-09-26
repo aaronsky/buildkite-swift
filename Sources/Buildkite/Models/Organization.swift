@@ -35,7 +35,18 @@ public struct Organization: Codable, Equatable, Hashable, Identifiable, Sendable
     /// When this organization was created.
     public var createdAt: Date
 
-    public init(id: UUID, graphqlId: String, url: Followable<Organization.Resources.Get>, webURL: URL, name: String, slug: String, pipelinesURL: Followable<Pipeline.Resources.List>, agentsURL: Followable<Agent.Resources.List>, emojisURL: Followable<Emoji.Resources.List>, createdAt: Date) {
+    public init(
+        id: UUID,
+        graphqlId: String,
+        url: Followable<Organization.Resources.Get>,
+        webURL: URL,
+        name: String,
+        slug: String,
+        pipelinesURL: Followable<Pipeline.Resources.List>,
+        agentsURL: Followable<Agent.Resources.List>,
+        emojisURL: Followable<Emoji.Resources.List>,
+        createdAt: Date
+    ) {
         self.id = id
         self.graphqlId = graphqlId
         self.url = url

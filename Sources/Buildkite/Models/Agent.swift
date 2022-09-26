@@ -44,10 +44,27 @@ public struct Agent: Codable, Equatable, Hashable, Identifiable, Sendable {
     public var lastJobFinishedAt: Date?
     /// The priority Buildkite follows when assigning jobs to this agent.
     public var priority: Int?
-    /// Additional meta-data registered by the agent. 
+    /// Additional meta-data registered by the agent.
     public var metaData: [String]
 
-    public init(id: UUID, graphqlId: String, url: Followable<Agent.Resources.Get>, webURL: URL, name: String, connectionState: String, hostname: String, ipAddress: String, userAgent: String, version: String, creator: User? = nil, createdAt: Date, job: Job? = nil, lastJobFinishedAt: Date? = nil, priority: Int? = nil, metaData: [String]) {
+    public init(
+        id: UUID,
+        graphqlId: String,
+        url: Followable<Agent.Resources.Get>,
+        webURL: URL,
+        name: String,
+        connectionState: String,
+        hostname: String,
+        ipAddress: String,
+        userAgent: String,
+        version: String,
+        creator: User? = nil,
+        createdAt: Date,
+        job: Job? = nil,
+        lastJobFinishedAt: Date? = nil,
+        priority: Int? = nil,
+        metaData: [String]
+    ) {
         self.id = id
         self.graphqlId = graphqlId
         self.url = url

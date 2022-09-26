@@ -15,7 +15,7 @@ import Vapor
         let app = try Application(.detect())
         defer { app.shutdown() }
 
-        let buildkite = BuildkiteClient(/*transport: app.client*/)
+        let buildkite = BuildkiteClient(/* transport: app.client */)
 
         app.group(buildkite) {
             $0.post("buildkite_webhook") { req in

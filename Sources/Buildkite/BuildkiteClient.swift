@@ -85,7 +85,12 @@ public actor BuildkiteClient {
     /// - Throws: An error describing the manner in which the resource failed to complete.
     public func send<R>(_ resource: R, pageOptions: PageOptions? = nil) async throws -> Response<R.Content>
     where R: PaginatedResource {
-        let request = try await URLRequest(resource, configuration: configuration, tokens: tokens, pageOptions: pageOptions)
+        let request = try await URLRequest(
+            resource,
+            configuration: configuration,
+            tokens: tokens,
+            pageOptions: pageOptions
+        )
 
         let (data, response) = try await transport.send(request: request)
         try checkResponseForIssues(response, data: data)

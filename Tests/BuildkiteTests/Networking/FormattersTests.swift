@@ -39,8 +39,9 @@ final class FormattersTests: XCTestCase {
         }
 
         let data = """
-        {"date":"invalid"}
-        """.data(using: .utf8)!
+            {"date":"invalid"}
+            """
+            .data(using: .utf8)!
 
         let decoder = JSONDecoder()
         decoder.dateDecodingStrategy = .custom(Formatters.decodeISO8601)

@@ -23,7 +23,9 @@ public struct Meta: Codable, Equatable, Hashable, Sendable {
     /// before they are used.
     public var webhookIPRanges: [String]
 
-    public init(webhookIPRanges: [String]) {
+    public init(
+        webhookIPRanges: [String]
+    ) {
         self.webhookIPRanges = webhookIPRanges
     }
 

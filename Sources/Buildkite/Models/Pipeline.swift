@@ -73,7 +73,33 @@ public struct Pipeline: Codable, Equatable, Hashable, Identifiable, Sendable {
     /// Environment configuration for builds run on this pipeline.
     public var env: JSONValue?
 
-    public init(id: UUID, graphqlId: String, url: Followable<Pipeline.Resources.Get>, webURL: URL, name: String, slug: String, repository: String, branchConfiguration: String? = nil, defaultBranch: String? = nil, provider: Provider, skipQueuedBranchBuilds: Bool, skipQueuedBranchBuildsFilter: String? = nil, cancelRunningBranchBuilds: Bool, cancelRunningBranchBuildsFilter: String? = nil, buildsURL: Followable<Build.Resources.ListForPipeline>, badgeURL: URL, createdAt: Date, scheduledBuildsCount: Int, runningBuildsCount: Int, scheduledJobsCount: Int, runningJobsCount: Int, waitingJobsCount: Int, visibility: String, steps: [Step], env: JSONValue? = nil) {
+    public init(
+        id: UUID,
+        graphqlId: String,
+        url: Followable<Pipeline.Resources.Get>,
+        webURL: URL,
+        name: String,
+        slug: String,
+        repository: String,
+        branchConfiguration: String? = nil,
+        defaultBranch: String? = nil,
+        provider: Provider,
+        skipQueuedBranchBuilds: Bool,
+        skipQueuedBranchBuildsFilter: String? = nil,
+        cancelRunningBranchBuilds: Bool,
+        cancelRunningBranchBuildsFilter: String? = nil,
+        buildsURL: Followable<Build.Resources.ListForPipeline>,
+        badgeURL: URL,
+        createdAt: Date,
+        scheduledBuildsCount: Int,
+        runningBuildsCount: Int,
+        scheduledJobsCount: Int,
+        runningJobsCount: Int,
+        waitingJobsCount: Int,
+        visibility: String,
+        steps: [Step],
+        env: JSONValue? = nil
+    ) {
         self.id = id
         self.graphqlId = graphqlId
         self.url = url
@@ -110,7 +136,11 @@ public struct Pipeline: Codable, Equatable, Hashable, Identifiable, Sendable {
         /// Provider settings.
         public var settings: Settings
 
-        public init(id: String, webhookURL: URL? = nil, settings: Settings) {
+        public init(
+            id: String,
+            webhookURL: URL? = nil,
+            settings: Settings
+        ) {
             self.id = id
             self.webhookURL = webhookURL
             self.settings = settings
@@ -185,7 +215,23 @@ extension Pipeline.Provider {
         /// The status to use for blocked builds. Pending can be used with required status checks to prevent merging pull requests with blocked builds.
         public var publishBlockedAsPending: Bool?
 
-        public init(repository: String? = nil, buildPullRequests: Bool? = nil, pullRequestBranchFilterEnabled: Bool? = nil, pullRequestBranchFilterConfiguration: String? = nil, skipPullRequestBuildsForExistingCommits: Bool? = nil, buildTags: Bool? = nil, publishCommitStatus: Bool? = nil, publishCommitStatusPerStep: Bool? = nil, triggerMode: String? = nil, filterEnabled: Bool? = nil, filterCondition: String? = nil, buildPullRequestForks: Bool? = nil, prefixPullRequestForkBranchNames: Bool? = nil, separatePullRequestStatuses: Bool? = nil, publishBlockedAsPending: Bool? = nil) {
+        public init(
+            repository: String? = nil,
+            buildPullRequests: Bool? = nil,
+            pullRequestBranchFilterEnabled: Bool? = nil,
+            pullRequestBranchFilterConfiguration: String? = nil,
+            skipPullRequestBuildsForExistingCommits: Bool? = nil,
+            buildTags: Bool? = nil,
+            publishCommitStatus: Bool? = nil,
+            publishCommitStatusPerStep: Bool? = nil,
+            triggerMode: String? = nil,
+            filterEnabled: Bool? = nil,
+            filterCondition: String? = nil,
+            buildPullRequestForks: Bool? = nil,
+            prefixPullRequestForkBranchNames: Bool? = nil,
+            separatePullRequestStatuses: Bool? = nil,
+            publishBlockedAsPending: Bool? = nil
+        ) {
             self.repository = repository
             self.buildPullRequests = buildPullRequests
             self.pullRequestBranchFilterEnabled = pullRequestBranchFilterEnabled
@@ -316,7 +362,19 @@ extension Pipeline {
             /// that will be created based on this step.
             public var parallelism: Int?
 
-            public init(name: String? = nil, command: String? = nil, label: String? = nil, artifactPaths: String? = nil, branchConfiguration: String? = nil, env: JSONValue, timeoutInMinutes: Int? = nil, agentQueryRules: [String], async: Bool? = nil, concurrency: Int? = nil, parallelism: Int? = nil) {
+            public init(
+                name: String? = nil,
+                command: String? = nil,
+                label: String? = nil,
+                artifactPaths: String? = nil,
+                branchConfiguration: String? = nil,
+                env: JSONValue,
+                timeoutInMinutes: Int? = nil,
+                agentQueryRules: [String],
+                async: Bool? = nil,
+                concurrency: Int? = nil,
+                parallelism: Int? = nil
+            ) {
                 self.name = name
                 self.command = command
                 self.label = label
@@ -354,7 +412,10 @@ extension Pipeline {
             /// Whether to continue the build if previous steps have failed.
             public var continueAfterFailure: Bool?
 
-            public init(label: String? = nil, continueAfterFailure: Bool? = nil) {
+            public init(
+                label: String? = nil,
+                continueAfterFailure: Bool? = nil
+            ) {
                 self.label = label
                 self.continueAfterFailure = continueAfterFailure
             }
@@ -372,7 +433,9 @@ extension Pipeline {
             /// Human-readable label.
             public var label: String?
 
-            public init(label: String? = nil) {
+            public init(
+                label: String? = nil
+            ) {
                 self.label = label
             }
         }
@@ -397,7 +460,13 @@ extension Pipeline {
             /// does not get updated after subsequent steps or after the triggered build completes.
             public var triggerAsync: Bool?
 
-            public init(triggerProjectSlug: String? = nil, label: String? = nil, triggerCommit: String? = nil, triggerBranch: String? = nil, triggerAsync: Bool? = nil) {
+            public init(
+                triggerProjectSlug: String? = nil,
+                label: String? = nil,
+                triggerCommit: String? = nil,
+                triggerBranch: String? = nil,
+                triggerAsync: Bool? = nil
+            ) {
                 self.triggerProjectSlug = triggerProjectSlug
                 self.label = label
                 self.triggerCommit = triggerCommit

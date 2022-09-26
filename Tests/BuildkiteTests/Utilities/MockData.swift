@@ -118,8 +118,9 @@ extension MockData {
 
     static func mockingUnsuccessfulResponse(for url: URL) -> (Data, URLResponse) {
         let json = """
-        {"message":"not found","errors": ["go away"]}
-        """.data(using: .utf8)!
+            {"message":"not found","errors": ["go away"]}
+            """
+            .data(using: .utf8)!
 
         return (json, urlResponse(for: url, status: .notFound))
     }
@@ -138,8 +139,9 @@ extension MockData {
 
     static func mockingUnrecognizedBuildkiteError(for url: URL) -> (Data, URLResponse) {
         let json = """
-        {"message":-1000}
-        """.data(using: .utf8)!
+            {"message":-1000}
+            """
+            .data(using: .utf8)!
         return (json, urlResponse(for: url, status: .notFound))
     }
 

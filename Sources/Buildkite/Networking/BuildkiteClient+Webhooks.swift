@@ -132,8 +132,7 @@ extension BuildkiteClient {
 
     private nonisolated func checkMAC(message: Data, signature: Data, secretKey: Data) throws {
         let key = SymmetricKey(data: secretKey)
-        guard
-            HMAC<SHA256>.isValidAuthenticationCode(
+        guard HMAC<SHA256>.isValidAuthenticationCode(
                 signature,
                 authenticating: message,
                 using: key
@@ -184,8 +183,10 @@ private func htoi(_ value: UInt8) throws -> UInt8 {
     }
 }
 
-private extension Data {
-    init(hexString: String) throws {
+extension Data {
+    fileprivate init(
+        hexString: String
+    ) throws {
         self.init()
 
         if hexString.isEmpty {

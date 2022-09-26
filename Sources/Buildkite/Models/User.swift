@@ -27,7 +27,14 @@ public struct User: Codable, Equatable, Hashable, Identifiable, Sendable {
     /// When the user was created.
     public var createdAt: Date
 
-    public init(id: UUID, graphqlId: String, name: String, email: String, avatarURL: URL, createdAt: Date) {
+    public init(
+        id: UUID,
+        graphqlId: String,
+        name: String,
+        email: String,
+        avatarURL: URL,
+        createdAt: Date
+    ) {
         self.id = id
         self.graphqlId = graphqlId
         self.name = name

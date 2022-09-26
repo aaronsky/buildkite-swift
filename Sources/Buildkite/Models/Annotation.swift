@@ -28,7 +28,14 @@ public struct Annotation: Codable, Equatable, Hashable, Identifiable, Sendable {
     /// When the annotation was last added to or replaced.
     public var updatedAt: Date
 
-    public init(id: UUID, context: String, style: Style, bodyHtml: String, createdAt: Date, updatedAt: Date) {
+    public init(
+        id: UUID,
+        context: String,
+        style: Style,
+        bodyHtml: String,
+        createdAt: Date,
+        updatedAt: Date
+    ) {
         self.id = id
         self.context = context
         self.style = style

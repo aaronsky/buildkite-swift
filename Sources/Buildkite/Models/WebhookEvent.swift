@@ -87,12 +87,18 @@ public enum WebhookEvent: Codable, Equatable, Hashable, Sendable {
             /// URL to the service.
             public var url: URL
 
-            public init(url: URL) {
+            public init(
+                url: URL
+            ) {
                 self.url = url
             }
         }
 
-        public init(id: UUID, provider: String, settings: Settings) {
+        public init(
+            id: UUID,
+            provider: String,
+            settings: Settings
+        ) {
             self.id = id
             self.provider = provider
             self.settings = settings
@@ -105,7 +111,10 @@ public enum WebhookEvent: Codable, Equatable, Hashable, Sendable {
         /// Name of the user or entity that triggered the event.
         public var name: String
 
-        public init(id: UUID, name: String) {
+        public init(
+            id: UUID,
+            name: String
+        ) {
             self.id = id
             self.name = name
         }
@@ -122,7 +131,11 @@ public enum WebhookEvent: Codable, Equatable, Hashable, Sendable {
         /// The user who created the webhook
         public var sender: Sender
 
-        public init(service: Service, organization: Organization, sender: Sender) {
+        public init(
+            service: Service,
+            organization: Organization,
+            sender: Sender
+        ) {
             self.service = service
             self.organization = organization
             self.sender = sender
@@ -140,7 +153,12 @@ public enum WebhookEvent: Codable, Equatable, Hashable, Sendable {
         /// The user who created the webhook.
         public var sender: Sender
 
-        public init(event: Event, build: Buildkite.Build, pipeline: Pipeline, sender: Sender) {
+        public init(
+            event: Event,
+            build: Buildkite.Build,
+            pipeline: Pipeline,
+            sender: Sender
+        ) {
             self.event = event
             self.build = build
             self.pipeline = pipeline
@@ -170,7 +188,13 @@ public enum WebhookEvent: Codable, Equatable, Hashable, Sendable {
         /// The user who created the webhook.
         public var sender: Sender
 
-        public init(event: Event, job: Buildkite.Job, build: Buildkite.Build, pipeline: Pipeline, sender: Sender) {
+        public init(
+            event: Event,
+            job: Buildkite.Job,
+            build: Buildkite.Build,
+            pipeline: Pipeline,
+            sender: Sender
+        ) {
             self.event = event
             self.job = job
             self.build = build
@@ -198,7 +222,11 @@ public enum WebhookEvent: Codable, Equatable, Hashable, Sendable {
         /// The user who created the webhook.
         public var sender: Sender
 
-        public init(event: Event, agent: Buildkite.Agent, sender: Sender) {
+        public init(
+            event: Event,
+            agent: Buildkite.Agent,
+            sender: Sender
+        ) {
             self.event = event
             self.agent = agent
             self.sender = sender

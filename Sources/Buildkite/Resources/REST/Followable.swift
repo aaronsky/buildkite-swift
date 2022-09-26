@@ -29,7 +29,9 @@ public struct Followable<R: Resource>: Resource, Codable, Equatable, Hashable, S
     public let path = ""
     public var url: URL
 
-    public init(url: URL) {
+    public init(
+        url: URL
+    ) {
         self.url = url
     }
 
