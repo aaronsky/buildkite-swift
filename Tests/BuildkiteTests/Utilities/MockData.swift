@@ -103,19 +103,23 @@ enum MockData {
 }
 
 extension MockData {
+    @Sendable
     static func mockingSuccess<Content: Codable>(with content: Content, url: URL) throws -> (Data, URLResponse) {
         let data = try encoder.encode(content)
         return (data, urlResponse(for: url, status: .ok))
     }
 
+    @Sendable
     static func mockingSuccessNoContent(url: URL) -> (Data, URLResponse) {
         return (Data(), urlResponse(for: url, status: .ok))
     }
 
+    @Sendable
     static func mockingIncompatibleResponse(for url: URL) -> (Data, URLResponse) {
         return (Data(), urlResponse(for: url, rawStatus: -128))
     }
 
+    @Sendable
     static func mockingUnsuccessfulResponse(for url: URL) -> (Data, URLResponse) {
         let json = """
             {"message":"not found","errors": ["go away"]}
@@ -125,18 +129,22 @@ extension MockData {
         return (json, urlResponse(for: url, status: .notFound))
     }
 
+    @Sendable
     static func mockingSuccessNoContent(for request: URLRequest) throws -> (Data, URLResponse) {
         return mockingSuccessNoContent(url: request.url!)
     }
 
+    @Sendable
     static func mockingError(for request: URLRequest) throws -> (Data, URLResponse) {
         throw URLError(.notConnectedToInternet)
     }
 
+    @Sendable
     static func mockingError(_ error: Error) throws -> (Data, URLResponse) {
         throw error
     }
 
+    @Sendable
     static func mockingUnrecognizedBuildkiteError(for url: URL) -> (Data, URLResponse) {
         let json = """
             {"message":-1000}
@@ -145,10 +153,12 @@ extension MockData {
         return (json, urlResponse(for: url, status: .notFound))
     }
 
+    @Sendable
     private static func urlResponse(for url: URL, status: StatusCode) -> URLResponse {
         urlResponse(for: url, rawStatus: status.rawValue)
     }
 
+    @Sendable
     private static func urlResponse(for url: URL, rawStatus status: Int) -> URLResponse {
         HTTPURLResponse(
             url: url,

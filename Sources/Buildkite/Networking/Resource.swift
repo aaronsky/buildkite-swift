@@ -19,7 +19,7 @@ public enum ResourceError: Error, Equatable {
 }
 
 /// Resource describes an endpoint on any of Buildkite's APIs. Do not implement this type.
-public protocol Resource {
+public protocol Resource: Sendable {
     /// The input type.
     associatedtype Body = Void
     /// The return type.

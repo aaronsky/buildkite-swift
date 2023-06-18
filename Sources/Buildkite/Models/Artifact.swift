@@ -73,7 +73,7 @@ public struct Artifact: Codable, Equatable, Hashable, Identifiable, Sendable {
         case deleted
     }
 
-    public struct URLs: Codable, Equatable {
+    public struct URLs: Codable, Equatable, Sendable {
         public var url: URL
 
         public init(

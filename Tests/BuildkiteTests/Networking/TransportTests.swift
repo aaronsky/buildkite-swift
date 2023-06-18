@@ -15,66 +15,80 @@ import XCTest
 import FoundationNetworking
 #endif
 
-class TransportTests: XCTestCase {
-    private func createSession(testCase: MockURLProtocol.Case = .success) -> URLSession {
-        switch testCase {
-        case .success:
-            MockURLProtocol.requestHandler = MockData.mockingSuccessNoContent
-        case .error:
-            MockURLProtocol.requestHandler = MockData.mockingError
-        }
+extension URLSession {
+    fileprivate convenience init(
+        _ testCase: MockURLProtocol.Case
+    ) {
         let config = URLSessionConfiguration.ephemeral
         config.protocolClasses = [MockURLProtocol.self]
-        return URLSession(configuration: config)
-    }
-
-    private class MockURLProtocol: URLProtocol {
-        enum Case {
-            case success
-            case error
-        }
-
-        typealias RequestHandler = (URLRequest) throws -> (Data, URLResponse)
-        static var requestHandler: RequestHandler?
-
-        override class func canInit(with request: URLRequest) -> Bool {
-            return true
-        }
-
-        override class func canonicalRequest(for request: URLRequest) -> URLRequest {
-            return request
-        }
-
-        override func startLoading() {
-            guard let handler = MockURLProtocol.requestHandler else {
-                return
-            }
-            do {
-                let (data, response) = try handler(request)
-                client?.urlProtocol(self, didReceive: response, cacheStoragePolicy: .notAllowed)
-                client?.urlProtocol(self, didLoad: data)
-                client?.urlProtocolDidFinishLoading(self)
-            } catch {
-                client?.urlProtocol(self, didFailWithError: error)
-            }
-        }
-
-        override func stopLoading() {}
+        self.init(configuration: config)
     }
 }
 
-// MARK: - Async/Await-based Requests
+private final class MockURLProtocol: URLProtocol {
+    typealias RequestHandler = @Sendable (URLRequest) throws -> (Data, URLResponse)
 
-extension TransportTests {
+    enum Case {
+        case success
+        case error
+
+        var handler: RequestHandler {
+            switch self {
+            case .success:
+                return MockData.mockingSuccessNoContent(for:)
+            case .error:
+                return MockData.mockingError(for:)
+            }
+        }
+    }
+
+    override class func canInit(with request: URLRequest) -> Bool { true }
+
+    override class func canonicalRequest(for request: URLRequest) -> URLRequest { request }
+
+    override func startLoading() {
+        guard let client = client, let handler = Self.testCase(for: request)?.handler else { return }
+        do {
+            let (data, response) = try handler(request)
+            client.urlProtocol(self, didReceive: response, cacheStoragePolicy: .notAllowed)
+            client.urlProtocol(self, didLoad: data)
+            client.urlProtocolDidFinishLoading(self)
+        } catch {
+            client.urlProtocol(self, didFailWithError: error)
+        }
+    }
+
+    override func stopLoading() {}
+
+    static func testCase(for request: URLRequest) -> Case? {
+        property(forKey: "testCase", in: request) as? Case
+    }
+
+    static func setTestCase(_ testCase: Case, for request: inout URLRequest) {
+        let mutableRequest = (request as NSURLRequest) as! NSMutableURLRequest
+        setProperty(
+            testCase,
+            forKey: "testCase",
+            in: mutableRequest
+        )
+        request = mutableRequest as URLRequest
+    }
+}
+
+class TransportTests: XCTestCase {
     func testURLSessionSendRequest() async throws {
-        let request = URLRequest(url: URL())
-        _ = try await createSession().send(request: request)
+        var request = URLRequest(url: URL())
+        let session = URLSession(.success)
+        MockURLProtocol.setTestCase(.success, for: &request)
+        _ = try await session.send(request: request)
     }
 
     func testURLSessionSendRequestFailure() async {
-        let request = URLRequest(url: URL())
+        var request = URLRequest(url: URL())
+        let session = URLSession(.error)
+        MockURLProtocol.setTestCase(.error, for: &request)
         try await XCTAssertThrowsError(
-            await createSession(testCase: .error).send(request: request)
+            await session.send(request: request)
         )
     }
 }

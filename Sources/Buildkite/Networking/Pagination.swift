@@ -31,7 +31,8 @@ public struct Page: Equatable, Hashable, Sendable {
         }
 
         for link in header.split(separator: ",") {
-            let segments = link
+            let segments =
+                link
                 .trimmingCharacters(in: .whitespacesAndNewlines)
                 .split(separator: ";")
             guard

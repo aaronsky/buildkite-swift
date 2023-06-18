@@ -19,7 +19,7 @@ public enum TransportError: Error {
 }
 
 /// Interface for the asynchronous communication layer the ``BuildkiteClient`` uses.
-public protocol Transport {
+public protocol Transport: Sendable {
     typealias Output = (data: Data, response: URLResponse)
 
     /// Send the request and receive the ``Output`` asynchronously.
@@ -32,12 +32,16 @@ extension URLSession: Transport {
         // Task-based API for URLSession.
         #if os(Linux) || os(Windows)
         return try await withCheckedThrowingContinuation { continuation in
-            send(request: request, completion: continuation.resume)
+            send(request: request) {
+                continuation.resume(with: $0)
+            }
         }
         #else
         guard #available(iOS 15, macOS 12, tvOS 15, watchOS 8, *) else {
             return try await withCheckedThrowingContinuation { continuation in
-                send(request: request, completion: continuation.resume)
+                send(request: request) {
+                    continuation.resume(with: $0)
+                }
             }
         }
 
@@ -45,7 +49,7 @@ extension URLSession: Transport {
         #endif
     }
 
-    private func send(request: URLRequest, completion: @escaping (Result<Output, Error>) -> Void) {
+    private func send(request: URLRequest, completion: @Sendable @escaping (Result<Output, Error>) -> Void) {
         let task = dataTask(with: request) { data, response, error in
             if let error = error {
                 completion(.failure(error))

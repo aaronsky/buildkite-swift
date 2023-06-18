@@ -98,10 +98,11 @@ class GraphQLTests: XCTestCase {
     func testGraphQLContentGet() throws {
         try XCTAssertNoThrow(GraphQL.Content.data("hello").get())
 
-        let errors = GraphQL<String>.Errors(
-            errors: [],
-            type: nil
-        )
+        let errors = GraphQL<String>
+            .Errors(
+                errors: [],
+                type: nil
+            )
         try XCTAssertThrowsError(
             GraphQL<String>.Content.errors(errors)
                 .get(),

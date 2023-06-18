@@ -13,7 +13,7 @@ import Foundation
 import FoundationNetworking
 #endif
 
-final class MockTransport {
+actor MockTransport {
     enum Error: Swift.Error {
         case tooManyRequests
     }

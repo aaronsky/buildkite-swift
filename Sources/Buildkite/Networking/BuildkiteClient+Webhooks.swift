@@ -99,7 +99,8 @@ extension BuildkiteClient {
 
     private nonisolated func getTimestampAndSignature(_ header: String) throws -> (timestamp: String, signature: Data) {
         let parts: [String: String] = Dictionary(
-            uniqueKeysWithValues: header
+            uniqueKeysWithValues:
+                header
                 .split(separator: ",")
                 .compactMap { kv in
                     let kvp = kv.split(separator: "=", maxSplits: 2)
@@ -132,11 +133,13 @@ extension BuildkiteClient {
 
     private nonisolated func checkMAC(message: Data, signature: Data, secretKey: Data) throws {
         let key = SymmetricKey(data: secretKey)
-        guard HMAC<SHA256>.isValidAuthenticationCode(
-                signature,
-                authenticating: message,
-                using: key
-            )
+        guard
+            HMAC<SHA256>
+                .isValidAuthenticationCode(
+                    signature,
+                    authenticating: message,
+                    using: key
+                )
         else {
             throw WebhookValidationError.signatureRefused
         }

@@ -32,7 +32,8 @@ extension BuildkiteClient: AsyncMiddleware {
         }
 
         guard
-            let secretKey = Environment
+            let secretKey =
+                Environment
                 .get("BUILDKITE_WEBHOOK_SECRET")?
                 .data(using: .utf8)
         else {
@@ -42,12 +43,14 @@ extension BuildkiteClient: AsyncMiddleware {
             )
         }
 
-        let replayLimit = Environment
+        let replayLimit =
+            Environment
             .get("BUILDKITE_WEBHOOK_REPLAY_LIMIT")
             .flatMap(TimeInterval.init)
 
         if let signature = request.headers.buildkiteSignature,
-            let payload = request.body.data {
+            let payload = request.body.data
+        {
             try validateWebhookPayload(
                 signatureHeader: signature,
                 body: Data(buffer: payload),

@@ -24,7 +24,7 @@ import FoundationNetworking
 /// if you need to read your token dynamically from the keychain, it may be more adventageous to do that as part of a
 /// ``TokenProvider`` implementation rather than tightly-coupling keychain raw string access directly to your
 /// client instantiation.
-public protocol TokenProvider {
+public protocol TokenProvider: Sendable {
     /// Returns a token string for the given ``APIVersion``. This will usually be a fixed constant such as ``APIVersion/REST/v2`` or ``APIVersion/GraphQL/v1``, so you can switch on the values of one of these.
     func token(for version: APIVersion) async -> String?
 }

@@ -14,66 +14,75 @@ FORMAT_PATHS := $(GIT_REPO_TOPLEVEL)/Examples $(GIT_REPO_TOPLEVEL)/Package.swift
 
 # Tasks
 
+.PHONY: default
 default: test-all
 
-test-all: test-library test-library-xcode test-examples
+.PHONY: test-all
+test-all: test-library test-library-xcode build-examples
 
+.PHONY: test-library
 test-library:
 	swift test --parallel
 
-test-library-xcode:
+.PHONY: test-library-xcode
+test-library-xcode: test-library-xcode-ios test-library-xcode-macos test-library-xcode-tvos test-library-xcode-watchos
+
+.PHONY: test-library-xcode-ios
+test-library-xcode-ios:
 	xcodebuild test \
 		-scheme Buildkite \
 		-destination "$(DESTINATION_PLATFORM_IOS_SIMULATOR)" \
 		-quiet
+
+.PHONY: test-library-xcode-macos
+test-library-xcode-macos:
 	xcodebuild test \
 		-scheme Buildkite \
 		-destination "$(DESTINATION_PLATFORM_MACOS)" \
 		-quiet
+
+.PHONY: test-library-xcode-tvos
+test-library-xcode-tvos:
 	xcodebuild test \
 		-scheme Buildkite \
 		-destination "$(DESTINATION_PLATFORM_TVOS_SIMULATOR)" \
 		-quiet
+
+.PHONY: test-library-xcode-watchos
+test-library-xcode-watchos:
 	xcodebuild \
 		-scheme Buildkite \
 		-destination "$(DESTINATION_PLATFORM_WATCHOS_SIMULATOR)" \
 		-quiet
 
-test-examples:
-	xcodebuild build \
-		-scheme simple \
-		-destination "$(DESTINATION_PLATFORM_MACOS)" \
-		-quiet
-	xcodebuild build \
-		-scheme graphql \
-		-destination "$(DESTINATION_PLATFORM_MACOS)" \
-		-quiet
-	xcodebuild build \
-		-scheme advanced-authorization \
-		-destination "$(DESTINATION_PLATFORM_MACOS)" \
-		-quiet
-	xcodebuild build \
-		-scheme test-analytics \
-		-destination "$(DESTINATION_PLATFORM_MACOS)" \
-		-quiet
-	xcodebuild build \
-		-scheme webhooks \
-		-destination "$(DESTINATION_PLATFORM_MACOS)" \
-		-quiet
+.PHONY: build-examples
+build-examples: build-examples-all
 
-DOC_WARNINGS := $(shell xcodebuild clean docbuild \
-	-scheme Buildkite \
-	-destination "$(DESTINATION_PLATFORM_MACOS)" \
-	-quiet \
-	2>&1 \
-	| grep "couldn't be resolved to known documentation" \
-	| sed 's|$(PWD)|.|g' \
-	| tr '\n' '\1')
-test-docs:
-	@test "$(DOC_WARNINGS)" = "" \
-		|| (echo "xcodebuild docbuild failed:\n\n$(DOC_WARNINGS)" | tr '\1' '\n' \
-		&& exit 1)
+.PHONY: build-examples-all
+build-examples-all:
+	swift build --package-path Examples
 
+.PHONY: build-examples-simple
+build-examples-simple:
+	swift build --package-path Examples --product simple
+
+.PHONY: build-examples-graphql
+build-examples-graphql:
+	swift build --package-path Examples --product graphql
+
+.PHONY: build-examples-advanced-authorization
+build-examples-advanced-authorization:
+	swift build --package-path Examples --product advanced-authorization
+
+.PHONY: build-examples-test-analytics
+build-examples-test-analytics:
+	swift build --package-path Examples --product test-analytics
+
+.PHONY: build-examples-webhooks
+build-examples-webhooks:
+	swift build --package-path Examples --product webhooks
+
+.PHONY: format
 format:
 	$(SWIFT_FORMAT_BIN) \
 		--configuration $(SWIFT_FORMAT_CONFIG_FILE) \
@@ -82,11 +91,10 @@ format:
 		--recursive \
 		$(FORMAT_PATHS)
 
+.PHONY: lint
 lint:
 	$(SWIFT_FORMAT_BIN) lint \
 		--configuration $(SWIFT_FORMAT_CONFIG_FILE) \
 		--ignore-unparsable-files \
 		--recursive \
 		$(FORMAT_PATHS)
-
-.PHONY: format lint test-all test-library test-library-xcode test-examples test-docs
